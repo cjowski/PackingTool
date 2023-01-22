@@ -361,4 +361,5 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/PackingTool/appsettings.json
+/PackingTool.WebAPI/appsettings.json
+/PackingTool.WebAPI/Client/src/api
