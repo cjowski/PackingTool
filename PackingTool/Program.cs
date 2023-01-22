@@ -1,15 +1,18 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Host.ConfigureServices(services =>
+{
+    services.AddControllers();
+    services.AddEndpointsApiExplorer();
+    services.AddSwaggerGen();
+    services.AddSpaStaticFiles(configuration =>
+    {
+        configuration.RootPath = "wwwroot/dist";
+    });
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,7 +20,19 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthorization();
-
+app.UseDefaultFiles();
+app.UseStaticFiles();
+app.UseSpaStaticFiles();
+app.UseRouting();
 app.MapControllers();
+
+app.UseSpa(spa =>
+{
+    spa.Options.SourcePath = "Client";
+    if (app.Environment.IsDevelopment())
+    {
+        spa.UseProxyToSpaDevelopmentServer("http://localhost:4000");
+    }
+});
 
 app.Run();
