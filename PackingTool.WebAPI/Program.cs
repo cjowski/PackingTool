@@ -19,12 +19,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseSpaStaticFiles();
 app.UseRouting();
 app.MapControllers();
+app.UseEndpoints(endpoints => { });
 
 app.UseSpa(spa =>
 {
