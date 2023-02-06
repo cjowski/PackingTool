@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.WebAPI", "PackingTool.WebAPI\PackingTool.WebAPI.csproj", "{B03DA124-BEF6-45DA-93D7-D2F85F7AA7AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackingTool.Database", "PackingTool.Database\PackingTool.Database.csproj", "{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{B03DA124-BEF6-45DA-93D7-D2F85F7AA7AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B03DA124-BEF6-45DA-93D7-D2F85F7AA7AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B03DA124-BEF6-45DA-93D7-D2F85F7AA7AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
