@@ -1,14 +1,26 @@
+using PackingTool.WebAPI.Extensions;
+
+var appSettings = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .Build();
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureServices(services =>
 {
     services.AddControllers();
+    services.AddRepositories();
+    services.AddServices();
+    services.AddDbContext(
+        appSettings.GetConnectionString("DefaultConnection")!
+    );
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
     services.AddSpaStaticFiles(configuration =>
     {
         configuration.RootPath = "wwwroot/dist";
     });
+    
 });
 
 var app = builder.Build();
