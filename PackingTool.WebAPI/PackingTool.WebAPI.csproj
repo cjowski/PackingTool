@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Client\**" />
-    <Content Remove="Client\**" />
-    <EmbeddedResource Remove="Client\**" />
-    <None Remove="Client\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.13" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="7.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
@@ -30,12 +23,12 @@
 
   <Target Name="OpenAPI" AfterTargets="Build" Condition="$(Configuration)=='Debug'">
     <Exec Command="dotnet swagger tofile --output ./swagger.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />
-    <Exec Command="npx openapi --input ../../PackingTool.WebAPI/swagger.json --output src/api --client axios --postfix Service --useOptions --useUnionTypes" WorkingDirectory="$(ProjectDir)..\PackingTool.WebAPI\Client" />
+    <Exec Command="npx openapi --input ../PackingTool.WebAPI/swagger.json --output src/api --client axios --postfix Service --useOptions --useUnionTypes" WorkingDirectory="$(ProjectDir)..\PackingTool.Client" />
   </Target>
 
   <Target Name="OpenAPIPublish" AfterTargets="Publish" Condition="$(Configuration)!='Debug'">
     <Exec Command="dotnet swagger tofile --output ./swagger.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />
-    <Exec Command="npx openapi --input ../../PackingTool.WebAPI/swagger.json --output src/api --client axios --postfix Service --useOptions --useUnionTypes" WorkingDirectory="$(ProjectDir)..\PackingTool.WebAPI\Client" />
+    <Exec Command="npx openapi --input ../PackingTool.WebAPI/swagger.json --output src/api --client axios --postfix Service --useOptions --useUnionTypes" WorkingDirectory="$(ProjectDir)..\PackingTool.Client" />
   </Target>
 
   <Target Name="PublishRunClient" AfterTargets="ComputeFilesToPublish">
