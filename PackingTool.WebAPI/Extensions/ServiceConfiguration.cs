@@ -6,10 +6,15 @@ namespace PackingTool.WebAPI.Extensions
     {
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            return services.AddScoped<
-                Core.Repository.IUserRepository,
-                Database.Repository.UserRepository
-            >();
+            return services
+                .AddScoped<
+                    Core.Repository.User.IUserRepository,
+                    Database.Repository.UserRepository
+                >()
+                .AddScoped<
+                    Core.Repository.PackingList.IPackingListRepository,
+                    Database.Repository.PackingListRepository
+                >();
         }
 
         public static IServiceCollection AddServices(this IServiceCollection services)

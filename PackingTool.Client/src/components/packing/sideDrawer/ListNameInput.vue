@@ -83,13 +83,11 @@ const validateNewListName = () => {
     font-size: 16px;
     top: 10px;
     font-weight: bold;
-    color: $selected-text;
   }
   :deep(input) {
     padding-top: 10px;
     font-size: 18px;
     font-weight: bold;
-    color: $selected-text;
   }
   font-family: "Ink Free";
 }

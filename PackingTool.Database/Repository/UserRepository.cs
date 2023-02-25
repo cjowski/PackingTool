@@ -1,6 +1,6 @@
 ﻿namespace PackingTool.Database.Repository
 {
-    public class UserRepository : Core.Repository.IUserRepository
+    public class UserRepository : Core.Repository.User.IUserRepository
     {
         private DbModels.PackingContext _context { get; }
 

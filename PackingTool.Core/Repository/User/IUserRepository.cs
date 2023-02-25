@@ -1,4 +1,4 @@
-﻿namespace PackingTool.Core.Repository
+﻿namespace PackingTool.Core.Repository.User
 {
     public interface IUserRepository
     {

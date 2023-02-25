@@ -7,7 +7,7 @@ namespace PackingTool.Core.Service.PackingList.Json
     {
         public int ID { get; set; } //TODO do not serialize
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } //TODO do not serialize
         public int GridColumnCount { get; set; }
         [Required]
         public PackingGroup[] Groups { get; set; }
@@ -27,8 +27,7 @@ namespace PackingTool.Core.Service.PackingList.Json
         }
 
         public static PackingList FromJson(
-            string jsonList,
-            bool fromDatabase
+            string jsonList
         )
         {
             var list = JsonConvert.DeserializeObject<PackingList>(jsonList);
@@ -40,7 +39,27 @@ namespace PackingTool.Core.Service.PackingList.Json
                 );
             }
 
-            list.IsValid(fromDatabase);
+            list.IsValid(false);
+            list.PrettifySorts();
+            return list;
+        }
+
+        public static PackingList FromDatabase(
+            int listID,
+            string jsonList
+        )
+        {
+            var list = JsonConvert.DeserializeObject<PackingList>(jsonList);
+
+            if (list == null)
+            {
+                throw new InvalidDataException(
+                    $"{nameof(PackingList)}: unable to deserialize JSON."
+                );
+            }
+
+            list.ID = listID;
+            list.IsValid(true);
             list.PrettifySorts();
             return list;
         }

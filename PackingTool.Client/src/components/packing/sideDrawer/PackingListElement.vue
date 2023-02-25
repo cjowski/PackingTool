@@ -5,7 +5,7 @@
     clickable
     v-ripple
     dense
-    active-class="selected-list"
+    :active-class="editingListName ? '' : 'selected-list'"
     :class="elementClass"
     @click="currentSectionFocus = PackingSectionType.Lists"
     @keydown.delete.prevent="doDeleteList"
