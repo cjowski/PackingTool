@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Output = PackingTool.Core.Repository.PackingList.Output;
 
 namespace PackingTool.Database.Repository
 {
@@ -21,17 +22,23 @@ namespace PackingTool.Database.Repository
                 .AnyAsync(x => x.PackingListId == listID);
         }
 
-        public async Task<string> GetJsonList(
+        public async Task<Output.PackingListDb> GetList(
             int listID
         )
         {
             return await _context.PackingList
                 .Where(x => x.PackingListId == listID)
-                .Select(x => x.Json)
+                .Select(x =>
+                    new Output.PackingListDb(
+                        x.PackingListId,
+                        x.Name,
+                        x.Json
+                    )
+                )
                 .SingleAsync();
         }
 
-        public async Task<Tuple<int, string>[]> GetListIDsWithNamesForUser(
+        public async Task<Output.PackingListDb[]> GetListsForUser(
             int userID
         )
         {
@@ -41,9 +48,10 @@ namespace PackingTool.Database.Repository
                     && !x.PackingList.Deleted
                 )
                 .Select(x =>
-                    new Tuple<int, string>(
+                    new Output.PackingListDb(
                         x.PackingListId,
-                        x.PackingList.Name
+                        x.PackingList.Name,
+                        x.PackingList.Json
                     )
                 )
                 .ToArrayAsync();
@@ -81,12 +89,12 @@ namespace PackingTool.Database.Repository
             };
 
             _context.PackingList.Add(packingList);
-            var packingListID = await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             var userPackingList = new DbModels.UserPackingList()
             {
                 UserId = userID,
-                PackingListId = packingListID,
+                PackingListId = packingList.PackingListId,
                 CreatedDate = DateTime.Now,
                 CreatedUserId = userID
             };
@@ -94,7 +102,7 @@ namespace PackingTool.Database.Repository
             _context.UserPackingList.Add(userPackingList);
             await _context.SaveChangesAsync();
 
-            return packingListID;
+            return packingList.PackingListId;
         }
 
         public async Task UpdateList(

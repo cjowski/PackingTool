@@ -131,7 +131,7 @@
         }
       }
     },
-    "/api/PackingList/SaveListFromJson": {
+    "/api/PackingList/SaveList": {
       "post": {
         "tags": [
           "PackingList"
@@ -150,24 +150,44 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/PackingList"
               }
             },
             "text/json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/PackingList"
               }
             },
             "application/*+json": {
               "schema": {
-                "type": "string"
+                "$ref": "#/components/schemas/PackingList"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
           }
         }
       }
@@ -209,7 +229,27 @@
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
           }
         }
       }
@@ -398,7 +438,7 @@
       },
       "PackingList": {
         "required": [
-          "groups",
+          "content",
           "name"
         ],
         "type": "object",
@@ -411,6 +451,18 @@
             "minLength": 1,
             "type": "string"
           },
+          "content": {
+            "$ref": "#/components/schemas/PackingListContent"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PackingListContent": {
+        "required": [
+          "groups"
+        ],
+        "type": "object",
+        "properties": {
           "gridColumnCount": {
             "type": "integer",
             "format": "int32"

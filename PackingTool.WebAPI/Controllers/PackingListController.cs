@@ -40,17 +40,17 @@ namespace PackingTool.WebAPI.Controllers
             return await _packingService.GetListDescriptionsForUser(userID);
         }
 
-        [HttpPost("SaveListFromJson")]
-        public async Task SaveListFromJson(
-            [FromBody] string jsonList,
+        [HttpPost("SaveList")]
+        public async Task<int> SaveList(
+            [FromBody] CoreService.Json.PackingList list,
             int userID
         )
         {
-            await _packingService.AddUpdateListForUser(jsonList, userID);
+            return await _packingService.SaveListForUser(list, userID);
         }
 
         [HttpPost("SaveListFromJsonFile")]
-        public async Task SaveListFromJsonFile(
+        public async Task<int> SaveListFromJsonFile(
             IFormFile file,
             int userID
         )
@@ -66,8 +66,9 @@ namespace PackingTool.WebAPI.Controllers
             await file.CopyToAsync(stream);
             stream.Position = 0;
 
+            var listName = Path.GetFileNameWithoutExtension(file.FileName);
             var jsonList = Encoding.UTF8.GetString(stream.ToArray());
-            await _packingService.AddUpdateListForUser(jsonList, userID);
+            return await _packingService.SaveJsonListForUser(listName, jsonList, userID);
         }
 
         [HttpPost("UpdateListName")]

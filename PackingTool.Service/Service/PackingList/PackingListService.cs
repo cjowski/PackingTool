@@ -14,7 +14,9 @@ namespace PackingTool.Service.Service.PackingList
             _repository = repository;
         }
 
-        public async Task<CoreService.Json.PackingList> GetList(int listID)
+        public async Task<CoreService.Json.PackingList> GetList(
+            int listID
+        )
         {
             if (!await _repository.ListExists(listID))
             {
@@ -23,8 +25,8 @@ namespace PackingTool.Service.Service.PackingList
                 );
             }
 
-            var jsonList = await _repository.GetJsonList(listID);
-            var list = CoreService.Json.PackingList.FromDatabase(listID, jsonList);
+            var listDb = await _repository.GetList(listID);
+            var list = CoreService.Json.PackingList.FromDatabase(listDb);
 
             return list;
         }
@@ -38,50 +40,70 @@ namespace PackingTool.Service.Service.PackingList
                 );
             }
 
-            var jsonList = await _repository.GetJsonList(listID);
-            var list = CoreService.Json.PackingList.FromDatabase(listID, jsonList);
-            var jsonToRead = JsonConvert.SerializeObject(list, Formatting.Indented);
+            var listDb = await _repository.GetList(listID);
+            var listContent = CoreService.Json.PackingListContent.FromJson(listDb.Json);
+            var jsonToRead = JsonConvert.SerializeObject(listContent, Formatting.Indented);
 
             return jsonToRead;
         }
 
-        public async Task<CoreService.Output.PackingListDescription[]> GetListDescriptionsForUser(int userID)
+        public async Task<CoreService.Output.PackingListDescription[]> GetListDescriptionsForUser(
+            int userID
+        )
         {
-            var listNames = await _repository.GetListIDsWithNamesForUser(userID);
+            var listNames = await _repository.GetListsForUser(userID);
             return listNames
                 .Select(x =>
                     new CoreService.Output.PackingListDescription(
-                        id: x.Item1,
-                        name: x.Item2
+                        id: x.ID,
+                        name: x.Name
                     )
                 )
                 .ToArray();
         }
 
-        public async Task AddUpdateListForUser(
-            string jsonList,
+        public async Task<int> SaveListForUser(
+            CoreService.Json.PackingList list,
             int userID
         )
         {
-            var list = CoreService.Json.PackingList.FromJson(jsonList);
-            var jsonToSave = JsonConvert.SerializeObject(list, Formatting.None);
-            var listID = list.ID;
+            var jsonToSave = JsonConvert.SerializeObject(list.Content, Formatting.None);
+            var listID = list.ID > 0
+                ? list.ID
+                : await _repository.TryGetListIDForUser(list.Name, userID);
 
-            var listExists = list.ID > 0 && await _repository.ListExists(list.ID);
-            if (!listExists)
-            {
-                listID = await _repository.TryGetListIDForUser(list.Name, userID);
-                listExists = listID > 0;
-            }
-
-            if (listExists)
+            if (listID > 0)
             {
                 await _repository.UpdateList(listID, jsonToSave, userID);
             }
             else
             {
-                await _repository.AddListForUser(list.Name, jsonToSave, userID);
+                listID = await _repository.AddListForUser(list.Name, jsonToSave, userID);
             }
+
+            return listID;
+        }
+
+        public async Task<int> SaveJsonListForUser(
+            string listName,
+            string jsonList, 
+            int userID
+        )
+        {
+            var listContent = CoreService.Json.PackingListContent.FromJson(jsonList);
+            var jsonToSave = JsonConvert.SerializeObject(listContent, Formatting.None);
+            var listID = await _repository.TryGetListIDForUser(listName, userID);
+
+            if (listID > 0)
+            {
+                await _repository.UpdateList(listID, jsonToSave, userID);
+            }
+            else
+            {
+                listID = await _repository.AddListForUser(listName, jsonToSave, userID);
+            }
+
+            return listID;
         }
 
         public async Task UpdateListName(

@@ -18,8 +18,7 @@ BEGIN TRAN @TransactionName
 			ModifiedDate				DATETIME					NOT NULL,
 			ModifiedUserID				INT							NOT NULL
 		
-			CONSTRAINT PK_PackingList		PRIMARY KEY CLUSTERED(PackingListID),
-			CONSTRAINT UK_PackingList		UNIQUE([Name])
+			CONSTRAINT PK_PackingList		PRIMARY KEY CLUSTERED(PackingListID)
 		)
 		PRINT 'Created table dbo.PackingList'
 	END

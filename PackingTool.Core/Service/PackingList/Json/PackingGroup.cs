@@ -44,13 +44,6 @@ namespace PackingTool.Core.Service.PackingList.Json
                 );
             }
 
-            if (Sort < 1)
-            {
-                throw new InvalidDataException(
-                    $"{nameof(PackingGroup)}: '{Name}' invalid Sort: {Sort}."
-                );
-            }
-
             if (Items == null)
             {
                 throw new InvalidDataException(
