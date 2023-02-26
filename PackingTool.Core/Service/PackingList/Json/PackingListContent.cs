@@ -10,6 +10,11 @@ namespace PackingTool.Core.Service.PackingList.Json
         [Required]
         public PackingGroup[] Groups { get; set; }
 
+        public PackingListContent()
+        {
+            GridColumnCount = 0;
+            Groups = Array.Empty<PackingGroup>();
+        }
 
         [JsonConstructor]
         private PackingListContent(

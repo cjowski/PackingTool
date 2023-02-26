@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PackingTool.Core.Service.PackingList.Json
 {
@@ -11,6 +12,14 @@ namespace PackingTool.Core.Service.PackingList.Json
         [Required]
         public PackingListContent Content { get; set; }
 
+        public PackingList()
+        {
+            ID = 0;
+            Name = string.Empty;
+            Content = new PackingListContent();
+        }
+
+        [JsonConstructor]
         private PackingList(
             int id,
             string name,

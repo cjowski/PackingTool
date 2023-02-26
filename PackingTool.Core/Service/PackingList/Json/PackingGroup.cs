@@ -10,12 +10,22 @@ namespace PackingTool.Core.Service.PackingList.Json
         public int ID { get; set; }
         [Required]
         public string Name { get; set; }
+        [Required]
         [JsonConverter(typeof(StringEnumConverter))]
         public Item.PackingItemType Type { get; set; }
         [Required]
         public int Sort { get; set; }
         [Required]
         public Item.PackingItem[] Items { get; set; }
+
+        public PackingGroup()
+        {
+            ID = 0;
+            Name = string.Empty;
+            Type = Item.PackingItemType.Undefined;
+            Sort = 0;
+            Items = Array.Empty<Item.PackingItem>();
+        }
 
         [JsonConstructor]
         private PackingGroup(

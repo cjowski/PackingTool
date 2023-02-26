@@ -65,6 +65,7 @@ namespace PackingTool.Database.Repository
             return await _context.UserPackingList
                 .Where(x =>
                     x.PackingList.Name == listName
+                    && !x.PackingList.Deleted
                     && x.UserId == userID
                 )
                 .Select(x => x.PackingListId)

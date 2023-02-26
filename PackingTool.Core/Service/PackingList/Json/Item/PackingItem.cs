@@ -20,6 +20,16 @@ namespace PackingTool.Core.Service.PackingList.Json.Item
         [Required]
         public bool Packed { get; set; }
 
+        public PackingItem()
+        {
+            ID = 0;
+            Name = string.Empty;
+            Count = 0;
+            Sort = 0;
+            Attributes = Array.Empty<PackingItemAttribute>();
+            Packed = false;
+        }
+
         [JsonConstructor]
         private PackingItem(
             int id,
@@ -58,13 +68,6 @@ namespace PackingTool.Core.Service.PackingList.Json.Item
             {
                 throw new InvalidDataException(
                     $"{nameof(PackingItem)}: '{Name}' invalid Count: {Count}."
-                );
-            }
-
-            if (Sort < 1)
-            {
-                throw new InvalidDataException(
-                    $"{nameof(PackingItem)}: '{Name}' invalid Sort: {Sort}."
                 );
             }
 

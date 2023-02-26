@@ -360,7 +360,8 @@
           "id",
           "items",
           "name",
-          "sort"
+          "sort",
+          "type"
         ],
         "type": "object",
         "properties": {
