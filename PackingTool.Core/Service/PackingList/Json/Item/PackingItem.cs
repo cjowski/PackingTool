@@ -7,6 +7,8 @@ namespace PackingTool.Core.Service.PackingList.Json.Item
     public class PackingItem
     {
         [Required]
+        public int ID { get; set; }
+        [Required]
         public string Name { get; set; }
         [Required]
         public int Count { get; set; }
@@ -20,6 +22,7 @@ namespace PackingTool.Core.Service.PackingList.Json.Item
 
         [JsonConstructor]
         private PackingItem(
+            int id,
             string name,
             int count,
             int sort,
@@ -27,6 +30,7 @@ namespace PackingTool.Core.Service.PackingList.Json.Item
             bool packed
         )
         {
+            ID = id;
             Name = name;
             Count = count;
             Sort = sort;
@@ -36,6 +40,13 @@ namespace PackingTool.Core.Service.PackingList.Json.Item
 
         public bool IsValid()
         {
+            if (ID <= 0)
+            {
+                throw new InvalidDataException(
+                    $"{nameof(PackingItem)}: ID is missing."
+                );
+            }
+
             if (string.IsNullOrEmpty(Name))
             {
                 throw new InvalidDataException(

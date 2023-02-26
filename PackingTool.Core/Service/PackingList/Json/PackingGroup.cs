@@ -7,6 +7,8 @@ namespace PackingTool.Core.Service.PackingList.Json
     public class PackingGroup
     {
         [Required]
+        public int ID { get; set; }
+        [Required]
         public string Name { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public Item.PackingItemType Type { get; set; }
@@ -17,12 +19,14 @@ namespace PackingTool.Core.Service.PackingList.Json
 
         [JsonConstructor]
         private PackingGroup(
+            int id,
             string name,
             Item.PackingItemType type,
             int sort,
             Item.PackingItem[] items
         )
         {
+            ID = id;
             Name = name;
             Type = type;
             Sort = sort;
@@ -31,6 +35,13 @@ namespace PackingTool.Core.Service.PackingList.Json
 
         public bool IsValid()
         {
+            if (ID <= 0)
+            {
+                throw new InvalidDataException(
+                    $"{nameof(PackingGroup)}: ID is missing."
+                );
+            }
+
             if (string.IsNullOrEmpty(Name))
             {
                 throw new InvalidDataException(

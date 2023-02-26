@@ -357,13 +357,17 @@
     "schemas": {
       "PackingGroup": {
         "required": [
+          "id",
           "items",
           "name",
-          "sort",
-          "type"
+          "sort"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "name": {
             "minLength": 1,
             "type": "string"
@@ -388,12 +392,17 @@
         "required": [
           "attributes",
           "count",
+          "id",
           "name",
           "packed",
           "sort"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
           "name": {
             "minLength": 1,
             "type": "string"
