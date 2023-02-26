@@ -92,7 +92,7 @@ import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { PackingListState } from "@/models/packing/list/PackingListState"
 import ListNameInput from "./ListNameInput.vue"
 import { PackingSectionType } from "@/enums/PackingSectionType"
-import { PackingListStorage } from "@/firebase/packingList/PackingListStorage"
+import { PackingListService } from "@/api/services/PackingListService"
 
 const { packingListManager } = usePackingListStore()
 const { selectedListName } = storeToRefs(usePackingListStore())
@@ -100,6 +100,10 @@ const { currentSectionFocus } = storeToRefs(useOperationStatusStore())
 const $q = useQuasar()
 
 const props = defineProps({
+  id: {
+    type: Number,
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -131,9 +135,10 @@ const elementClass = computed(() => {
 
 const downloadFile = async () => {
   const fileName = `${props.name.toString()}.json`
-  const json = await PackingListStorage.GetList(props.name)
-  const jsonString = JSON.stringify(json, null, 2)
-  const fileBlob = new Blob([jsonString], { type: "application/json" })
+  const json = await PackingListService.getApiPackingListJson({
+    listId: props.id,
+  })
+  const fileBlob = new Blob([json], { type: "application/json" })
   const fileURL = window.URL.createObjectURL(fileBlob)
   const fileLink = document.createElement("a")
   fileLink.href = fileURL
@@ -149,7 +154,7 @@ const editListName = () => {
 
 const doUpdateListName = async (name: string) => {
   editingListName.value = false
-  await packingListManager.UpdateListName(props.name, name)
+  await packingListManager.UpdateListName(props.id, name)
 
   if (selectedListName.value != name) {
     router.push(`/list?name=${name}`)
@@ -167,7 +172,7 @@ const copyList = async () => {
 
 const doDeleteList = async () => {
   showMoreButtons.value = false
-  await packingListManager.DeleteList(props.name)
+  await packingListManager.DeleteList(props.id)
   $q.notify({
     message: "Deleted",
     color: "red",

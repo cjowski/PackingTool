@@ -1,141 +1,63 @@
-import type { IPackingList } from "./IPackingList"
-import type { PackingItemType } from "../item/PackingItemType"
-import { PackingGroup } from "../group/PackingGroup"
+import type { PackingList as ApiPackingList } from "src/api/models/PackingList"
+import { PackingListContent } from "./PackingListContent"
 import { PackingListState } from "./PackingListState"
 
-export class PackingList implements IPackingList {
-  Name: string
-  GridColumnCount: number
-  Groups: PackingGroup[]
-  State: PackingListState
+export class PackingList implements ApiPackingList {
+  id: number
+  name: string
+  content: PackingListContent
+  state: PackingListState
 
   constructor(
+    id: number,
     name: string,
-    gridColumnCount: number,
-    groups: PackingGroup[],
+    content: PackingListContent,
     state: PackingListState
   ) {
-    this.Name = name
-    this.GridColumnCount = gridColumnCount
-    this.Groups = groups
-    this.State = state
+    this.id = id
+    this.name = name
+    this.content = content
+    this.state = state
   }
 
   static New(name: string) {
-    return new PackingList(name, 0, [] as PackingGroup[], PackingListState.New)
+    return new PackingList(
+      0,
+      name,
+      PackingListContent.New(),
+      PackingListState.New
+    )
   }
 
-  static Unsynced(name: string) {
+  static Unsynced(id: number, name: string) {
     return new PackingList(
+      id,
       name,
-      0,
-      [] as PackingGroup[],
+      PackingListContent.New(),
       PackingListState.Unsynced
     )
   }
 
   static Undefined() {
     return new PackingList(
-      "",
       0,
-      [] as PackingGroup[],
+      "",
+      PackingListContent.New(),
       PackingListState.Undefined
     )
   }
 
   ToJson() {
-    return <IPackingList>{
-      GridColumnCount: this.GridColumnCount,
-      Groups: this.Groups.map((group) => group.ToJson()),
+    return <ApiPackingList>{
+      id: this.id,
+      name: this.name,
+      content: this.content.ToJson(),
     }
   }
 
-  GetGroup(id: number) {
-    return this.Groups.find((group) => group.ID === id)
-  }
-
-  Synchronize(otherList: IPackingList, otherListName: string) {
-    this.Name = otherListName
-    this.GridColumnCount = otherList.GridColumnCount
-
-    otherList.Groups.forEach((otherGroup) => {
-      const group = this.GetGroup(otherGroup.ID)
-      if (!group) {
-        this.Groups.push(PackingGroup.FromJson(otherGroup))
-      } else {
-        group.Synchronize(otherGroup)
-      }
-    })
-
-    const groupIDsToRemove = [] as number[]
-    this.Groups.forEach((group) => {
-      if (!otherList.Groups.find((otherGroup) => otherGroup.ID === group.ID)) {
-        groupIDsToRemove.push(group.ID)
-      }
-    })
-
-    groupIDsToRemove.forEach((groupID) => {
-      this.Groups.splice(
-        this.Groups.findIndex((group) => group.ID === groupID),
-        1
-      )
-    })
-
-    this.SortGroups()
-    this.State = PackingListState.Synced
-  }
-
-  AddGroup(name: string, type: PackingItemType) {
-    const sort = this.Groups.length
-      ? Math.max.apply(
-          Math,
-          this.Groups.map((group) => group.Sort)
-        ) + 1
-      : 1
-
-    const group = PackingGroup.New(this.GetNextGroupID(), name, type, sort)
-    this.Groups.push(group)
-
-    if (this.GridColumnCount < 3) {
-      ++this.GridColumnCount
-    }
-
-    return group
-  }
-
-  RemoveGroup(id: number) {
-    this.Groups.splice(
-      this.Groups.findIndex((group) => group.ID === id),
-      1
-    )
-  }
-
-  SortGroups() {
-    this.Groups.sort((a, b) => {
-      return a.Sort - b.Sort
-    })
-  }
-
-  GetNextGroupID() {
-    return this.Groups.length
-      ? Math.max.apply(
-          Math,
-          this.Groups.map((group) => group.ID)
-        ) + 1
-      : 1
-  }
-
-  GetNextItemID() {
-    return (
-      Math.max.apply(
-        Math,
-        this.Groups.map((group) =>
-          Math.max.apply(
-            Math,
-            group.Items.length ? group.Items.map((item) => item.ID) : [0]
-          )
-        )
-      ) + 1
-    )
+  Synchronize(otherList: ApiPackingList, otherListName: string) {
+    this.name = otherListName
+    this.content.Synchronize(otherList.content)
+    this.state = PackingListState.Synced
   }
 }

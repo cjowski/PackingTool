@@ -15,7 +15,7 @@
               <div class="row justify-end">
                 <q-btn
                   icon="sync"
-                  @click="packingListManager.FetchListNames"
+                  @click="packingListManager.FetchListDescriptions"
                   flat
                   dense
                   color="orange"
@@ -51,9 +51,10 @@
         <q-separator />
         <template v-for="list in allPackingLists">
           <PackingListElement
-            :name="list.Name"
-            :selected="list.Name == selectedListName"
-            :state="list.State"
+            :id="list.id"
+            :name="list.name"
+            :selected="list.name == selectedListName"
+            :state="list.state"
           ></PackingListElement>
         </template>
       </q-list>
@@ -69,8 +70,8 @@ import PackingListElement from "./PackingListElement.vue"
 import ListNameInput from "./ListNameInput.vue"
 import JSZip from "jszip"
 import { storeToRefs } from "pinia"
-import { PackingListStorage } from "@/firebase/packingList/PackingListStorage"
 import { usePackingListStore } from "@/stores/packingListStore"
+import { PackingListService } from "@/api/services/PackingListService"
 
 const route = useRoute()
 const { packingListManager } = usePackingListStore()
@@ -101,10 +102,11 @@ const cancelAddNewList = () => {
 const downloadAllLists = async () => {
   const zip = new JSZip()
   for (const list of allPackingLists.value) {
-    const json = await PackingListStorage.GetList(list.Name)
-    const jsonString = JSON.stringify(json, null, 2)
-    const fileBlob = new Blob([jsonString], { type: "application/json" })
-    zip.file(`${list.Name}.json`, fileBlob)
+    const json = await PackingListService.getApiPackingListJson({
+      listId: list.id,
+    })
+    const fileBlob = new Blob([json], { type: "application/json" })
+    zip.file(`${list.name}.json`, fileBlob)
   }
   zip.generateAsync({ type: "base64" }).then((content) => {
     location.href = "data:application/zip;base64," + content
@@ -121,5 +123,5 @@ watch(
   { flush: "pre", immediate: true, deep: true }
 )
 
-packingListManager.FetchListNames()
+packingListManager.FetchListDescriptions()
 </script>

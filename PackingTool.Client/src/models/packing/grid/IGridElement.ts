@@ -1,4 +1,4 @@
 export interface IGridElement {
-  readonly ID: number,
-  Sort: number
+  readonly id: number,
+  sort: number
 }

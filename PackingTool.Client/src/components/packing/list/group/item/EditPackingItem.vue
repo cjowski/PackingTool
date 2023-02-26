@@ -3,12 +3,12 @@
     dense
     :class="itemClass"
     :clickable="true"
-    @click="(event: MouseEvent) => setSelectedItemID(item.ID, event.ctrlKey)"
+    @click="(event: MouseEvent) => setSelectedItemID(item.id, event.ctrlKey)"
     @dblclick="editName"
   >
     <q-item-section>
       <div v-if="!editingName" class="non-selectable new-item-label">
-        {{ item.Name }}
+        {{ item.name }}
       </div>
       <div v-else class="column">
         <q-input
@@ -28,7 +28,7 @@
       <div class="row q-gutter-xs q-ma-none q-pa-none">
         <div class="column">
           <q-input
-            v-model="item.Count"
+            v-model="item.count"
             type="number"
             outlined
             dense
@@ -41,7 +41,7 @@
             dense
             icon="close"
             size="10px"
-            @click="packingListManager.RemoveItem(item.ID, groupID)"
+            @click="packingListManager.RemoveItem(item.id, groupID)"
           />
           <q-btn
             flat
@@ -59,9 +59,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue"
-import type { PackingItem } from "@/models/packing/item/PackingItem"
+import type { PackingItem } from "@/models/packing/list/PackingItem"
 import { usePackingListStore } from "@/stores/packingListStore"
-import { PackingItemAttribute } from "@/models/packing/item/PackingItemAttribute"
 
 const { packingListManager } = usePackingListStore()
 
@@ -92,27 +91,27 @@ const editingName = ref(false)
 const modifiedName = ref("")
 
 const isImportant = computed(() => {
-  return props.item.Attributes.indexOf(PackingItemAttribute.Important) !== -1
+  return props.item.attributes.indexOf("Important") !== -1
 })
 
 const editName = () => {
   editingName.value = true
-  modifiedName.value = props.item.Name
+  modifiedName.value = props.item.name
   props.setSelectedItemID(0, false)
 }
 
 const submitModifiedName = () => {
-  props.item.Name = modifiedName.value
+  props.item.name = modifiedName.value
   editingName.value = false
 }
 
 const markImportance = () => {
-  if (props.item.Attributes.indexOf(PackingItemAttribute.Important) === -1) {
-    props.item.Attributes.push(PackingItemAttribute.Important)
+  if (props.item.attributes.indexOf("Important") === -1) {
+    props.item.attributes.push("Important")
   } else {
-    props.item.Attributes.splice(
-      props.item.Attributes.findIndex(
-        (attribute) => attribute === PackingItemAttribute.Important
+    props.item.attributes.splice(
+      props.item.attributes.findIndex(
+        (attribute) => attribute === "Important"
       ),
       1
     )

@@ -62,7 +62,7 @@ const validateNewListName = () => {
   }
 
   const list = allPackingLists.value.find(
-    (list) => list.Name === props.modelValue
+    (list) => list.name === props.modelValue
   )
   if (list) {
     newListNameError.value = "Already exist list with given name"

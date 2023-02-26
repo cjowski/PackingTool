@@ -2,14 +2,14 @@ import type { IGridElement } from "./IGridElement"
 import type { NeighborDirection } from "./NeighborDirection"
 
 export class GridNode {
-  Element: IGridElement
+  element: IGridElement
   private _neighbors: Map<NeighborDirection, GridNode>
 
   private constructor(
     element: IGridElement,
     neighbors: Map<NeighborDirection, GridNode>
   ) {
-    this.Element = element
+    this.element = element
     this._neighbors = neighbors
   }
 

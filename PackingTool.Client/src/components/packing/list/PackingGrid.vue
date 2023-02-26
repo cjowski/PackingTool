@@ -8,8 +8,8 @@
       >
         <div v-for="node in gridColumn" class="row">
           <PackingGroup
-            :group="packingListManager.GetGroup(node.Element.ID)"
-            :isSelected="selectedGroupIDs.indexOf(node.Element.ID) !== -1"
+            :group="packingListManager.GetGroup(node.element.id)"
+            :isSelected="selectedGroupIDs.indexOf(node.element.id) !== -1"
             :packing="packing"
             :setSelectedGroupID="setSelectedGroupID"
             style="width: 100%"
@@ -51,13 +51,13 @@ const selectedGroupIDs = ref([] as number[])
 
 const grid = computed(() => {
   return Grid.FromGridElements(
-    packingList.value.Groups,
-    packingList.value.GridColumnCount
+    packingList.value.content.groups,
+    packingList.value.content.gridColumnCount
   )
 })
 
 const columnsWidth = computed(() => {
-  return `${(1 / packingList.value.GridColumnCount) * 100}%`
+  return `${(1 / packingList.value.content.gridColumnCount) * 100}%`
 })
 
 const setSelectedGroupID = (groupID: number, allowMultiple: boolean) => {
@@ -89,9 +89,9 @@ const setSelectedGroupID = (groupID: number, allowMultiple: boolean) => {
 
 watch(packingList, (updatedList) => {
   selectedGroupIDs.value = [] as number[]
-  const groupsLength = updatedList.Groups.length
-  if (groupsLength < updatedList.GridColumnCount) {
-    updatedList.GridColumnCount = groupsLength
+  const groupsLength = updatedList.content.groups.length
+  if (groupsLength < updatedList.content.gridColumnCount) {
+    updatedList.content.gridColumnCount = groupsLength
   }
 })
 
@@ -103,8 +103,8 @@ const selectAllGroups = (event: KeyboardEvent) => {
   ) {
     event.preventDefault()
     selectedGroupIDs.value.length = 0
-    packingList.value.Groups.forEach((group) => {
-      selectedGroupIDs.value.push(group.ID)
+    packingList.value.content.groups.forEach((group) => {
+      selectedGroupIDs.value.push(group.id)
     })
   }
 }
@@ -154,8 +154,8 @@ const pasteGroups = (event: KeyboardEvent) => {
     event.preventDefault()
     copiedGroups.value.forEach((copiedGroup) => {
       const addedGroup = packingListManager.AddGroup(
-        copiedGroup.Name,
-        copiedGroup.Type
+        copiedGroup.name,
+        copiedGroup.type
       )
       addedGroup.Synchronize(copiedGroup)
     })
@@ -191,7 +191,7 @@ const selectNextNode = (event: KeyboardEvent) => {
 
   const node = grid.value.GetNode(selectedGroupIDs.value[0])
   if (node.HasNeighbor(direction)) {
-    selectedGroupIDs.value[0] = node.GetNeighbor(direction).Element.ID
+    selectedGroupIDs.value[0] = node.GetNeighbor(direction).element.id
   }
 }
 

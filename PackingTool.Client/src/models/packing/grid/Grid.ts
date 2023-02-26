@@ -3,63 +3,63 @@ import type { IGridElement } from "./IGridElement"
 import { NeighborDirection } from "./NeighborDirection"
 
 export class Grid {
-  readonly Nodes: GridNode[][]
+  readonly nodes: GridNode[][]
 
   private constructor(nodes: GridNode[][]) {
-    this.Nodes = nodes
+    this.nodes = nodes
   }
 
   private AssignNeighbors() {
-    for (let i: number = 0; i < this.Nodes.length; i++) {
-      for (let j: number = 0; j < this.Nodes[i].length; j++) {
+    for (let i: number = 0; i < this.nodes.length; i++) {
+      for (let j: number = 0; j < this.nodes[i].length; j++) {
         if (i > 0) {
-          this.Nodes[i][j].AssignNeighbor(
+          this.nodes[i][j].AssignNeighbor(
             NeighborDirection.Top,
-            this.Nodes[i - 1][j]
+            this.nodes[i - 1][j]
           )
         }
-        if (j + 1 < this.Nodes[i].length) {
-          this.Nodes[i][j].AssignNeighbor(
+        if (j + 1 < this.nodes[i].length) {
+          this.nodes[i][j].AssignNeighbor(
             NeighborDirection.Right,
-            this.Nodes[i][j + 1]
+            this.nodes[i][j + 1]
           )
-        } else if (i + 1 < this.Nodes.length && j + 1 == this.Nodes[i].length) {
-          this.Nodes[i][j].AssignNeighbor(
+        } else if (i + 1 < this.nodes.length && j + 1 == this.nodes[i].length) {
+          this.nodes[i][j].AssignNeighbor(
             NeighborDirection.Right,
-            this.Nodes[i + 1][0]
+            this.nodes[i + 1][0]
           )
         }
-        if (i + 1 < this.Nodes.length && j < this.Nodes[i + 1].length) {
-          this.Nodes[i][j].AssignNeighbor(
+        if (i + 1 < this.nodes.length && j < this.nodes[i + 1].length) {
+          this.nodes[i][j].AssignNeighbor(
             NeighborDirection.Bottom,
-            this.Nodes[i + 1][j]
+            this.nodes[i + 1][j]
           )
         }
         if (j > 0) {
-          this.Nodes[i][j].AssignNeighbor(
+          this.nodes[i][j].AssignNeighbor(
             NeighborDirection.Left,
-            this.Nodes[i][j - 1]
+            this.nodes[i][j - 1]
           )
         } else if (i > 0 && j == 0) {
-          this.Nodes[i][j].AssignNeighbor(
+          this.nodes[i][j].AssignNeighbor(
             NeighborDirection.Left,
-            this.Nodes[i - 1][this.Nodes[i - 1].length - 1]
+            this.nodes[i - 1][this.nodes[i - 1].length - 1]
           )
         }
       }
     }
   }
 
-  public static FromGridElements(gridElements: IGridElement[], columnsInRow: number) {
+  public static FromGridElements(gridelements: IGridElement[], columnsInRow: number) {
     let currentRowIndex = 0
     let currentRows = [] as GridNode[][]
     let currentColumns = [] as GridNode[]
 
-    const sortedElements = gridElements.sort((a, b) => {
-      return a.Sort - b.Sort
+    const sortedelements = gridelements.sort((a, b) => {
+      return a.sort - b.sort
     })
 
-    sortedElements.forEach((element) => {
+    sortedelements.forEach((element) => {
       if (currentColumns.length < columnsInRow) {
         currentColumns.push(GridNode.NoNeighbors(element))
       }
@@ -80,18 +80,18 @@ export class Grid {
   }
 
   public GetColumns() {
-    if (!this.Nodes.length) {
+    if (!this.nodes.length) {
       return [] as GridNode[][]
     }
 
     const columns = [] as GridNode[][]
     let currentColumnRows = [] as GridNode[]
-    for (let i: number = 0; i < this.Nodes[0].length; i++) {
-      for (let j: number = 0; j < this.Nodes.length; j++) {
-        if (i + 1 <= this.Nodes[j].length) {
-          currentColumnRows.push(this.Nodes[j][i])
+    for (let i: number = 0; i < this.nodes[0].length; i++) {
+      for (let j: number = 0; j < this.nodes.length; j++) {
+        if (i + 1 <= this.nodes[j].length) {
+          currentColumnRows.push(this.nodes[j][i])
         }
-        if (j + 1 == this.Nodes.length) {
+        if (j + 1 == this.nodes.length) {
           columns.push(currentColumnRows)
           currentColumnRows = [] as GridNode[]
           break
@@ -103,8 +103,8 @@ export class Grid {
 
   public GetNode(elementID: number) {
     let node = undefined as GridNode | undefined
-    this.Nodes.every((row) => {
-      node = row.find((node) => elementID == node.Element.ID)
+    this.nodes.every((row) => {
+      node = row.find((node) => elementID == node.element.id)
       if (node !== undefined) {
         return false
       }
@@ -119,7 +119,7 @@ export class Grid {
     }
 
     let neighbor = node.GetNeighbor(NeighborDirection.Top)
-    node.Element.Sort = neighbor.Element.Sort
+    node.element.sort = neighbor.element.sort
     let currentNode = neighbor
     let currentNeighbor = null as GridNode | null
     while (
@@ -127,11 +127,11 @@ export class Grid {
       currentNode.GetNeighbor(NeighborDirection.Right) != node
     ) {
       currentNeighbor = currentNode.GetNeighbor(NeighborDirection.Right)
-      currentNode.Element.Sort = currentNeighbor.Element.Sort
+      currentNode.element.sort = currentNeighbor.element.sort
       currentNode = currentNeighbor
     }
     if (currentNeighbor) {
-      ++currentNeighbor.Element.Sort
+      ++currentNeighbor.element.sort
     }
   }
 
@@ -140,10 +140,10 @@ export class Grid {
       return
     }
 
-    const currentSort = node.Element.Sort
+    const currentsort = node.element.sort
     const neighbor = node.GetNeighbor(NeighborDirection.Right)
-    node.Element.Sort = neighbor.Element.Sort
-    neighbor.Element.Sort = currentSort
+    node.element.sort = neighbor.element.sort
+    neighbor.element.sort = currentsort
   }
 
   public TryMoveBottom(node: GridNode) {
@@ -152,7 +152,7 @@ export class Grid {
     }
 
     let neighbor = node.GetNeighbor(NeighborDirection.Bottom)
-    node.Element.Sort = neighbor.Element.Sort
+    node.element.sort = neighbor.element.sort
     let currentNode = neighbor
     let currentNeighbor = null as GridNode | null
     while (
@@ -160,11 +160,11 @@ export class Grid {
       currentNode.GetNeighbor(NeighborDirection.Left) != node
     ) {
       currentNeighbor = currentNode.GetNeighbor(NeighborDirection.Left)
-      currentNode.Element.Sort = currentNeighbor.Element.Sort
+      currentNode.element.sort = currentNeighbor.element.sort
       currentNode = currentNeighbor
     }
     if (currentNeighbor) {
-      --currentNeighbor.Element.Sort
+      --currentNeighbor.element.sort
     }
   }
 
@@ -173,9 +173,9 @@ export class Grid {
       return
     }
 
-    const currentSort = node.Element.Sort
+    const currentsort = node.element.sort
     const neighbor = node.GetNeighbor(NeighborDirection.Left)
-    node.Element.Sort = neighbor.Element.Sort
-    neighbor.Element.Sort = currentSort
+    node.element.sort = neighbor.element.sort
+    neighbor.element.sort = currentsort
   }
 }

@@ -13,7 +13,7 @@
     dense
     :class="itemClass"
     :clickable="true"
-    @click="(event: MouseEvent) => setSelectedItemID(item.ID, event.ctrlKey)"
+    @click="(event: MouseEvent) => setSelectedItemID(item.id, event.ctrlKey)"
   >
     <q-btn
       v-if="isImportant && !packing && !importantSection && !edit"
@@ -28,11 +28,11 @@
     <q-item-section>
       <div class="row q-gutter-xs non-selectable">
         <div class="col-11 q-ma-none">
-          <span>{{ item.Name }}</span>
+          <span>{{ item.name }}</span>
         </div>
         <div class="col-1 q-ma-none text-left">
-          <span :style="item.Count == 1 ? 'visibility: hidden' : ''">
-            {{ item.Count }}
+          <span :style="item.count == 1 ? 'visibility: hidden' : ''">
+            {{ item.count }}
           </span>
         </div>
       </div>
@@ -44,8 +44,7 @@
 import { computed } from "vue"
 import PackPackingItem from "./PackPackingItem.vue"
 import EditPackingItem from "./EditPackingItem.vue"
-import type { PackingItem } from "@/models/packing/item/PackingItem"
-import { PackingItemAttribute } from "@/models/packing/item/PackingItemAttribute"
+import type { PackingItem } from "@/models/packing/list/PackingItem"
 
 const props = defineProps({
   item: {
@@ -81,13 +80,13 @@ const props = defineProps({
 const itemClass = computed(() => {
   let output = "q-pa-xs label-font shadow-transition"
   if (props.edit) output += " q-pb-none"
-  if (props.item.IsNew) output += " new-item-label"
+  if (props.item.isNew) output += " new-item-label"
   if (props.selected) output += " selected-item"
   return output
 })
 
 const isImportant = computed(() => {
-  return props.item.Attributes.indexOf(PackingItemAttribute.Important) !== -1
+  return props.item.attributes.indexOf("Important") !== -1
 })
 </script>
 

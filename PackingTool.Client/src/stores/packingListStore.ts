@@ -3,19 +3,20 @@ import { defineStore, storeToRefs } from "pinia"
 import { useOperationStatusStore } from "./operationStatusStore"
 import { useClipboardStore } from "./clipboardStore"
 import { PackingList } from "@/models/packing/list/PackingList"
-import { PackingItemAttribute } from "@/models/packing/item/PackingItemAttribute"
-import { PackingListManager } from "@/firebase/packingList/PackingListManager"
+import { PackingListManager } from "@/logic/PackingListManager"
 
 export const usePackingListStore = defineStore("packingList", () => {
   const { currentAction, previousAction } = storeToRefs(useOperationStatusStore())
   const { copiedGroups, copiedItems } = storeToRefs(useClipboardStore())
 
+  const userID = 1
   const allPackingLists = ref([] as PackingList[])
   const packingList = ref(PackingList.Undefined())
   const selectedListName = ref("")
   const allListsFetched = ref(false)
 
   const packingListManager = new PackingListManager(
+    userID,
     allPackingLists,
     packingList,
     selectedListName,
@@ -27,9 +28,9 @@ export const usePackingListStore = defineStore("packingList", () => {
   )
 
   const importantItems = computed(() => {
-    return packingList.value.Groups.flatMap((group) =>
-      group.Items.filter((item) =>
-        item.Attributes.includes(PackingItemAttribute.Important)
+    return packingList.value.content.groups.flatMap((group) =>
+      group.items.filter((item) =>
+        item.attributes.includes("Important")
       )
     )
   })

@@ -74,7 +74,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import { PackingItemType } from "@/models/packing/item/PackingItemType"
+import type { PackingItemType } from "@/api/models/PackingItemType";
 import { usePackingListStore } from "@/stores/packingListStore"
 import getIconByItemType from "@/methods/getIconForItemType"
 
@@ -88,14 +88,23 @@ const props = defineProps({
 })
 
 const name = ref("")
-const itemType = ref(PackingItemType.Other)
-const itemTypes = Object.values(PackingItemType)
+const itemType = ref("Other" as PackingItemType)
+const itemTypes = [
+  "Cloth",
+  "Electronics",
+  "Food",
+  "Documents",
+  "Shoes",
+  "Cosmetics",
+  "Medicaments",
+  "Other",
+] as PackingItemType[] //TODO make it automated
 
 const add = () => {
   if (name.value) {
     packingListManager.AddGroup(name.value, itemType.value as PackingItemType)
     name.value = ""
-    itemType.value = PackingItemType.Other
+    itemType.value = "Other"
     props.closeAddGroupDialog()
   }
 }

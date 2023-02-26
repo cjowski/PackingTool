@@ -1,22 +1,22 @@
-import * as Enum from "@/models/packing/item/PackingItemType"
+import type { PackingItemType } from "src/api/models/PackingItemType"
 
-export default function getIconByItemType(type: Enum.PackingItemType) {
+export default function getIconByItemType(type: PackingItemType) {
   switch (type) {
-    case Enum.PackingItemType.Cloth:
+    case "Cloth":
       return "checkroom"
-    case Enum.PackingItemType.Electronics:
+    case "Electronics":
       return "phone_android"
-    case Enum.PackingItemType.Food:
+    case "Food":
       return "restaurant"
-    case Enum.PackingItemType.Documents:
+    case "Documents":
       return "article"
-      case Enum.PackingItemType.Shoes:
-        return "pets"
-      case Enum.PackingItemType.Cosmetics:
-        return "science"
-      case Enum.PackingItemType.Medicaments:
-        return "local_hospital"
-    case Enum.PackingItemType.Other:
+    case "Shoes":
+      return "pets"
+    case "Cosmetics":
+      return "science"
+    case "Medicaments":
+      return "local_hospital"
+    case "Other":
       return "auto_awesome"
     default:
       return ""

@@ -83,7 +83,7 @@ const packAllItemsCheckboxVisible = computed(
 
 const allItemsPacked = computed({
   get() {
-    return importantItems.value.every((item) => item.Packed)
+    return importantItems.value.every((item) => item.packed)
   },
   set(value: boolean) {
     packAllItems(value)
@@ -91,7 +91,7 @@ const allItemsPacked = computed({
 })
 
 const packAllItems = (value: boolean) => {
-  importantItems.value.forEach((item) => (item.Packed = value))
+  importantItems.value.forEach((item) => (item.packed = value))
 }
 </script>
 

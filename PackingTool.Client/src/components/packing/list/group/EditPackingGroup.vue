@@ -6,7 +6,7 @@
           <q-select
             outlined
             hideBottomSpace
-            v-model="group.Type"
+            v-model="group.type"
             :options="itemTypes"
             class="item-type-select"
           >
@@ -28,7 +28,7 @@
           </q-select>
           <q-input
             outlined
-            v-model="group.Name"
+            v-model="group.name"
             label="Name"
             class="group-name-input"
           ></q-input>
@@ -77,12 +77,12 @@
 
     <q-card-section class="item-list-section">
       <PackingItem
-        v-for="item in group.Items"
+        v-for="item in group.items"
         :item="item"
-        :groupID="group.ID"
+        :groupID="group.id"
         :edit="true"
         :packing="false"
-        :selected="selectedItemIDs.includes(item.ID)"
+        :selected="selectedItemIDs.includes(item.id)"
         :setSelectedItemID="setSelectedItemID"
       />
     </q-card-section>
@@ -110,11 +110,11 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import PackingItem from "./item/PackingItem.vue"
-import type { PackingGroup } from "@/models/packing/group/PackingGroup"
-import { PackingItemType } from "@/models/packing/item/PackingItemType"
+import type { PackingItemType } from "src/api/models/PackingItemType"
+import type { PackingItemAttribute } from "@/api/models/PackingItemAttribute"
+import type { PackingGroup } from "@/models/packing/list/PackingGroup"
 import getIconByItemType from "@/methods/getIconForItemType"
 import { usePackingListStore } from "@/stores/packingListStore"
-import type { PackingItemAttribute } from "@/models/packing/item/PackingItemAttribute"
 
 const { packingListManager } = usePackingListStore()
 
@@ -149,7 +149,16 @@ const props = defineProps({
   },
 })
 
-const itemTypes = Object.values(PackingItemType)
+const itemTypes = [
+  "Cloth",
+  "Electronics",
+  "Food",
+  "Documents",
+  "Shoes",
+  "Cosmetics",
+  "Medicaments",
+  "Other",
+] as PackingItemType[] //TODO make it automated
 const showNewItemNameInput = ref(true)
 const newItemName = ref("")
 const newItemCount = ref(1)
@@ -160,7 +169,7 @@ const submitNewItem = () => {
     newItemName.value,
     newItemCount.value,
     [] as PackingItemAttribute[],
-    props.group.ID
+    props.group.id
   )
   newItemName.value = ""
   newItemCount.value = 1

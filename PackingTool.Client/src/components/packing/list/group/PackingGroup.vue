@@ -18,14 +18,14 @@
     >
       <q-item class="col">
         <q-item-section side>
-          <q-icon :name="getIconByItemType(group.Type)" />
+          <q-icon :name="getIconByItemType(group.type)" />
         </q-item-section>
 
         <q-item-section>
           <q-item-label
             class="text-capitalize text-body1 text-bold non-selectable"
           >
-            {{ group.Name }}
+            {{ group.name }}
           </q-item-label>
         </q-item-section>
       </q-item>
@@ -53,7 +53,7 @@
                       padding="sm"
                     />
                   </q-item>
-                  <q-item v-if="!group.IsNew">
+                  <q-item v-if="!group.isNew">
                     <q-btn
                       icon="sync"
                       @click="synchronize"
@@ -100,12 +100,12 @@
 
     <q-card-section>
       <PackingItem
-        v-for="item in group.Items"
+        v-for="item in group.items"
         :item="item"
-        :groupID="group.ID"
+        :groupID="group.id"
         :edit="false"
         :packing="packing"
-        :selected="selectedItemIDs.includes(item.ID)"
+        :selected="selectedItemIDs.includes(item.id)"
         :setSelectedItemID="setSelectedItemID"
       />
     </q-card-section>
@@ -125,7 +125,7 @@ import PackingItem from "./item/PackingItem.vue"
 import { usePackingListStore } from "@/stores/packingListStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { useClipboardStore } from "@/stores/clipboardStore"
-import type { PackingGroup } from "@/models/packing/group/PackingGroup"
+import type { PackingGroup } from "@/models/packing/list/PackingGroup"
 import getIconByItemType from "@/methods/getIconForItemType"
 import { PackingListAction } from "@/enums/PackingListAction"
 import { PackingSectionType } from "@/enums/PackingSectionType"
@@ -162,12 +162,12 @@ const showMoreButtons = ref(false)
 const selectedItemIDs = ref([] as number[])
 
 const packAllItemsCheckboxVisible = computed(
-  () => props.packing && !editing.value && props.group.Items.length > 1
+  () => props.packing && !editing.value && props.group.items.length > 1
 )
 
 const allItemsPacked = computed({
   get() {
-    return props.group.Items.every((item) => item.Packed)
+    return props.group.items.every((item) => item.packed)
   },
   set(value: boolean) {
     packAllItems(value)
@@ -175,18 +175,18 @@ const allItemsPacked = computed({
 })
 
 const packAllItems = (value: boolean) => {
-  props.group.Items.forEach((item) => (item.Packed = value))
+  props.group.items.forEach((item) => (item.packed = value))
 }
 
 const select = (event: MouseEvent) => {
-  props.setSelectedGroupID(!editing.value ? props.group.ID : 0, event.ctrlKey)
+  props.setSelectedGroupID(!editing.value ? props.group.id : 0, event.ctrlKey)
   selectedItemIDs.value.length = 0
 }
 
 const synchronize = async () => {
   showMoreButtons.value = false
   synchronizing.value = true
-  await packingListManager.SynchronizeGroup(props.group.ID)
+  await packingListManager.SynchronizeGroup(props.group.id)
 }
 
 const edit = () => {
@@ -203,13 +203,13 @@ const finishEdit = () => {
 
 const remove = () => {
   showMoreButtons.value = false
-  packingListManager.RemoveGroup(props.group.ID)
+  packingListManager.RemoveGroup(props.group.id)
 }
 
 const setSelectedItemID = (itemID: number, allowMultiple: boolean) => {
   props.setSelectedGroupID(0, false)
   currentSectionFocus.value = PackingSectionType.Items
-  currentGroupIDFocus.value = props.group.ID
+  currentGroupIDFocus.value = props.group.id
 
   if (itemID == 0 || (props.packing && !editing.value)) {
     selectedItemIDs.value.length = 0
@@ -236,18 +236,18 @@ const setSelectedItemID = (itemID: number, allowMultiple: boolean) => {
 
 const cardClass = computed(() => {
   let output = "shadow-transition header-font"
-  if (props.isSelected && props.group.IsNew) {
+  if (props.isSelected && props.group.isNew) {
     output += " new-selected-group-color"
   } else if (props.isSelected) {
     output += " selected-group-color"
-  } else if (props.group.IsNew) {
+  } else if (props.group.isNew) {
     output += " new-group-color"
   }
   return output
 })
 
 watch(currentGroupIDFocus, (groupIDFocus) => {
-  if (groupIDFocus != props.group.ID) {
+  if (groupIDFocus != props.group.id) {
     selectedItemIDs.value.length = 0
   }
 })
@@ -269,13 +269,13 @@ watch(
 
 const selectAllItems = (event: KeyboardEvent) => {
   if (
-    currentGroupIDFocus.value == props.group.ID &&
+    currentGroupIDFocus.value == props.group.id &&
     currentSectionFocus.value == PackingSectionType.Items &&
     event.ctrlKey &&
     event.key.toLowerCase() === "a"
   ) {
     event.preventDefault()
-    selectedItemIDs.value = props.group.Items.map((item) => item.ID)
+    selectedItemIDs.value = props.group.items.map((item) => item.id)
   }
 }
 
@@ -287,7 +287,7 @@ const copySelectedItems = (event: KeyboardEvent) => {
     event.key.toLowerCase() === "c"
   ) {
     event.preventDefault()
-    packingListManager.CopyItems(props.group.ID, selectedItemIDs.value, false)
+    packingListManager.CopyItems(props.group.id, selectedItemIDs.value, false)
 
     $q.notify({
       message: "Copied item(s)",
@@ -305,7 +305,7 @@ const cutSelectedItems = (event: KeyboardEvent) => {
     event.key.toLowerCase() === "x"
   ) {
     event.preventDefault()
-    packingListManager.CopyItems(props.group.ID, selectedItemIDs.value, true)
+    packingListManager.CopyItems(props.group.id, selectedItemIDs.value, true)
 
     $q.notify({
       message: "Copied item(s)",
@@ -326,10 +326,10 @@ const pasteItems = (event: KeyboardEvent) => {
     event.preventDefault()
     copiedItems.value.forEach((copiedItem) => {
       packingListManager.AddItem(
-        copiedItem.Name,
-        copiedItem.Count,
-        copiedItem.Attributes,
-        props.group.ID
+        copiedItem.name,
+        copiedItem.count,
+        copiedItem.attributes,
+        props.group.id
       )
     })
   }
@@ -345,21 +345,21 @@ const changeItemSelection = (event: KeyboardEvent) => {
     case "ArrowUp":
       event.preventDefault()
       const previousItem = packingListManager.GetPreviousItem(
-        props.group.ID,
+        props.group.id,
         selectedItemID
       )
-      if (previousItem.ID !== undefined) {
-        selectedItemIDs.value[0] = previousItem.ID
+      if (previousItem.id !== undefined) {
+        selectedItemIDs.value[0] = previousItem.id
       }
       break
     case "ArrowDown":
       event.preventDefault()
       const nextItem = packingListManager.GetNextItem(
-        props.group.ID,
+        props.group.id,
         selectedItemID
       )
-      if (nextItem.ID !== undefined) {
-        selectedItemIDs.value[0] = nextItem.ID
+      if (nextItem.id !== undefined) {
+        selectedItemIDs.value[0] = nextItem.id
       }
       break
     default:
@@ -376,11 +376,11 @@ const changeItemSort = (event: KeyboardEvent) => {
   switch (event.key) {
     case "ArrowUp":
       event.preventDefault()
-      packingListManager.SortItemUp(props.group.ID, selectedItemID)
+      packingListManager.SortItemUp(props.group.id, selectedItemID)
       break
     case "ArrowDown":
       event.preventDefault()
-      packingListManager.SortItemDown(props.group.ID, selectedItemID)
+      packingListManager.SortItemDown(props.group.id, selectedItemID)
       break
     default:
       return

@@ -55,7 +55,7 @@
               @click="configuringGrid = false"
             />
             <q-input
-              v-model="packingList.GridColumnCount"
+              v-model="packingList.content.gridColumnCount"
               type="number"
               :min="minColumnsInRow"
               :max="maxColumnsInRow"
@@ -77,7 +77,7 @@
           @click="addingGroup = true"
         />
         <q-btn
-          v-if="packingList.State != PackingListState.New"
+          v-if="packingList.state != PackingListState.New"
           fab
           icon="sync"
           color="orange"
@@ -121,21 +121,21 @@ const configuringGrid = ref(false)
 selectedListName.value = route.query.name?.toString() ?? ""
 
 const minColumnsInRow = computed(() => {
-  return packingList.value.Groups.length < 2
-    ? packingList.value.Groups.length
+  return packingList.value.content.groups.length < 2
+    ? packingList.value.content.groups.length
     : 2
 })
 
 const maxColumnsInRow = computed(() => {
-  return packingList.value.Groups.length > 7
+  return packingList.value.content.groups.length > 7
     ? 7
-    : packingList.value.Groups.length
+    : packingList.value.content.groups.length
 })
 
 const allGroupsPacked = computed({
   get() {
-    return packingList.value.Groups.every((group) =>
-      group.Items.every((item) => item.Packed)
+    return packingList.value.content.groups.every((group) =>
+      group.items.every((item) => item.packed)
     )
   },
   set(value: boolean) {
@@ -144,8 +144,8 @@ const allGroupsPacked = computed({
 })
 
 const packAllGroups = (value: boolean) => {
-  packingList.value.Groups.forEach((group) =>
-    group.Items.forEach((item) => (item.Packed = value))
+  packingList.value.content.groups.forEach((group) =>
+    group.items.forEach((item) => (item.packed = value))
   )
 }
 
