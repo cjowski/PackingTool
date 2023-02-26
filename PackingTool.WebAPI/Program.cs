@@ -1,4 +1,5 @@
 using PackingTool.WebAPI.Extensions;
+using System.Text.Json.Serialization;
 
 var appSettings = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -8,12 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureServices(services =>
 {
-    services.AddControllers();
+    services
+        .AddControllers()
+        .AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+        );
+
     services.AddRepositories();
     services.AddServices();
     services.AddDbContext(
         appSettings.GetConnectionString("DefaultConnection")!
     );
+
     services.AddEndpointsApiExplorer();
     services.AddSwaggerGen();
     services.AddSpaStaticFiles(configuration =>

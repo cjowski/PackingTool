@@ -5,6 +5,7 @@ namespace PackingTool.Core.Service.PackingList.Json
 {
     public class PackingListContent
     {
+        [Required]
         public int GridColumnCount { get; set; }
         [Required]
         public PackingGroup[] Groups { get; set; }

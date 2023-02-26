@@ -8,11 +8,14 @@ namespace PackingTool.Core.Service.PackingList.Json.Item
     {
         [Required]
         public string Name { get; set; }
+        [Required]
         public int Count { get; set; }
+        [Required]
         public int Sort { get; set; }
         [Required]
         [JsonProperty(ItemConverterType = typeof(StringEnumConverter))]
         public PackingItemAttribute[] Attributes { get; set; } //TODO do not serialize null
+        [Required]
         public bool Packed { get; set; }
 
         [JsonConstructor]

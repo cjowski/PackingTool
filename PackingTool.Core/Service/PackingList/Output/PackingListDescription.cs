@@ -4,6 +4,7 @@ namespace PackingTool.Core.Service.PackingList.Output
 {
     public class PackingListDescription
     {
+        [Required]
         public int ID { get; set; }
         [Required]
         public string Name { get; set; }

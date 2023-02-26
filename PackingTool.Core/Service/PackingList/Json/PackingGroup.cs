@@ -10,6 +10,7 @@ namespace PackingTool.Core.Service.PackingList.Json
         public string Name { get; set; }
         [JsonConverter(typeof(StringEnumConverter))]
         public Item.PackingItemType Type { get; set; }
+        [Required]
         public int Sort { get; set; }
         [Required]
         public Item.PackingItem[] Items { get; set; }
