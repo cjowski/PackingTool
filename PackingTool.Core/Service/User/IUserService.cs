@@ -2,6 +2,8 @@
 {
     public interface IUserService
     {
-        Task AddUser(Input.User user);
+        Task<Output.AuthenticateResponse> Authenticate(Input.AuthenticateUser authenticateUser);
+        Task<Output.UserResponse> Register(Input.RegisterUser registerUser);
+        Task<Output.UserResponse> UpdatePassword(string userName, string password);
     }
 }

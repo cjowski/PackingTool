@@ -16,7 +16,7 @@ namespace PackingTool.WebAPI.Controllers
 
         [HttpPost("AddUser")]
         public async Task AddUser(
-            [FromBody] CoreService.Input.User user
+            [FromBody] CoreService.Input.RegisterUser user
         )
         {
             await _userService.AddUser(user);

@@ -26,9 +26,6 @@ namespace PackingTool.Database.DbModels
         {
             modelBuilder.Entity<PackingList>(entity =>
             {
-                entity.HasIndex(e => e.Name, "UK_PackingList")
-                    .IsUnique();
-
                 entity.Property(e => e.PackingListId).HasColumnName("PackingListID");
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
@@ -58,18 +55,23 @@ namespace PackingTool.Database.DbModels
 
                 entity.Property(e => e.CreatedUserId).HasColumnName("CreatedUserID");
 
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
                 entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
 
                 entity.Property(e => e.ModifiedUserId).HasColumnName("ModifiedUserID");
 
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Password)
+                entity.Property(e => e.PasswordHash)
                     .IsRequired()
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(20)
                     .IsUnicode(false);
             });
 

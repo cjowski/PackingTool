@@ -10,8 +10,9 @@ BEGIN TRAN @TransactionName
 	BEGIN
 		CREATE TABLE dbo.[User](
             UserID					INT IDENTITY(1, 1)			NOT NULL,
-            [Name]					VARCHAR(20)					NOT NULL,
-            [Password]				VARCHAR(100)				NOT NULL,
+            [UserName]				VARCHAR(20)					NOT NULL,
+            PasswordHash			VARCHAR(100)				NOT NULL,
+			Email					VARCHAR(40)					NOT NULL,
 			CreatedDate				DATETIME					NOT NULL,
 			CreatedUserID			INT							NOT NULL,
 			ModifiedDate			DATETIME					NOT NULL,
