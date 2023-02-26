@@ -1,5 +1,12 @@
 <template>
-  <q-drawer v-model="modelValue" side="left" behavior="desktop" bordered>
+  <q-drawer
+    v-model="modelValue"
+    side="left"
+    behavior="desktop"
+    bordered
+    overlay
+    persistent
+  >
     <q-scroll-area class="fit">
       <q-list>
         <q-item dense>

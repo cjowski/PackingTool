@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh LpR fFf">
     <q-header elevated height-hint="98" class="z-top">
-      <q-toolbar>
+      <q-toolbar class="toolbar-font">
         <q-btn
           v-if="userAuthorized"
           flat
@@ -11,29 +11,21 @@
           icon="menu"
         />
         <q-toolbar-title
-          class="text-bold non-selectable cursor-pointer toolbar-font"
+          class="text-bold non-selectable cursor-pointer"
           @click="drawer = !drawer"
         >
           Packing lists
         </q-toolbar-title>
 
-        <q-btn flat aria-label="Menu" size="20px" icon="login" to="/login" />
-        <q-btn
-          flat
-          aria-label="Menu"
-          size="20px"
-          icon="account_circle"
-          to="/signup"
-        />
-        <q-btn
-          v-if="userAuthorized"
-          @click="doLogout"
-          flat
-          aria-label="Menu"
-          size="20px"
-          icon="power_settings_new"
-          color="amber-7"
-        />
+        <q-btn to="/login" flat no-caps size="20px"
+          ><span class="text-bold">LogIn</span></q-btn
+        >
+        <q-btn to="/signup" flat no-caps size="20px"
+          ><span class="text-bold">SignUp</span></q-btn
+        >
+        <q-btn v-if="userAuthorized" @click="doLogout" flat no-caps size="20px"
+          ><span class="text-bold">LogOut</span></q-btn
+        >
       </q-toolbar>
     </q-header>
 

@@ -11,6 +11,10 @@ import "./assets/main.css"
 import "@quasar/extras/material-icons/material-icons.css"
 import "@quasar/extras/animate/bounceIn.css"
 import "@quasar/extras/animate/fadeOut.css"
+// import iconSet from "quasar/icon-set/ionicons-v4";
+// import "@quasar/extras/ionicons-v4/ionicons-v4.css";
+// import iconSet from 'quasar/icon-set/fontawesome-v6'
+// import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 import "quasar/src/css/index.sass"
 initializeApp(firebaseConfig as FirebaseOptions)
 OpenAPI.BASE = window.location.origin
