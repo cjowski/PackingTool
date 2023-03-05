@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using CoreService = PackingTool.Core.Service.User;
 
 namespace PackingTool.WebAPI.Controllers
@@ -14,6 +15,7 @@ namespace PackingTool.WebAPI.Controllers
             _userService = userService;
         }
 
+        [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<CoreService.Output.AuthenticateResponse> Authenticate(
             [FromBody] CoreService.Input.AuthenticateUser user
@@ -22,6 +24,7 @@ namespace PackingTool.WebAPI.Controllers
             return await _userService.Authenticate(user);
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<CoreService.Output.UserResponse> Register(
             [FromBody] CoreService.Input.RegisterUser user

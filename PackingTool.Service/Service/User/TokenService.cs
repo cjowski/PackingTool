@@ -15,7 +15,7 @@ namespace PackingTool.Service.Service.User
             IConfiguration config
         )
         {
-            _apiKey = config.GetRequiredSection("Token:ApiKey").Value!;
+            _apiKey = config.GetRequiredSection("Token:Key").Value!;
         }
 
         public string GenerateToken(int userID)
