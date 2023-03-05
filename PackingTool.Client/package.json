@@ -15,7 +15,6 @@
   "dependencies": {
     "@quasar/extras": "^1.15.0",
     "axios": "^0.27.2",
-    "firebase": "^9.9.3",
     "jszip": "^3.10.1",
     "openapi-typescript-codegen": "^0.23.0",
     "pinia": "^2.0.16",

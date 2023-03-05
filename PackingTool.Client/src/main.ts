@@ -3,8 +3,6 @@ import { Quasar, Notify, LocalStorage, Loading } from "quasar"
 import { createPinia } from "pinia"
 import App from "./App.vue"
 import router from "./router"
-import { initializeApp, type FirebaseOptions } from "firebase/app"
-import { firebaseConfig } from "@/config/config.json"
 import { OpenAPI } from "./api/core/OpenAPI"
 
 import "./assets/main.css"
@@ -16,7 +14,6 @@ import "@quasar/extras/animate/fadeOut.css"
 // import iconSet from 'quasar/icon-set/fontawesome-v6'
 // import '@quasar/extras/fontawesome-v6/fontawesome-v6.css'
 import "quasar/src/css/index.sass"
-initializeApp(firebaseConfig as FirebaseOptions)
 OpenAPI.BASE = window.location.origin
 
 createApp(App)

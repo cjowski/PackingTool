@@ -16,7 +16,7 @@ namespace PackingTool.WebAPI.Controllers
             _packingService = packingService;
         }
 
-        [HttpGet("List")]
+        [HttpGet("list")]
         public async Task<CoreService.Json.PackingList> GetList(
             int listID
         )
@@ -24,7 +24,7 @@ namespace PackingTool.WebAPI.Controllers
             return await _packingService.GetList(listID);
         }
 
-        [HttpGet("Json")]
+        [HttpGet("json")]
         public async Task<string> GetJson(
             int listID
         )
@@ -32,7 +32,7 @@ namespace PackingTool.WebAPI.Controllers
             return await _packingService.GetJson(listID);
         }
 
-        [HttpGet("ListDescriptionsForUser")]
+        [HttpGet("listDescriptionsForUser")]
         public async Task<CoreService.Output.PackingListDescription[]> GetListDescriptionsForUser(
             int userID
         )
@@ -40,8 +40,8 @@ namespace PackingTool.WebAPI.Controllers
             return await _packingService.GetListDescriptionsForUser(userID);
         }
 
-        [HttpPost("SaveList")]
-        public async Task<int> SaveList(
+        [HttpPost("save")]
+        public async Task<int> Save(
             [FromBody] CoreService.Json.PackingList list,
             int userID
         )
@@ -49,8 +49,8 @@ namespace PackingTool.WebAPI.Controllers
             return await _packingService.SaveListForUser(list, userID);
         }
 
-        [HttpPost("SaveListFromJsonFile")]
-        public async Task<int> SaveListFromJsonFile(
+        [HttpPost("saveFromJsonFile")]
+        public async Task<int> SaveFromJsonFile(
             IFormFile file,
             int userID
         )
@@ -71,8 +71,8 @@ namespace PackingTool.WebAPI.Controllers
             return await _packingService.SaveJsonListForUser(listName, jsonList, userID);
         }
 
-        [HttpPost("UpdateListName")]
-        public async Task UpdateListName(
+        [HttpPost("updateName")]
+        public async Task UpdateName(
             int listID,
             string newName,
             int userID
@@ -81,8 +81,8 @@ namespace PackingTool.WebAPI.Controllers
             await _packingService.UpdateListName(listID, newName, userID);
         }
 
-        [HttpDelete("DeleteList")]
-        public async Task DeleteList(
+        [HttpDelete("delete")]
+        public async Task Delete(
             int listID,
             int userID
         )

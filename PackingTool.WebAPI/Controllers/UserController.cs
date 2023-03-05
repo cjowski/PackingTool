@@ -14,12 +14,20 @@ namespace PackingTool.WebAPI.Controllers
             _userService = userService;
         }
 
-        [HttpPost("AddUser")]
-        public async Task AddUser(
+        [HttpPost("authenticate")]
+        public async Task<CoreService.Output.AuthenticateResponse> Authenticate(
+            [FromBody] CoreService.Input.AuthenticateUser user
+        )
+        {
+            return await _userService.Authenticate(user);
+        }
+
+        [HttpPost("register")]
+        public async Task<CoreService.Output.UserResponse> Register(
             [FromBody] CoreService.Input.RegisterUser user
         )
         {
-            await _userService.AddUser(user);
+            return await _userService.Register(user);
         }
     }
 }

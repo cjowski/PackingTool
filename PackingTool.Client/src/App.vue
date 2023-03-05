@@ -3,16 +3,16 @@
     <q-header elevated height-hint="98" class="z-top">
       <q-toolbar class="toolbar-font">
         <q-btn
-          v-if="userAuthorized"
+          v-if="isAuthorized()"
           flat
-          @click="drawer = !drawer"
+          @click="showPackingLists"
           round
           dense
           icon="menu"
         />
         <q-toolbar-title
           class="text-bold non-selectable cursor-pointer"
-          @click="drawer = !drawer"
+          @click="showPackingLists"
         >
           Packing lists
         </q-toolbar-title>
@@ -20,16 +20,16 @@
         <q-btn to="/login" flat no-caps size="20px"
           ><span class="text-bold">LogIn</span></q-btn
         >
-        <q-btn to="/signup" flat no-caps size="20px"
-          ><span class="text-bold">SignUp</span></q-btn
+        <q-btn to="/register" flat no-caps size="20px"
+          ><span class="text-bold">Register</span></q-btn
         >
-        <q-btn v-if="userAuthorized" @click="doLogout" flat no-caps size="20px"
+        <q-btn v-if="isAuthorized()" @click="doLogout" flat no-caps size="20px"
           ><span class="text-bold">LogOut</span></q-btn
         >
       </q-toolbar>
     </q-header>
 
-    <PackingLists v-model="drawer"></PackingLists>
+    <PackingLists v-model="packingListsShown"></PackingLists>
 
     <q-page-container>
       <router-view />
@@ -38,21 +38,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import router from "./router"
-import { useAuthStore } from "./stores/authStore"
+import { useAuthenticationStore } from "./stores/authenticationStore"
 import PackingLists from "./components/packing/sideDrawer/PackingLists.vue"
-const { userAuthorized, logout } = useAuthStore()
+import { useRoute } from "vue-router"
+const { isAuthorized, logout } = useAuthenticationStore()
 
+const route = useRoute()
 const $q = useQuasar()
 $q.dark.toggle()
-const drawer = ref(true)
+const packingListsShown = ref(isAuthorized())
 
 const doLogout = async () => {
   await logout()
   router.push("/login")
 }
+
+const showPackingLists = () => {
+  if (!isAuthorized()) {
+    return false
+  }
+
+  packingListsShown.value = !packingListsShown.value
+}
+
+watch(
+  route,
+  () => {
+    packingListsShown.value = isAuthorized()
+  },
+  { flush: "pre", immediate: true, deep: true }
+)
 </script>
 
 <style scoped lang="scss">

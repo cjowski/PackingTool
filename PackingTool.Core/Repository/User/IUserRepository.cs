@@ -2,9 +2,10 @@
 {
     public interface IUserRepository
     {
-        Task<bool> UserNameExists(string userName);
+        Task<int> GetUserID(string userName);
+        Task<bool> EmailExists(string email);
         Task AddUser(Input.RegisterUser registerUser);
-        Task<string> GetPasswordHash(string userName);
-        Task UpdatePassword(string userName, string password);
+        Task<string> GetPasswordHash(int userID);
+        Task UpdatePassword(int userID, string password);
     }
 }

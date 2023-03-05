@@ -13,11 +13,21 @@ namespace PackingTool.Database.Repository
             _context = context;
         }
 
-        public async Task<bool> UserNameExists(
+        public async Task<int> GetUserID(
             string userName
         )
         {
-            return await _context.User.AnyAsync(u => u.UserName == userName);
+            return await _context.User
+                .Where(u => u.UserName == userName)
+                .Select(u => u.UserId)
+                .SingleOrDefaultAsync();
+        }
+
+        public async Task<bool> EmailExists(
+            string email
+        )
+        {
+            return await _context.User.AnyAsync(u => u.Email == email);
         }
 
         public async Task AddUser(
@@ -39,20 +49,20 @@ namespace PackingTool.Database.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<string> GetPasswordHash(string userName)
+        public async Task<string> GetPasswordHash(int userID)
         {
             return await _context.User
-                .Where(u => u.UserName == userName)
+                .Where(u => u.UserId == userID)
                 .Select(u => u.PasswordHash)
                 .SingleAsync();
         }
 
         public async Task UpdatePassword(
-            string userName,
+            int userID,
             string password
         )
         {
-            var user = await _context.User.SingleAsync(x => x.UserName == userName);
+            var user = await _context.User.SingleAsync(x => x.UserId == userID);
             user.PasswordHash = password;
             user.ModifiedUserId = user.UserId;
             user.ModifiedDate = DateTime.Now;

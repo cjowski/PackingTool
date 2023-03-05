@@ -1,13 +1,11 @@
 <template>
   <q-page>
     <div class="row q-mt-md">
-      <q-card class="login-font" style="width: 400px">
+      <q-card class="register-font" style="width: 400px">
         <q-card-section horizontal>
           <q-item class="col">
             <q-item-section>
-              <q-item-label class="text-h5 text-bold">
-                LogIn
-              </q-item-label>
+              <q-item-label class="text-h5 text-bold"> Register </q-item-label>
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -26,7 +24,21 @@
                 @blur="validateUserName"
                 :error="userNameError.length > 0"
                 :error-message="userNameError"
-                class="login-input"
+                class="register-input"
+              />
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section>
+              <q-input
+                v-model="email"
+                type="email"
+                outlined
+                label="Email"
+                @blur="validateEmail"
+                :error="emailError.length > 0"
+                :error-message="emailError"
+                class="register-input"
               />
             </q-item-section>
           </q-item>
@@ -37,17 +49,17 @@
                 type="password"
                 outlined
                 label="Password"
-                v-on:keyup.enter="doLogin"
+                v-on:keyup.enter="doRegister"
                 @blur="validatePassword"
                 :error="passwordError.length > 0"
                 :error-message="passwordError"
-                class="login-input"
+                class="register-input"
               />
             </q-item-section>
           </q-item>
           <q-item>
             <q-item-section class="text-red text-bold text-body1">
-              {{ loginError }}
+              {{ registerError }}
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -55,7 +67,9 @@
         <q-card-actions vertical class="q-pt-none">
           <q-item class="q-pt-none">
             <q-item-section>
-              <q-btn size="18px" color="primary" @click="doLogin">Login</q-btn>
+              <q-btn size="18px" color="primary" @click="doRegister"
+                >Register</q-btn
+              >
             </q-item-section>
           </q-item>
         </q-card-actions>
@@ -69,15 +83,17 @@ import { ref } from "vue"
 import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 
-const { login } = useAuthenticationStore()
+const { register } = useAuthenticationStore()
 
 const userName = ref("")
+const email = ref("")
 const password = ref("")
 
 const userNameError = ref("")
+const emailError = ref("")
 const passwordError = ref("")
 
-const loginError = ref("")
+const registerError = ref("")
 
 const validateUserName = () => {
   if (!userName.value) {
@@ -94,6 +110,22 @@ const validateUserName = () => {
   userNameError.value = ""
 }
 
+const validateEmail = () => {
+  if (!email.value) {
+    emailError.value = "Please enter email address"
+    return
+  }
+
+  const reg =
+    /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+  if (!reg.test(email.value)) {
+    emailError.value = "Please enter valid email address"
+    return
+  }
+
+  emailError.value = ""
+}
+
 const validatePassword = () => {
   if (!password.value) {
     passwordError.value = "Please enter password"
@@ -103,29 +135,30 @@ const validatePassword = () => {
   passwordError.value = ""
 }
 
-const doLogin = async () => {
+const doRegister = async () => {
   validateUserName()
+  validateEmail()
   validatePassword()
 
-  if (userNameError.value || passwordError.value) {
+  if (userNameError.value || emailError.value || passwordError.value) {
     return
   }
-  
-  const response = await login(userName.value, password.value)
+
+  const response = await register(userName.value, email.value, password.value)
 
   if (response.success) {
     router.push("/")
   } else {
-    loginError.value = response.message!
+    registerError.value = response.message!
   }
 }
 </script>
 
 <style scoped lang="scss">
-.login-font {
+.register-font {
   font-family: "Ink Free";
 }
-.login-input {
+.register-input {
   :deep(.q-field__control) {
     padding: 5px 10px;
     height: 50px;

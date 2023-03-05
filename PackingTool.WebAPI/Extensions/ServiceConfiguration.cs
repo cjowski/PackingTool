@@ -25,6 +25,10 @@ namespace PackingTool.WebAPI.Extensions
                     Service.Service.User.UserService
                 >()
                 .AddScoped<
+                    Core.Service.User.ITokenService,
+                    Service.Service.User.TokenService
+                >()
+                .AddScoped<
                     Core.Service.PackingList.IPackingListService,
                     Service.Service.PackingList.PackingListService
                 >();

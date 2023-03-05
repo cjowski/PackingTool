@@ -98,7 +98,7 @@ export class PackingListManager {
 
     list.name = newName
     if (list.state != PackingListState.New) {
-      await PackingListService.postApiPackingListUpdateListName({
+      await PackingListService.postApiPackingListUpdateName({
         listId: id,
         newName: newName,
         userId: this._userID,
@@ -115,7 +115,7 @@ export class PackingListManager {
     }
 
     if (list.state != PackingListState.New) {
-      await PackingListService.deleteApiPackingListDeleteList({
+      await PackingListService.deleteApiPackingListDelete({
         listId: id,
         userId: this._userID,
       })
@@ -157,7 +157,7 @@ export class PackingListManager {
     if (this.AnyActionInProgress()) return
     this._currentAction.value = PackingListAction.Saving
     const apiList = this._selectedPackingList.value.ToJson()
-    const listID = await PackingListService.postApiPackingListSaveList({
+    const listID = await PackingListService.postApiPackingListSave({
       userId: this._userID,
       requestBody: apiList,
     })

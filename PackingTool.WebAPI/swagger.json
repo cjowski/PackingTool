@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/PackingList/List": {
+    "/api/PackingList/list": {
       "get": {
         "tags": [
           "PackingList"
@@ -44,7 +44,7 @@
         }
       }
     },
-    "/api/PackingList/Json": {
+    "/api/PackingList/json": {
       "get": {
         "tags": [
           "PackingList"
@@ -83,7 +83,7 @@
         }
       }
     },
-    "/api/PackingList/ListDescriptionsForUser": {
+    "/api/PackingList/listDescriptionsForUser": {
       "get": {
         "tags": [
           "PackingList"
@@ -131,7 +131,7 @@
         }
       }
     },
-    "/api/PackingList/SaveList": {
+    "/api/PackingList/save": {
       "post": {
         "tags": [
           "PackingList"
@@ -192,7 +192,7 @@
         }
       }
     },
-    "/api/PackingList/SaveListFromJsonFile": {
+    "/api/PackingList/saveFromJsonFile": {
       "post": {
         "tags": [
           "PackingList"
@@ -254,7 +254,7 @@
         }
       }
     },
-    "/api/PackingList/UpdateListName": {
+    "/api/PackingList/updateName": {
       "post": {
         "tags": [
           "PackingList"
@@ -291,7 +291,7 @@
         }
       }
     },
-    "/api/PackingList/DeleteList": {
+    "/api/PackingList/delete": {
       "delete": {
         "tags": [
           "PackingList"
@@ -321,7 +321,7 @@
         }
       }
     },
-    "/api/User/AddUser": {
+    "/api/User/authenticate": {
       "post": {
         "tags": [
           "User"
@@ -330,24 +330,89 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/AuthenticateUser"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/AuthenticateUser"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/User"
+                "$ref": "#/components/schemas/AuthenticateUser"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Success"
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticateResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticateResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticateResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUser"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUser"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -355,6 +420,44 @@
   },
   "components": {
     "schemas": {
+      "AuthenticateResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "token": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AuthenticateUser": {
+        "required": [
+          "password",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "userName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "PackingGroup": {
         "required": [
           "id",
@@ -509,20 +612,40 @@
         },
         "additionalProperties": false
       },
-      "User": {
+      "RegisterUser": {
         "required": [
-          "name",
-          "password"
+          "email",
+          "password",
+          "userName"
         ],
         "type": "object",
         "properties": {
-          "name": {
+          "userName": {
             "minLength": 1,
             "type": "string"
           },
           "password": {
             "minLength": 1,
             "type": "string"
+          },
+          "email": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false

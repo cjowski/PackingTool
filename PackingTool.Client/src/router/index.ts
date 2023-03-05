@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthenticationStore } from '@/stores/authenticationStore'
 import Login from '@/views/user/Login.vue'
-import SignUp from '@/views/user/SignUp.vue'
+import Register from '@/views/user/Register.vue'
 import PackingList from '@/views/PackingList.vue'
 import EmptyPage from '@/views/EmptyPage.vue'
 
@@ -25,19 +25,21 @@ const router = createRouter({
       component: Login
     },
     {
-      path: '/signup',
-      name: 'signup',
-      component: SignUp
+      path: '/register',
+      name: 'register',
+      component: Register
     }
   ]
 })
 
 router.beforeEach(async (to) => {
-  const publicPages = ['/login', '/signup']
-  const authRequired = !publicPages.includes(to.path)
-  const { userAuthorized } = useAuthStore()
+  const publicPages = ['/login', '/register']
+  if (publicPages.includes(to.path)) {
+    return
+  }
 
-  if (authRequired && !userAuthorized) {
+  const { isAuthorized } = useAuthenticationStore()
+  if (!isAuthorized()) {
     return { name: 'login', replace: true }
   }
 })
