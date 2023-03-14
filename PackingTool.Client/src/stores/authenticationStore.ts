@@ -1,4 +1,4 @@
-import { LocalStorage } from "quasar"
+import { SessionStorage } from "quasar"
 import { defineStore } from "pinia"
 import { ref } from "vue"
 import {
@@ -9,9 +9,23 @@ import {
 } from "@/api"
 
 export const useAuthenticationStore = defineStore("authentication", () => {
+
+  let _userID = -1
   const _userAuthorized = ref(false)
 
+  const userID = () => _userID
   const isAuthorized = () => _userAuthorized.value
+
+  const tryAutoLogin = async () => {
+    const userName = SessionStorage.getItem("userName") as string
+    const password = SessionStorage.getItem("password") as string
+    
+    if (!userName || !password) {
+      return false
+    }
+
+    return (await login(userName, password)).success
+  }
 
   const login = async (userName: string, password: string) => {
     const response = (await UserService.postApiUserAuthenticate({
@@ -19,8 +33,12 @@ export const useAuthenticationStore = defineStore("authentication", () => {
     })) as AuthenticateResponse
 
     if (response.success) {
+      _userID = response.userID
       _userAuthorized.value = true
       OpenAPI.TOKEN = response.token!
+
+      SessionStorage.set("userName", userName)
+      SessionStorage.set("password", password)
     }
 
     return response
@@ -41,7 +59,8 @@ export const useAuthenticationStore = defineStore("authentication", () => {
   const logout = async () => {
     _userAuthorized.value = false
     OpenAPI.TOKEN = ""
+    SessionStorage.clear()
   }
 
-  return { isAuthorized, login, register, logout }
+  return { userID, isAuthorized, tryAutoLogin, login, register, logout }
 })

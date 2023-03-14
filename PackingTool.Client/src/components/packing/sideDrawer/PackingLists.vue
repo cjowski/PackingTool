@@ -123,5 +123,4 @@ watch(
   { flush: "pre", immediate: true, deep: true }
 )
 
-packingListManager.FetchListDescriptions()
 </script>

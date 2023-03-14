@@ -8,9 +8,9 @@ import { PackingListState } from "@/models/packing/list/PackingListState"
 import { PackingList } from "@/models/packing/list/PackingList"
 import { PackingItem } from "@/models/packing/list/PackingItem"
 import { PackingListService } from "@/api"
+import { useAuthenticationStore } from "@/stores/authenticationStore"
 
 export class PackingListManager {
-  private _userID: number
   private _allPackingLists: Ref<PackingList[]>
   private _selectedPackingList: Ref<PackingList>
   private _selectedListName: Ref<string> //TODO verify if needed
@@ -21,7 +21,6 @@ export class PackingListManager {
   private _copiedItems: Ref<PackingItem[]>
 
   constructor(
-    userID: number,
     allPackingLists: Ref<PackingList[]>,
     packingList: Ref<PackingList>,
     selectedListName: Ref<string>,
@@ -31,7 +30,6 @@ export class PackingListManager {
     copiedGroups: Ref<PackingGroup[]>,
     copiedItems: Ref<PackingItem[]>
   ) {
-    this._userID = userID
     this._allPackingLists = allPackingLists
     this._selectedPackingList = packingList
     this._selectedListName = selectedListName
@@ -40,6 +38,11 @@ export class PackingListManager {
     this._previousAction = previousAction
     this._copiedGroups = copiedGroups
     this._copiedItems = copiedItems
+  }
+
+  GetUserID = () => {
+    const { userID } = useAuthenticationStore()
+    return userID()
   }
 
   AnyActionInProgress = () => {
@@ -77,7 +80,7 @@ export class PackingListManager {
     this._allListsFetched.value = false
     const fetchedLists =
       await PackingListService.getApiPackingListListDescriptionsForUser({
-        userId: this._userID,
+        userId: this.GetUserID(),
       })
     const lists = fetchedLists.map((fetchedList) =>
       PackingList.Unsynced(fetchedList.id, fetchedList.name)
@@ -101,7 +104,7 @@ export class PackingListManager {
       await PackingListService.postApiPackingListUpdateName({
         listId: id,
         newName: newName,
-        userId: this._userID,
+        userId: this.GetUserID(),
       })
     }
   }
@@ -117,7 +120,7 @@ export class PackingListManager {
     if (list.state != PackingListState.New) {
       await PackingListService.deleteApiPackingListDelete({
         listId: id,
-        userId: this._userID,
+        userId: this.GetUserID(),
       })
     }
 
@@ -158,7 +161,7 @@ export class PackingListManager {
     this._currentAction.value = PackingListAction.Saving
     const apiList = this._selectedPackingList.value.ToJson()
     const listID = await PackingListService.postApiPackingListSave({
-      userId: this._userID,
+      userId: this.GetUserID(),
       requestBody: apiList,
     })
     this._selectedPackingList.value.id = listID

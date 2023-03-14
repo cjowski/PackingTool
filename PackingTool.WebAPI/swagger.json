@@ -321,6 +321,47 @@
         }
       }
     },
+    "/api/User/userID": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/User/authenticate": {
       "post": {
         "tags": [
@@ -421,20 +462,31 @@
   "components": {
     "schemas": {
       "AuthenticateResponse": {
+        "required": [
+          "message",
+          "success",
+          "token",
+          "userID"
+        ],
         "type": "object",
         "properties": {
           "success": {
             "type": "boolean",
             "readOnly": true
           },
+          "userID": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
           "token": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "message": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true,
             "readOnly": true
           }
         },
@@ -652,17 +704,16 @@
       }
     },
     "securitySchemes": {
-      "Bearer": {
+      "basic": {
         "type": "http",
-        "description": "Please enter token",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "description": "Basic Authorization header using the Bearer scheme.",
+        "scheme": "basic"
       }
     }
   },
   "security": [
     {
-      "Bearer": [ ]
+      "basic": [ ]
     }
   ]
 }

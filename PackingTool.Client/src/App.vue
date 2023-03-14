@@ -17,10 +17,10 @@
           Packing lists
         </q-toolbar-title>
 
-        <q-btn to="/login" flat no-caps size="20px"
+        <q-btn v-if="!isAuthorized()" to="/login" flat no-caps size="20px"
           ><span class="text-bold">LogIn</span></q-btn
         >
-        <q-btn to="/register" flat no-caps size="20px"
+        <q-btn v-if="!isAuthorized()" to="/register" flat no-caps size="20px"
           ><span class="text-bold">Register</span></q-btn
         >
         <q-btn v-if="isAuthorized()" @click="doLogout" flat no-caps size="20px"

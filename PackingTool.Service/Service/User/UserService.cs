@@ -17,6 +17,13 @@ namespace PackingTool.Service.Service.User
             _tokenService = tokenService;
         }
 
+        public async Task<int> GetUserID(
+            string userName    
+        )
+        {
+            return await _repository.GetUserID(userName);
+        }
+
         public async Task<CoreService.Output.AuthenticateResponse> Authenticate(
             CoreService.Input.AuthenticateUser user
         )
@@ -36,7 +43,7 @@ namespace PackingTool.Service.Service.User
             }
 
             var token = _tokenService.GenerateToken(userID);
-            return CoreService.Output.AuthenticateResponse.Succeed(token);
+            return CoreService.Output.AuthenticateResponse.Succeed(userID, token);
         }
 
         public async Task<CoreService.Output.UserResponse> Register(

@@ -14,5 +14,14 @@ namespace PackingTool.Core.Service.User.Input
             UserName = string.Empty;
             Password = string.Empty;
         }
+
+        public AuthenticateUser(
+            string userName,
+            string password
+        )
+        {
+            UserName = userName;
+            Password = password;
+        }
     }
 }

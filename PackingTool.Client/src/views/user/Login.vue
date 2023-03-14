@@ -1,13 +1,11 @@
 <template>
   <q-page>
     <div class="row q-mt-md">
-      <q-card class="login-font" style="width: 400px">
+      <q-card v-if="isMounted" class="login-font" style="width: 400px">
         <q-card-section horizontal>
           <q-item class="col">
             <q-item-section>
-              <q-item-label class="text-h5 text-bold">
-                LogIn
-              </q-item-label>
+              <q-item-label class="text-h5 text-bold"> LogIn </q-item-label>
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -65,12 +63,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
+import { usePackingListStore } from "@/stores/packingListStore"
 
-const { login } = useAuthenticationStore()
+const { tryAutoLogin, login } = useAuthenticationStore()
+const { packingListManager } = usePackingListStore()
 
+const isMounted = ref(false)
 const userName = ref("")
 const password = ref("")
 
@@ -110,15 +111,26 @@ const doLogin = async () => {
   if (userNameError.value || passwordError.value) {
     return
   }
-  
+
   const response = await login(userName.value, password.value)
 
   if (response.success) {
+    packingListManager.FetchListDescriptions()
     router.push("/")
   } else {
     loginError.value = response.message!
   }
 }
+
+onMounted(async () => {
+  await tryAutoLogin().then((isSuccess) => {
+    if (isSuccess) {
+      packingListManager.FetchListDescriptions()
+      router.push("/")
+    }
+    isMounted.value = true
+  })
+})
 </script>
 
 <style scoped lang="scss">

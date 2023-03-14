@@ -16,6 +16,15 @@ namespace PackingTool.WebAPI.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("userID")]
+        public async Task<int> GetUserID(
+            [FromQuery] string userName
+        )
+        {
+            return await _userService.GetUserID(userName);
+        }
+
+        [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<CoreService.Output.AuthenticateResponse> Authenticate(
             [FromBody] CoreService.Input.AuthenticateUser user

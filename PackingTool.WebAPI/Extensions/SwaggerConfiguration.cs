@@ -10,14 +10,13 @@ namespace PackingTool.WebAPI.Extensions
         {
             services.AddSwaggerGen(c =>
             {
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("basic", new OpenApiSecurityScheme
                 {
-                    In = ParameterLocation.Header,
-                    Description = "Please enter token",
                     Name = "Authorization",
                     Type = SecuritySchemeType.Http,
-                    BearerFormat = "JWT",
-                    Scheme = "bearer"
+                    Scheme = "basic",
+                    In = ParameterLocation.Header,
+                    Description = "Basic Authorization header using the Bearer scheme."
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -27,11 +26,11 @@ namespace PackingTool.WebAPI.Extensions
                         {
                             Reference = new OpenApiReference
                             {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "basic"
                             }
                         },
-                        new string[]{}
+                        new string[] {}
                     }
                 });
             });
@@ -43,7 +42,7 @@ namespace PackingTool.WebAPI.Extensions
             this IApplicationBuilder app
         )
         {
-            app.UseMiddleware<Middleware.SwaggerAuthenticateMiddleware>();
+            //app.UseMiddleware<Middleware.SwaggerAuthenticateMiddleware>();
             app.UseSwagger();
             app.UseSwaggerUI(setup =>
             {
