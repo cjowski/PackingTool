@@ -35,7 +35,7 @@
                 type="password"
                 outlined
                 label="Password"
-                v-on:keyup.enter="doLogin"
+                @keydown.enter.prevent="doLogin"
                 @blur="validatePassword"
                 :error="passwordError.length > 0"
                 :error-message="passwordError"

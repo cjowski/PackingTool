@@ -17,7 +17,7 @@
                 </q-item-section>
 
                 <q-item-section>
-                  <q-item-label>{{ scope.opt }}</q-item-label>
+                  <q-item-label class="item-type-dropdown-label">{{ scope.opt }}</q-item-label>
                 </q-item-section>
               </q-item>
             </template>
@@ -231,5 +231,9 @@ const submitNewItem = () => {
 }
 .item-list-section {
   padding: 0 0 0 6px;
+}
+.item-type-dropdown-label {
+  font-family: "Ink Free";
+  font-size: 16px;
 }
 </style>

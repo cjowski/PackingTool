@@ -76,6 +76,34 @@ export class PackingListManager {
     return newList
   }
 
+  TryAddListFromJsonFile = async (jsonFile: File) => {
+    let fileName = jsonFile.name.replace(".json", "")
+    const json = await jsonFile.text()
+
+    try {
+      const listContent =
+        await PackingListService.postApiPackingListListContentFromJson({
+          requestBody: JSON.stringify(json),
+        })
+
+      const sameListNameCount = this._allPackingLists.value.filter(
+        (list) => list.name == fileName || list.name.startsWith(`${fileName} (`)
+      ).length
+      if (sameListNameCount) {
+        fileName += ` (${sameListNameCount})`
+      }
+
+      const newList = PackingList.New(fileName)
+      newList.content.Synchronize(listContent)
+      this._allPackingLists.value.push(newList)
+      return true
+    } catch (error) {
+      console.error(JSON.stringify(error))
+    }
+
+    return false
+  }
+
   FetchListDescriptions = async () => {
     this._allListsFetched.value = false
     const fetchedLists =

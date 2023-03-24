@@ -31,6 +31,13 @@ namespace PackingTool.Service.Service.PackingList
             return list;
         }
 
+        public CoreService.Json.PackingListContent GetListContentFromJson(
+            string jsonList
+        )
+        {
+            return CoreService.Json.PackingListContent.FromJson(jsonList);
+        }
+
         public async Task<string> GetJson(int listID)
         {
             if (!await _repository.ListExists(listID))

@@ -24,6 +24,14 @@ namespace PackingTool.WebAPI.Controllers
             return await _packingService.GetList(listID);
         }
 
+        [HttpPost("listContentFromJson")]
+        public CoreService.Json.PackingListContent GetListContentFromJson(
+            [FromBody] string json
+        )
+        {
+            return _packingService.GetListContentFromJson(json);
+        }
+
         [HttpGet("json")]
         public async Task<string> GetJson(
             int listID

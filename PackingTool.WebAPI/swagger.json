@@ -44,6 +44,54 @@
         }
       }
     },
+    "/api/PackingList/listContentFromJson": {
+      "post": {
+        "tags": [
+          "PackingList"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackingListContent"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackingListContent"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackingListContent"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PackingList/json": {
       "get": {
         "tags": [

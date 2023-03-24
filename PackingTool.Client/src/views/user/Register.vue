@@ -49,7 +49,7 @@
                 type="password"
                 outlined
                 label="Password"
-                v-on:keyup.enter="doRegister"
+                @keydown.enter.prevent="doRegister"
                 @blur="validatePassword"
                 :error="passwordError.length > 0"
                 :error-message="passwordError"
