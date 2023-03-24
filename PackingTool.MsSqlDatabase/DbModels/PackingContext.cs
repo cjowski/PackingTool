@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace PackingTool.Database.DbModels
+namespace PackingTool.MsSqlDatabase.DbModels
 {
     public partial class PackingContext : DbContext
     {

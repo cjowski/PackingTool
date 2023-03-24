@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Output = PackingTool.Core.Repository.PackingList.Output;
 
-namespace PackingTool.Database.Repository
+namespace PackingTool.MsSqlDatabase.Repository
 {
     public class PackingListRepository : Core.Repository.PackingList.IPackingListRepository
     {

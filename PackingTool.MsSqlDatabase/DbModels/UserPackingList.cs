@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PackingTool.Database.DbModels
+namespace PackingTool.MsSqlDatabase.DbModels
 {
     public partial class UserPackingList
     {

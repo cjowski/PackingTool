@@ -3,19 +3,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace PackingTool.Database.DbModels
+namespace PackingTool.MsSqlDatabase.DbModels
 {
-    public partial class User
+    public partial class PackingList
     {
-        public User()
+        public PackingList()
         {
             UserPackingList = new HashSet<UserPackingList>();
         }
 
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public string PasswordHash { get; set; }
-        public string Email { get; set; }
+        public int PackingListId { get; set; }
+        public string Name { get; set; }
+        public string Json { get; set; }
+        public bool Deleted { get; set; }
         public DateTime CreatedDate { get; set; }
         public int CreatedUserId { get; set; }
         public DateTime ModifiedDate { get; set; }

@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PackingTool.Core\PackingTool.Core.csproj" />
-    <ProjectReference Include="..\PackingTool.Database\PackingTool.Database.csproj" />
+    <ProjectReference Include="..\PackingTool.MsSqlDatabase\PackingTool.MsSqlDatabase.csproj" />
     <ProjectReference Include="..\PackingTool.Service\PackingTool.Service.csproj" />
   </ItemGroup>
 

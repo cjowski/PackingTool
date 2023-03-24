@@ -5,11 +5,11 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.WebAPI", "PackingTool.WebAPI\PackingTool.WebAPI.csproj", "{B03DA124-BEF6-45DA-93D7-D2F85F7AA7AA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.Database", "PackingTool.Database\PackingTool.Database.csproj", "{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.Core", "PackingTool.Core\PackingTool.Core.csproj", "{0BA2B0E8-FB99-40D7-B72E-39D3D610DBA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackingTool.Core", "PackingTool.Core\PackingTool.Core.csproj", "{0BA2B0E8-FB99-40D7-B72E-39D3D610DBA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.Service", "PackingTool.Service\PackingTool.Service.csproj", "{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackingTool.Service", "PackingTool.Service\PackingTool.Service.csproj", "{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.MsSqlDatabase", "PackingTool.MsSqlDatabase\PackingTool.MsSqlDatabase.csproj", "{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,6 @@ Global
 		{B03DA124-BEF6-45DA-93D7-D2F85F7AA7AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B03DA124-BEF6-45DA-93D7-D2F85F7AA7AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B03DA124-BEF6-45DA-93D7-D2F85F7AA7AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47FEF734-1E4E-4E98-AAFC-71F3F1224B40}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0BA2B0E8-FB99-40D7-B72E-39D3D610DBA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0BA2B0E8-FB99-40D7-B72E-39D3D610DBA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0BA2B0E8-FB99-40D7-B72E-39D3D610DBA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

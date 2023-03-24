@@ -9,11 +9,11 @@ namespace PackingTool.WebAPI.Extensions
             return services
                 .AddScoped<
                     Core.Repository.User.IUserRepository,
-                    Database.Repository.UserRepository
+                    MsSqlDatabase.Repository.UserRepository
                 >()
                 .AddScoped<
                     Core.Repository.PackingList.IPackingListRepository,
-                    Database.Repository.PackingListRepository
+                    MsSqlDatabase.Repository.PackingListRepository
                 >();
         }
 
@@ -41,7 +41,7 @@ namespace PackingTool.WebAPI.Extensions
         {
             return services
                 .AddEntityFrameworkSqlServer()
-                .AddDbContext<Database.DbModels.PackingContext>(options =>
+                .AddDbContext<MsSqlDatabase.DbModels.PackingContext>(options =>
                     options.UseSqlServer(connectionString)
                 );
         }

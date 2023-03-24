@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace PackingTool.Database.Repository
+namespace PackingTool.MsSqlDatabase.Repository
 {
     public class UserRepository : Core.Repository.User.IUserRepository
     {
