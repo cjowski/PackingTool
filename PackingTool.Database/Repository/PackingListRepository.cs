@@ -75,7 +75,8 @@ namespace PackingTool.Database.Repository
         public async Task<int> AddListForUser(
             string listName,
             string jsonList,
-            int userID
+            int userID,
+            int requestedUserID
         )
         {
             var packingList = new DbModels.PackingList()
@@ -84,9 +85,9 @@ namespace PackingTool.Database.Repository
                 Json = jsonList,
                 Deleted = false,
                 CreatedDate = DateTime.Now,
-                CreatedUserId = userID,
+                CreatedUserId = requestedUserID,
                 ModifiedDate = DateTime.Now,
-                ModifiedUserId = userID
+                ModifiedUserId = requestedUserID
             };
 
             _context.PackingList.Add(packingList);
@@ -97,7 +98,7 @@ namespace PackingTool.Database.Repository
                 UserId = userID,
                 PackingListId = packingList.PackingListId,
                 CreatedDate = DateTime.Now,
-                CreatedUserId = userID
+                CreatedUserId = requestedUserID
             };
 
             _context.UserPackingList.Add(userPackingList);
@@ -109,13 +110,13 @@ namespace PackingTool.Database.Repository
         public async Task UpdateList(
             int listID,
             string jsonList,
-            int userID
+            int requestedUserID
         )
         {
             var packingList = await _context.PackingList
                 .SingleAsync(x => x.PackingListId == listID);
             packingList.Json = jsonList;
-            packingList.ModifiedUserId = userID;
+            packingList.ModifiedUserId = requestedUserID;
             packingList.ModifiedDate = DateTime.Now;
             await _context.SaveChangesAsync();
         }
@@ -123,26 +124,26 @@ namespace PackingTool.Database.Repository
         public async Task UpdateListName(
             int listID,
             string newName,
-            int userID
+            int requestedUserID
         )
         {
             var packingList = await _context.PackingList
                 .SingleAsync(x => x.PackingListId == listID);
             packingList.Name = newName;
-            packingList.ModifiedUserId = userID;
+            packingList.ModifiedUserId = requestedUserID;
             packingList.ModifiedDate = DateTime.Now;
             await _context.SaveChangesAsync();
         }
 
         public async Task DeleteList(
             int listID,
-            int userID
+            int requestedUserID
         )
         {
             var packingList = await _context.PackingList
                 .SingleAsync(x => x.PackingListId == listID);
             packingList.Deleted = true;
-            packingList.ModifiedUserId = userID;
+            packingList.ModifiedUserId = requestedUserID;
             packingList.ModifiedDate = DateTime.Now;
             await _context.SaveChangesAsync();
         }

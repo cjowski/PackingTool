@@ -322,14 +322,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "userID",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         ],
         "responses": {
@@ -347,14 +339,6 @@
         "parameters": [
           {
             "name": "listID",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "userID",
             "in": "query",
             "schema": {
               "type": "integer",

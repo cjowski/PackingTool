@@ -71,7 +71,8 @@ namespace PackingTool.Service.Service.PackingList
 
         public async Task<int> SaveListForUser(
             CoreService.Json.PackingList list,
-            int userID
+            int userID,
+            int requestedUserID
         )
         {
             var jsonToSave = JsonConvert.SerializeObject(list.Content, Formatting.None);
@@ -85,7 +86,7 @@ namespace PackingTool.Service.Service.PackingList
             }
             else
             {
-                listID = await _repository.AddListForUser(list.Name, jsonToSave, userID);
+                listID = await _repository.AddListForUser(list.Name, jsonToSave, userID, requestedUserID);
             }
 
             return listID;
@@ -94,7 +95,8 @@ namespace PackingTool.Service.Service.PackingList
         public async Task<int> SaveJsonListForUser(
             string listName,
             string jsonList, 
-            int userID
+            int userID,
+            int requestedUserID
         )
         {
             var listContent = CoreService.Json.PackingListContent.FromJson(jsonList);
@@ -107,7 +109,7 @@ namespace PackingTool.Service.Service.PackingList
             }
             else
             {
-                listID = await _repository.AddListForUser(listName, jsonToSave, userID);
+                listID = await _repository.AddListForUser(listName, jsonToSave, userID, requestedUserID);
             }
 
             return listID;
@@ -116,15 +118,15 @@ namespace PackingTool.Service.Service.PackingList
         public async Task UpdateListName(
             int listID,
             string newName,
-            int userID
+            int requestedUserID
         )
         {
-            await _repository.UpdateListName(listID, newName, userID);
+            await _repository.UpdateListName(listID, newName, requestedUserID);
         }
 
-        public async Task DeleteList(int listID, int userID)
+        public async Task DeleteList(int listID, int requestedUserID)
         {
-            await _repository.DeleteList(listID, userID);
+            await _repository.DeleteList(listID, requestedUserID);
         }
     }
 }

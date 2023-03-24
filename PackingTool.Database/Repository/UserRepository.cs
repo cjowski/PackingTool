@@ -31,7 +31,8 @@ namespace PackingTool.Database.Repository
         }
 
         public async Task AddUser(
-            Core.Repository.User.Input.RegisterUser registerUser
+            Core.Repository.User.Input.RegisterUser registerUser,
+            int requestedUserID
         )
         {
             var user = new DbModels.User()
@@ -40,9 +41,9 @@ namespace PackingTool.Database.Repository
                 PasswordHash = registerUser.PasswordHash,
                 Email = registerUser.Email,
                 CreatedDate = DateTime.Now,
-                CreatedUserId = Constants.Constants.SystemUserID,
+                CreatedUserId = requestedUserID,
                 ModifiedDate = DateTime.Now,
-                ModifiedUserId = Constants.Constants.SystemUserID
+                ModifiedUserId = requestedUserID
             };
 
             _context.User.Add(user);
@@ -59,12 +60,13 @@ namespace PackingTool.Database.Repository
 
         public async Task UpdatePassword(
             int userID,
-            string password
+            string password,
+            int requestedUserID
         )
         {
             var user = await _context.User.SingleAsync(x => x.UserId == userID);
             user.PasswordHash = password;
-            user.ModifiedUserId = user.UserId;
+            user.ModifiedUserId = requestedUserID;
             user.ModifiedDate = DateTime.Now;
             await _context.SaveChangesAsync();
         }

@@ -47,7 +47,8 @@ namespace PackingTool.Service.Service.User
         }
 
         public async Task<CoreService.Output.UserResponse> Register(
-            CoreService.Input.RegisterUser user
+            CoreService.Input.RegisterUser user,
+            int requestedUserID
         )
         {
             if (await _repository.GetUserID(user.UserName) > 0)
@@ -68,14 +69,15 @@ namespace PackingTool.Service.Service.User
                 passwordHash: passwordHash,
                 email: user.Email
             );
-            await _repository.AddUser(registerUserDb);
+            await _repository.AddUser(registerUserDb, requestedUserID);
 
             return CoreService.Output.UserResponse.Succeed();
         }
 
         public async Task<CoreService.Output.UserResponse> UpdatePassword(
             string userName,
-            string password
+            string password,
+            int requestedUserID
         )
         {
             var userID = await _repository.GetUserID(userName);
@@ -86,7 +88,7 @@ namespace PackingTool.Service.Service.User
             }
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
-            await _repository.UpdatePassword(userID, passwordHash);
+            await _repository.UpdatePassword(userID, passwordHash, requestedUserID);
 
             return CoreService.Output.UserResponse.Succeed();
         }

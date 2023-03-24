@@ -132,7 +132,6 @@ export class PackingListManager {
       await PackingListService.postApiPackingListUpdateName({
         listId: id,
         newName: newName,
-        userId: this.GetUserID(),
       })
     }
   }
@@ -148,7 +147,6 @@ export class PackingListManager {
     if (list.state != PackingListState.New) {
       await PackingListService.deleteApiPackingListDelete({
         listId: id,
-        userId: this.GetUserID(),
       })
     }
 

@@ -1,16 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using CoreService = PackingTool.Core.Service.User;
+using UserService = PackingTool.Core.Service.User;
 
 namespace PackingTool.WebAPI.Controllers
 {
     public class UserController : BaseApiController
     {
-        private CoreService.IUserService _userService { get; }
+        private UserService.IUserService _userService { get; }
 
         public UserController(
-            CoreService.IUserService userService
-        )
+            UserService.ITokenService tokenService,
+            UserService.IUserService userService
+        ) : base(tokenService)
         {
             _userService = userService;
         }
@@ -26,8 +27,8 @@ namespace PackingTool.WebAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public async Task<CoreService.Output.AuthenticateResponse> Authenticate(
-            [FromBody] CoreService.Input.AuthenticateUser user
+        public async Task<UserService.Output.AuthenticateResponse> Authenticate(
+            [FromBody] UserService.Input.AuthenticateUser user
         )
         {
             return await _userService.Authenticate(user);
@@ -35,11 +36,11 @@ namespace PackingTool.WebAPI.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<CoreService.Output.UserResponse> Register(
-            [FromBody] CoreService.Input.RegisterUser user
+        public async Task<UserService.Output.UserResponse> Register(
+            [FromBody] UserService.Input.RegisterUser user
         )
         {
-            return await _userService.Register(user);
+            return await _userService.Register(user, GetRequestedUserID());
         }
     }
 }

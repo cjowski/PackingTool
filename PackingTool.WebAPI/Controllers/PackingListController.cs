@@ -1,23 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text;
-using CoreService = PackingTool.Core.Service.PackingList;
+using PackingListService = PackingTool.Core.Service.PackingList;
 
 namespace PackingTool.WebAPI.Controllers
 {
     public class PackingListController : BaseApiController
     {
-
-        private CoreService.IPackingListService _packingService { get; }
+        private PackingListService.IPackingListService _packingService { get; }
 
         public PackingListController(
-            CoreService.IPackingListService packingService
-        )
+            Core.Service.User.ITokenService tokenService,
+            PackingListService.IPackingListService packingService
+        ) : base(tokenService)
         {
             _packingService = packingService;
         }
 
         [HttpGet("list")]
-        public async Task<CoreService.Json.PackingList> GetList(
+        public async Task<PackingListService.Json.PackingList> GetList(
             int listID
         )
         {
@@ -25,7 +25,7 @@ namespace PackingTool.WebAPI.Controllers
         }
 
         [HttpPost("listContentFromJson")]
-        public CoreService.Json.PackingListContent GetListContentFromJson(
+        public PackingListService.Json.PackingListContent GetListContentFromJson(
             [FromBody] string json
         )
         {
@@ -41,7 +41,7 @@ namespace PackingTool.WebAPI.Controllers
         }
 
         [HttpGet("listDescriptionsForUser")]
-        public async Task<CoreService.Output.PackingListDescription[]> GetListDescriptionsForUser(
+        public async Task<PackingListService.Output.PackingListDescription[]> GetListDescriptionsForUser(
             int userID
         )
         {
@@ -50,11 +50,11 @@ namespace PackingTool.WebAPI.Controllers
 
         [HttpPost("save")]
         public async Task<int> Save(
-            [FromBody] CoreService.Json.PackingList list,
+            [FromBody] PackingListService.Json.PackingList list,
             int userID
         )
         {
-            return await _packingService.SaveListForUser(list, userID);
+            return await _packingService.SaveListForUser(list, userID, GetRequestedUserID());
         }
 
         [HttpPost("saveFromJsonFile")]
@@ -76,26 +76,24 @@ namespace PackingTool.WebAPI.Controllers
 
             var listName = Path.GetFileNameWithoutExtension(file.FileName);
             var jsonList = Encoding.UTF8.GetString(stream.ToArray());
-            return await _packingService.SaveJsonListForUser(listName, jsonList, userID);
+            return await _packingService.SaveJsonListForUser(listName, jsonList, userID, GetRequestedUserID());
         }
 
         [HttpPost("updateName")]
         public async Task UpdateName(
             int listID,
-            string newName,
-            int userID
+            string newName
         )
         {
-            await _packingService.UpdateListName(listID, newName, userID);
+            await _packingService.UpdateListName(listID, newName, GetRequestedUserID());
         }
 
         [HttpDelete("delete")]
         public async Task Delete(
-            int listID,
-            int userID
+            int listID
         )
         {
-            await _packingService.DeleteList(listID, userID);
+            await _packingService.DeleteList(listID, GetRequestedUserID());
         }
     }
 }
