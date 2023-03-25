@@ -40,7 +40,7 @@ namespace PackingTool.WebAPI.Controllers
             [FromBody] UserService.Input.RegisterUser user
         )
         {
-            return await _userService.Register(user, GetRequestedUserID());
+            return await _userService.Register(user);
         }
     }
 }

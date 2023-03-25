@@ -13,13 +13,14 @@ BEGIN TRAN @TransactionName
 	SET @Password = '123'
 	
 
-	IF NOT EXISTS(SELECT 1 FROM dbo.[User] WHERE [Name] = @UserName)
+	IF NOT EXISTS(SELECT 1 FROM dbo.[User] WHERE UserName = @UserName)
 	BEGIN
 		
 		INSERT INTO dbo.[User]
 		(
-			[Name],
-			[Password],
+			UserName,
+			PasswordHash,
+			Email,
 			CreatedDate,
 			CreatedUserID,
 			ModifiedDate,
@@ -29,6 +30,7 @@ BEGIN TRAN @TransactionName
 		(
 			@UserName,
 			@Password,
+			'',
 			GETDATE(),
 			1,
 			GETDATE(),

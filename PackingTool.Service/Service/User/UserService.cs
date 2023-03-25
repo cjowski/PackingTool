@@ -47,8 +47,7 @@ namespace PackingTool.Service.Service.User
         }
 
         public async Task<CoreService.Output.UserResponse> Register(
-            CoreService.Input.RegisterUser user,
-            int requestedUserID
+            CoreService.Input.RegisterUser user
         )
         {
             if (await _repository.GetUserID(user.UserName) > 0)
@@ -69,7 +68,8 @@ namespace PackingTool.Service.Service.User
                 passwordHash: passwordHash,
                 email: user.Email
             );
-            await _repository.AddUser(registerUserDb, requestedUserID);
+            var systemUserID = await _repository.GetUserID(CoreRepository.UserContants.SystemUserName);
+            await _repository.AddUser(registerUserDb, systemUserID);
 
             return CoreService.Output.UserResponse.Succeed();
         }
