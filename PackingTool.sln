@@ -9,9 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.Core", "Packing
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.Service", "PackingTool.Service\PackingTool.Service.csproj", "{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.MsSqlDatabase", "PackingTool.MsSqlDatabase\PackingTool.MsSqlDatabase.csproj", "{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PackingTool.PostgreSqlDatabase", "PackingTool.PostgreSqlDatabase\PackingTool.PostgreSqlDatabase.csproj", "{EF00C3B8-255E-4764-AE2E-EE5EE15F6618}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PackingTool.Database", "PackingTool.Database\PackingTool.Database.csproj", "{4E8A991E-CE0F-4DA6-BAD7-5BC2A5B5C054}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +29,10 @@ Global
 		{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D737A3B-0B8E-4E15-883D-DF1B4BF1995B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34223D4F-B03A-469D-B0C8-07BFA0E86CBF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EF00C3B8-255E-4764-AE2E-EE5EE15F6618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF00C3B8-255E-4764-AE2E-EE5EE15F6618}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF00C3B8-255E-4764-AE2E-EE5EE15F6618}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF00C3B8-255E-4764-AE2E-EE5EE15F6618}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E8A991E-CE0F-4DA6-BAD7-5BC2A5B5C054}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E8A991E-CE0F-4DA6-BAD7-5BC2A5B5C054}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E8A991E-CE0F-4DA6-BAD7-5BC2A5B5C054}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E8A991E-CE0F-4DA6-BAD7-5BC2A5B5C054}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

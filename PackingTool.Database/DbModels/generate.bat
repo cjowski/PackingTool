@@ -1,0 +1,2 @@
+dotnet ef dbcontext scaffold --help
+dotnet ef dbcontext scaffold "Host=localhost;Database=PackingTool;Username=postgres;Password=kaszka18" Npgsql.EntityFrameworkCore.PostgreSQL -p ".." -o DbModels --no-onconfiguring --force

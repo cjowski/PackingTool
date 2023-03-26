@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PackingTool.PostgreSqlDatabase.DbModels
+namespace PackingTool.Database.DbModels
 {
     public partial class User
     {
         public User()
         {
-            UserLists = new HashSet<UserList>();
+            UserPackingLists = new HashSet<UserPackingList>();
         }
 
         public int UserId { get; set; }
@@ -22,6 +22,6 @@ namespace PackingTool.PostgreSqlDatabase.DbModels
         public DateTime ModifiedDate { get; set; }
         public int ModifiedUserId { get; set; }
 
-        public virtual ICollection<UserList> UserLists { get; set; }
+        public virtual ICollection<UserPackingList> UserPackingLists { get; set; }
     }
 }

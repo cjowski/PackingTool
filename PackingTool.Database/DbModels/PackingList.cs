@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PackingTool.PostgreSqlDatabase.DbModels
+namespace PackingTool.Database.DbModels
 {
-    public partial class List
+    public partial class PackingList
     {
-        public List()
+        public PackingList()
         {
-            UserLists = new HashSet<UserList>();
+            UserPackingLists = new HashSet<UserPackingList>();
         }
 
-        public int ListId { get; set; }
+        public int PackingListId { get; set; }
         public string ListName { get; set; } = null!;
         public string ListContent { get; set; } = null!;
         public bool Deleted { get; set; }
@@ -19,6 +19,6 @@ namespace PackingTool.PostgreSqlDatabase.DbModels
         public DateTime ModifiedDate { get; set; }
         public int ModifiedUserId { get; set; }
 
-        public virtual ICollection<UserList> UserLists { get; set; }
+        public virtual ICollection<UserPackingList> UserPackingLists { get; set; }
     }
 }
