@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <SpaRoot>..\PackingTool.Client</SpaRoot>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,15 +28,14 @@
   </Target>
 
   <Target Name="OpenAPIPublish" AfterTargets="Publish" Condition="$(Configuration)!='Debug'">
-    <Exec Command="dotnet swagger tofile --output ./swagger.json $(OutputPath)$(AssemblyName).dll v1" WorkingDirectory="$(ProjectDir)" />
     <Exec Command="npx openapi --input ../PackingTool.WebAPI/swagger.json --output src/api --client axios --postfix Service --useOptions --useUnionTypes" WorkingDirectory="$(ProjectDir)..\PackingTool.Client" />
   </Target>
 
-  <Target Name="PublishRunClient" AfterTargets="ComputeFilesToPublish">
+  <Target Name="PublishRunClient" AfterTargets="ComputeFilesToPublish" Condition="$(Configuration)=='Release'">
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm ci" />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
     <ItemGroup>
-      <DistFiles Include="$(SpaRoot)\dist\spa\**" />
+      <DistFiles Include="$(SpaRoot)\dist\**" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
         <RelativePath>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
