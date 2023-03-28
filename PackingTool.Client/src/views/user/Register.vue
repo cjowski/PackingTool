@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="row q-mt-md">
+    <div class="row q-mt-xl">
       <q-card class="register-font" style="width: 400px">
         <q-card-section horizontal>
           <q-item class="col">
@@ -46,7 +46,7 @@
             <q-item-section>
               <q-input
                 v-model="password"
-                type="password"
+                :type="viewPassword ? 'text' : 'password'"
                 outlined
                 label="Password"
                 @keydown.enter.prevent="doRegister"
@@ -54,7 +54,15 @@
                 :error="passwordError.length > 0"
                 :error-message="passwordError"
                 class="register-input"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="viewPassword ? 'visibility' : 'visibility_off'"
+                    class="cursor-pointer"
+                    @click="viewPassword = !viewPassword"
+                  />
+                </template>
+              </q-input>
             </q-item-section>
           </q-item>
           <q-item>
@@ -88,6 +96,8 @@ const { register } = useAuthenticationStore()
 const userName = ref("")
 const email = ref("")
 const password = ref("")
+
+const viewPassword = ref(false)
 
 const userNameError = ref("")
 const emailError = ref("")

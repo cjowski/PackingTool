@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="row q-mt-md">
+    <div class="row q-mt-xl">
       <q-card v-if="isMounted" class="login-font" style="width: 400px">
         <q-card-section horizontal>
           <q-item class="col">
@@ -32,7 +32,7 @@
             <q-item-section>
               <q-input
                 v-model="password"
-                type="password"
+                :type="viewPassword ? 'text' : 'password'"
                 outlined
                 label="Password"
                 @keydown.enter.prevent="doLogin"
@@ -40,12 +40,20 @@
                 :error="passwordError.length > 0"
                 :error-message="passwordError"
                 class="login-input"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="viewPassword ? 'visibility' : 'visibility_off'"
+                    class="cursor-pointer"
+                    @click="viewPassword = !viewPassword"
+                  />
+                </template>
+              </q-input>
             </q-item-section>
           </q-item>
           <q-item>
             <q-item-section class="text-red text-bold text-body1">
-              {{ loginError }}
+              {{ loginError }}{{ anotherLoginError ? "... again..." : "" }}
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -75,10 +83,13 @@ const isMounted = ref(false)
 const userName = ref("")
 const password = ref("")
 
+const viewPassword = ref(false)
+
 const userNameError = ref("")
 const passwordError = ref("")
 
 const loginError = ref("")
+const anotherLoginError = ref(false)
 
 const validateUserName = () => {
   if (!userName.value) {
@@ -117,8 +128,11 @@ const doLogin = async () => {
   if (response.success) {
     packingListManager.FetchListDescriptions()
     router.push("/")
+  } else if (response.message! == loginError.value) {
+    anotherLoginError.value = true
   } else {
     loginError.value = response.message!
+    anotherLoginError.value = false
   }
 }
 

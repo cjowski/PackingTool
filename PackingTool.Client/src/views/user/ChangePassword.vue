@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="row q-mt-md">
+    <div class="row q-mt-xl">
       <q-card class="change-password-font" style="width: 400px">
         <q-card-section horizontal>
           <q-item class="col">
@@ -19,7 +19,7 @@
             <q-item-section>
               <q-input
                 v-model="currentPassword"
-                type="password"
+                :type="viewCurrentPassword ? 'text' : 'password'"
                 autofocus
                 outlined
                 label="Current password"
@@ -27,28 +27,46 @@
                 :error="currentPasswordError.length > 0"
                 :error-message="currentPasswordError"
                 class="change-password-input"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="
+                      viewCurrentPassword ? 'visibility' : 'visibility_off'
+                    "
+                    class="cursor-pointer"
+                    @click="viewCurrentPassword = !viewCurrentPassword"
+                  />
+                </template>
+              </q-input>
             </q-item-section>
           </q-item>
           <q-item>
             <q-item-section>
               <q-input
                 v-model="newPassword"
-                type="password"
+                :type="viewNewPassword ? 'text' : 'password'"
                 outlined
                 label="New password"
                 @blur="validateNewPassword"
                 :error="newPasswordError.length > 0"
                 :error-message="newPasswordError"
                 class="change-password-input"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="viewNewPassword ? 'visibility' : 'visibility_off'"
+                    class="cursor-pointer"
+                    @click="viewNewPassword = !viewNewPassword"
+                  />
+                </template>
+              </q-input>
             </q-item-section>
           </q-item>
           <q-item class="q-pb-none">
             <q-item-section>
               <q-input
                 v-model="repeatNewPassword"
-                type="password"
+                :type="viewNewPassword ? 'text' : 'password'"
                 outlined
                 label="Repeat new password"
                 @keydown.enter.prevent="doChangePassword"
@@ -56,7 +74,15 @@
                 :error="repeatNewPasswordError.length > 0"
                 :error-message="repeatNewPasswordError"
                 class="change-password-input"
-              />
+              >
+                <template v-slot:append>
+                  <q-icon
+                    :name="viewNewPassword ? 'visibility' : 'visibility_off'"
+                    class="cursor-pointer"
+                    @click="viewNewPassword = !viewNewPassword"
+                  />
+                </template>
+              </q-input>
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -65,7 +91,7 @@
           <q-item class="q-pt-none">
             <q-item-section>
               <q-btn size="18px" color="primary" @click="doChangePassword"
-                >Change Password</q-btn
+                >Submit change</q-btn
               >
             </q-item-section>
           </q-item>
@@ -77,7 +103,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import { useQuasar } from "quasar";
+import { useQuasar } from "quasar"
 import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 
@@ -88,6 +114,9 @@ const $q = useQuasar()
 const currentPassword = ref("")
 const newPassword = ref("")
 const repeatNewPassword = ref("")
+
+const viewCurrentPassword = ref(false)
+const viewNewPassword = ref(false)
 
 const currentPasswordError = ref("")
 const newPasswordError = ref("")
