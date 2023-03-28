@@ -5,6 +5,6 @@
         Task<int> GetUserID(string username);
         Task<Output.AuthenticateResponse> Authenticate(Input.AuthenticateUser user);
         Task<Output.UserResponse> Register(Input.RegisterUser user);
-        Task<Output.UserResponse> UpdatePassword(string userName, string password, int requestedUserID);
+        Task<Output.UserResponse> ChangePassword(Input.ChangePassword changePassword, int userID, int requestedUserID);
     }
 }

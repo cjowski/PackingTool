@@ -16,7 +16,6 @@ namespace PackingTool.WebAPI.Controllers
             _userService = userService;
         }
 
-        [AllowAnonymous]
         [HttpPost("userID")]
         public async Task<int> GetUserID(
             [FromQuery] string userName
@@ -41,6 +40,15 @@ namespace PackingTool.WebAPI.Controllers
         )
         {
             return await _userService.Register(user);
+        }
+
+        [HttpPost("changePassword")]
+        public async Task<UserService.Output.UserResponse> ChangePassword(
+            [FromBody] UserService.Input.ChangePassword changePassword
+        )
+        {
+            var requestedUserID = GetRequestedUserID();
+            return await _userService.ChangePassword(changePassword, requestedUserID, requestedUserID);
         }
     }
 }

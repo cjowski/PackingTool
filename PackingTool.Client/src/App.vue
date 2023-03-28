@@ -23,6 +23,9 @@
         <q-btn v-if="!isAuthorized()" to="/register" flat no-caps size="20px"
           ><span class="text-bold">Register</span></q-btn
         >
+        <q-btn v-if="isAuthorized()" to="/changePassword" flat no-caps size="20px"
+          ><span class="text-bold">Change Password</span></q-btn
+        >
         <q-btn v-if="isAuthorized()" @click="doLogout" flat no-caps size="20px"
           ><span class="text-bold">LogOut</span></q-btn
         >

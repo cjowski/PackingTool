@@ -74,21 +74,21 @@ namespace PackingTool.Service.Service.User
             return CoreService.Output.UserResponse.Succeed();
         }
 
-        public async Task<CoreService.Output.UserResponse> UpdatePassword(
-            string userName,
-            string password,
+        public async Task<CoreService.Output.UserResponse> ChangePassword(
+            CoreService.Input.ChangePassword changePassword,
+            int userID,
             int requestedUserID
         )
         {
-            var userID = await _repository.GetUserID(userName);
-            if (userID == 0)
+            var currentPasswordHash = await _repository.GetPasswordHash(userID);
+            if (!BCrypt.Net.BCrypt.Verify(changePassword.CurrentPassword, currentPasswordHash))
             {
                 return CoreService.Output.UserResponse
-                    .Failed("Username is incorrect");
+                    .Failed("Current password is incorrect");
             }
 
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
-            await _repository.UpdatePassword(userID, passwordHash, requestedUserID);
+            var newPasswordHash = BCrypt.Net.BCrypt.HashPassword(changePassword.NewPassword);
+            await _repository.UpdatePassword(userID, newPasswordHash, requestedUserID);
 
             return CoreService.Output.UserResponse.Succeed();
         }
