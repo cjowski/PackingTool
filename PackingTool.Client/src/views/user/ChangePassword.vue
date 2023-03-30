@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import { useQuasar } from "quasar"
+import { QSpinnerHourglass, useQuasar } from "quasar"
 import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 
@@ -169,6 +169,14 @@ const doChangePassword = async () => {
     return
   }
 
+  $q.loading.show({
+    spinner: QSpinnerHourglass,
+    spinnerColor: "cyan",
+    spinnerSize: 140,
+    message: "Changing password...",
+    messageColor: "cyan",
+  })
+
   const response = await changePassword(
     currentPassword.value,
     newPassword.value
@@ -184,6 +192,8 @@ const doChangePassword = async () => {
   } else {
     currentPasswordError.value = response.message!
   }
+  
+  $q.loading.hide()
 }
 </script>
 

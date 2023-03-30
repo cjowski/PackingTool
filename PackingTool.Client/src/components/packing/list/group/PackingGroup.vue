@@ -8,6 +8,7 @@
     :setSelectedItemID="setSelectedItemID"
     :selectedItemIDs="selectedItemIDs"
     :finishEdit="finishEdit"
+    :editNameForItemID="editNameForItemID"
   />
   <q-card v-else :class="cardClass">
     <q-card-section
@@ -107,6 +108,7 @@
         :packing="packing"
         :selected="selectedItemIDs.includes(item.id)"
         :setSelectedItemID="setSelectedItemID"
+        :setEditItemName="editItemName"
       />
     </q-card-section>
 
@@ -160,6 +162,7 @@ const synchronizing = ref(false)
 const editing = ref(false)
 const showMoreButtons = ref(false)
 const selectedItemIDs = ref([] as number[])
+const editNameForItemID = ref(0)
 
 const packAllItemsCheckboxVisible = computed(
   () => props.packing && !editing.value && props.group.items.length > 1
@@ -193,12 +196,14 @@ const edit = () => {
   editing.value = true
   props.setSelectedGroupID(0, false) //todo clear
   selectedItemIDs.value.length = 0
+  editNameForItemID.value = 0
 }
 
 const finishEdit = () => {
   showMoreButtons.value = false
   editing.value = false
   selectedItemIDs.value.length = 0
+  editNameForItemID.value = 0
 }
 
 const remove = () => {
@@ -232,6 +237,11 @@ const setSelectedItemID = (itemID: number, allowMultiple: boolean) => {
   } else {
     selectedItemIDs.value.splice(selectedItemIDs.value.indexOf(itemID), 1)
   }
+}
+
+const editItemName = (itemID: number) => {
+  editNameForItemID.value = itemID
+  editing.value = true
 }
 
 const cardClass = computed(() => {
@@ -279,7 +289,7 @@ const selectAllItems = (event: KeyboardEvent) => {
   }
 }
 
-const copySelectedItems = (event: KeyboardEvent) => {
+const copyItems = (event: KeyboardEvent) => {
   if (
     currentSectionFocus.value == PackingSectionType.Items &&
     selectedItemIDs.value.length > 0 &&
@@ -297,7 +307,7 @@ const copySelectedItems = (event: KeyboardEvent) => {
   }
 }
 
-const cutSelectedItems = (event: KeyboardEvent) => {
+const cutItems = (event: KeyboardEvent) => {
   if (
     currentSectionFocus.value == PackingSectionType.Items &&
     selectedItemIDs.value.length > 0 &&
@@ -332,6 +342,19 @@ const pasteItems = (event: KeyboardEvent) => {
         props.group.id
       )
     })
+  }
+}
+
+const deleteItems = (event: KeyboardEvent) => {
+  if (
+    currentSectionFocus.value == PackingSectionType.Items &&
+    selectedItemIDs.value.length > 0 &&
+    event.key.toLowerCase() === "delete"
+  ) {
+    event.preventDefault()
+    selectedItemIDs.value.forEach((itemID) =>
+      packingListManager.RemoveItem(itemID, props.group.id)
+    )
   }
 }
 
@@ -389,18 +412,20 @@ const changeItemSort = (event: KeyboardEvent) => {
 
 onMounted(() => {
   window.addEventListener("keydown", selectAllItems)
-  window.addEventListener("keydown", copySelectedItems)
-  window.addEventListener("keydown", cutSelectedItems)
+  window.addEventListener("keydown", copyItems)
+  window.addEventListener("keydown", cutItems)
   window.addEventListener("keydown", pasteItems)
+  window.addEventListener("keydown", deleteItems)
   window.addEventListener("keydown", changeItemSelection)
   window.addEventListener("keydown", changeItemSort)
 })
 
 onUnmounted(() => {
   window.removeEventListener("keydown", selectAllItems)
-  window.removeEventListener("keydown", copySelectedItems)
-  window.removeEventListener("keydown", cutSelectedItems)
+  window.removeEventListener("keydown", copyItems)
+  window.removeEventListener("keydown", cutItems)
   window.removeEventListener("keydown", pasteItems)
+  window.removeEventListener("keydown", deleteItems)
   window.removeEventListener("keydown", changeItemSelection)
   window.removeEventListener("keydown", changeItemSort)
 })

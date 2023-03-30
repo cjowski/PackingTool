@@ -18,7 +18,7 @@
           autofocus
           @keydown.enter.prevent="submitModifiedName"
           @keydown.esc.prevent="editingName = false"
-          @focusout="editingName = false"
+          @focusout="submitModifiedName"
           class="item-name-input"
         ></q-input>
       </div>
@@ -85,10 +85,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  autofocusAndEditName: {
+    type: Boolean,
+    default: false,
+  },
 })
 
-const editingName = ref(false)
-const modifiedName = ref("")
+const editingName = ref(props.autofocusAndEditName)
+const modifiedName = ref(props.autofocusAndEditName ? props.item.name : "")
 
 const isImportant = computed(() => {
   return props.item.attributes.indexOf("Important") !== -1
@@ -110,9 +114,7 @@ const markImportance = () => {
     props.item.attributes.push("Important")
   } else {
     props.item.attributes.splice(
-      props.item.attributes.findIndex(
-        (attribute) => attribute === "Important"
-      ),
+      props.item.attributes.findIndex((attribute) => attribute === "Important"),
       1
     )
   }

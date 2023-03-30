@@ -3,6 +3,7 @@
     public enum PackingItemAttribute
     {
         Undefined,
-        Important
+        Important,
+        ToBuy
     }
 }

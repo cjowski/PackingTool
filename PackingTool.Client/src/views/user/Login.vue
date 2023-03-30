@@ -72,12 +72,15 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
+import { QSpinnerHourglass, useQuasar } from "quasar"
 import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 import { usePackingListStore } from "@/stores/packingListStore"
 
 const { tryAutoLogin, login } = useAuthenticationStore()
 const { packingListManager } = usePackingListStore()
+
+const $q = useQuasar()
 
 const isMounted = ref(false)
 const userName = ref("")
@@ -123,6 +126,7 @@ const doLogin = async () => {
     return
   }
 
+  showLoadingSpinner()
   const response = await login(userName.value, password.value)
 
   if (response.success) {
@@ -134,15 +138,29 @@ const doLogin = async () => {
     loginError.value = response.message!
     anotherLoginError.value = false
   }
+
+  $q.loading.hide()
+}
+
+const showLoadingSpinner = () => {
+  $q.loading.show({
+    spinner: QSpinnerHourglass,
+    spinnerColor: "cyan",
+    spinnerSize: 140,
+    message: "Logging...",
+    messageColor: "cyan",
+  })
 }
 
 onMounted(async () => {
+  showLoadingSpinner()
   await tryAutoLogin().then((isSuccess) => {
     if (isSuccess) {
       packingListManager.FetchListDescriptions()
       router.push("/")
     }
     isMounted.value = true
+    $q.loading.hide()
   })
 })
 </script>

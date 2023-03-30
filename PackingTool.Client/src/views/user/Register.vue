@@ -88,10 +88,13 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { QSpinnerHourglass, useQuasar } from "quasar";
 import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 
 const { register } = useAuthenticationStore()
+
+const $q = useQuasar()
 
 const userName = ref("")
 const email = ref("")
@@ -154,6 +157,14 @@ const doRegister = async () => {
     return
   }
 
+  $q.loading.show({
+    spinner: QSpinnerHourglass,
+    spinnerColor: "cyan",
+    spinnerSize: 140,
+    message: "Register...",
+    messageColor: "cyan",
+  })
+
   const response = await register(userName.value, email.value, password.value)
 
   if (response.success) {
@@ -161,6 +172,8 @@ const doRegister = async () => {
   } else {
     registerError.value = response.message!
   }
+
+  $q.loading.hide()
 }
 </script>
 

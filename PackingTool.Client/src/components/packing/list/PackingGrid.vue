@@ -162,6 +162,19 @@ const pasteGroups = (event: KeyboardEvent) => {
   }
 }
 
+const removeGroups = (event: KeyboardEvent) => {
+  if (
+    currentSectionFocus.value == PackingSectionType.Grid &&
+    selectedGroupIDs.value.length > 0 &&
+    event.key.toLowerCase() === "delete"
+  ) {
+    event.preventDefault()
+    selectedGroupIDs.value.forEach((groupID) =>
+      packingListManager.RemoveGroup(groupID)
+    )
+  }
+}
+
 const selectNextNode = (event: KeyboardEvent) => {
   if (event.altKey || selectedGroupIDs.value.length != 1) {
     return
@@ -221,6 +234,7 @@ onMounted(() => {
   window.addEventListener("keydown", copySelectedGroups)
   window.addEventListener("keydown", cutSelectedGroups)
   window.addEventListener("keydown", pasteGroups)
+  window.addEventListener("keydown", removeGroups)
   window.addEventListener("keydown", selectNextNode)
   window.addEventListener("keydown", moveNode)
 })
@@ -230,6 +244,7 @@ onUnmounted(() => {
   window.removeEventListener("keydown", copySelectedGroups)
   window.removeEventListener("keydown", cutSelectedGroups)
   window.removeEventListener("keydown", pasteGroups)
+  window.removeEventListener("keydown", removeGroups)
   window.removeEventListener("keydown", selectNextNode)
   window.removeEventListener("keydown", moveNode)
 })

@@ -6,6 +6,7 @@
     :selected="selected"
     :setSelectedItemID="setSelectedItemID"
     :itemClass="itemClass"
+    :autofocusAndEditName="autofocusAndEditName"
   />
   <PackPackingItem v-else-if="packing" :item="item" :itemClass="itemClass" />
   <q-item
@@ -14,6 +15,7 @@
     :class="itemClass"
     :clickable="true"
     @click="(event: MouseEvent) => setSelectedItemID(item.id, event.ctrlKey)"
+    @dblclick="setEditItemName(item.id)"
   >
     <q-btn
       v-if="isImportant && !packing && !importantSection && !edit"
@@ -41,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import PackPackingItem from "./PackPackingItem.vue"
 import EditPackingItem from "./EditPackingItem.vue"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
@@ -72,6 +74,14 @@ const props = defineProps({
     default: () => {},
   },
   importantSection: {
+    type: Boolean,
+    default: false,
+  },
+  setEditItemName: {
+    type: Function,
+    default: () => {},
+  },
+  autofocusAndEditName: {
     type: Boolean,
     default: false,
   },

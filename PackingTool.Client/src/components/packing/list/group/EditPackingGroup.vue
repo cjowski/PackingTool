@@ -17,7 +17,9 @@
                 </q-item-section>
 
                 <q-item-section>
-                  <q-item-label class="item-type-dropdown-label">{{ scope.opt }}</q-item-label>
+                  <q-item-label class="item-type-dropdown-label">{{
+                    scope.opt
+                  }}</q-item-label>
                 </q-item-section>
               </q-item>
             </template>
@@ -84,6 +86,7 @@
         :packing="false"
         :selected="selectedItemIDs.includes(item.id)"
         :setSelectedItemID="setSelectedItemID"
+        :autofocusAndEditName="editNameForItemID == item.id"
       />
     </q-card-section>
 
@@ -145,6 +148,10 @@ const props = defineProps({
   },
   finishEdit: {
     type: Function,
+    required: true,
+  },
+  editNameForItemID: {
+    type: Number,
     required: true,
   },
 })
