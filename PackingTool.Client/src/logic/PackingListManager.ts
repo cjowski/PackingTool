@@ -9,6 +9,7 @@ import { PackingList } from "@/models/packing/list/PackingList"
 import { PackingItem } from "@/models/packing/list/PackingItem"
 import { PackingListService } from "@/api"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
+import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 
 export class PackingListManager {
   private _allPackingLists: Ref<PackingList[]>
@@ -192,9 +193,9 @@ export class PackingListManager {
     })
     this._selectedPackingList.value.id = listID
     this._selectedPackingList.value.content.groups.forEach((group) => {
-      group.isNew = false
+      group.status = ExistenceStatus.Default
       group.items.forEach((item) => {
-        item.isNew = false
+        item.status = ExistenceStatus.Default
       })
     })
     this._selectedPackingList.value.state = PackingListState.Synced

@@ -1,5 +1,6 @@
 import type { PackingItem as ApiPackingItem } from "src/api/models/PackingItem"
 import type { PackingItemAttribute } from "src/api/models/PackingItemAttribute"
+import { ExistenceStatus } from "./ExistenceStatus"
 
 export class PackingItem implements ApiPackingItem {
   readonly id: number
@@ -7,7 +8,7 @@ export class PackingItem implements ApiPackingItem {
   count: number
   sort: number
   attributes: PackingItemAttribute[]
-  isNew: boolean
+  status: ExistenceStatus
   packed: boolean
 
   private constructor(
@@ -16,7 +17,7 @@ export class PackingItem implements ApiPackingItem {
     count: number,
     sort: number,
     attributes: PackingItemAttribute[],
-    isNew: boolean,
+    status: ExistenceStatus,
     packed: boolean
   ) {
     this.id = id
@@ -24,7 +25,7 @@ export class PackingItem implements ApiPackingItem {
     this.count = count
     this.sort = sort
     this.attributes = attributes
-    this.isNew = isNew
+    this.status = status
     this.packed = packed
   }
 
@@ -35,7 +36,7 @@ export class PackingItem implements ApiPackingItem {
     sort: number,
     attributes: PackingItemAttribute[]
   ) {
-    return new PackingItem(id, name, count, sort, attributes, true, false)
+    return new PackingItem(id, name, count, sort, attributes, ExistenceStatus.New, false)
   }
 
   static Undefined() {
@@ -45,7 +46,7 @@ export class PackingItem implements ApiPackingItem {
       1,
       1,
       [] as PackingItemAttribute[],
-      true,
+      ExistenceStatus.New,
       false
     )
   }
@@ -57,7 +58,7 @@ export class PackingItem implements ApiPackingItem {
       json.count,
       json.sort,
       json.attributes,
-      false,
+      ExistenceStatus.Default,
       json.packed
     )
   }

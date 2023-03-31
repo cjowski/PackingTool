@@ -47,6 +47,7 @@ import { computed, ref } from "vue"
 import PackPackingItem from "./PackPackingItem.vue"
 import EditPackingItem from "./EditPackingItem.vue"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
+import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus";
 
 const props = defineProps({
   item: {
@@ -90,7 +91,7 @@ const props = defineProps({
 const itemClass = computed(() => {
   let output = "q-pa-xs label-font shadow-transition"
   if (props.edit) output += " q-pb-none"
-  if (props.item.isNew) output += " new-item-label"
+  if (props.item.status == ExistenceStatus.New) output += " new-item-label"
   if (props.selected) output += " selected-item"
   return output
 })

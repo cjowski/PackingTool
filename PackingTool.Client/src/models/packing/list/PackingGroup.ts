@@ -3,13 +3,14 @@ import type { PackingItemType } from "src/api/models/PackingItemType"
 import type { PackingItemAttribute } from "src/api/models/PackingItemAttribute"
 import type { IGridElement } from "../grid/IGridElement"
 import { PackingItem } from "./PackingItem"
+import { ExistenceStatus } from "./ExistenceStatus"
 
 export class PackingGroup implements ApiPackingGroup, IGridElement {
   readonly id: number
   name: string
   type: PackingItemType
   sort: number
-  isNew: boolean
+  status: ExistenceStatus
   items: PackingItem[]
 
   private constructor(
@@ -17,23 +18,23 @@ export class PackingGroup implements ApiPackingGroup, IGridElement {
     name: string,
     type: PackingItemType,
     sort: number,
-    isNew: boolean,
+    status: ExistenceStatus,
     items: PackingItem[]
   ) {
     this.id = id
     this.name = name
     this.type = type
     this.sort = sort
-    this.isNew = isNew
+    this.status = status
     this.items = items
   }
 
   static New(id: number, name: string, type: PackingItemType, sort: number) {
-    return new PackingGroup(id, name, type, sort, true, [])
+    return new PackingGroup(id, name, type, sort, ExistenceStatus.New, [])
   }
 
   static Undefined() {
-    return new PackingGroup(0, "", "Other", 0, false, [])
+    return new PackingGroup(0, "", "Other", 0, ExistenceStatus.Default, [])
   }
 
   static FromJson(json: ApiPackingGroup) {
@@ -42,7 +43,7 @@ export class PackingGroup implements ApiPackingGroup, IGridElement {
       json.name,
       json.type,
       json.sort,
-      false,
+      ExistenceStatus.Default,
       json.items.map((item) => PackingItem.FromJson(item))
     )
   }

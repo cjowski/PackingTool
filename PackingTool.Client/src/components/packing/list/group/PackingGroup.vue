@@ -54,7 +54,7 @@
                       padding="sm"
                     />
                   </q-item>
-                  <q-item v-if="!group.isNew">
+                  <q-item v-if="group.status == ExistenceStatus.New">
                     <q-btn
                       icon="sync"
                       @click="synchronize"
@@ -131,6 +131,7 @@ import type { PackingGroup } from "@/models/packing/list/PackingGroup"
 import getIconByItemType from "@/methods/getIconForItemType"
 import { PackingListAction } from "@/enums/PackingListAction"
 import { PackingSectionType } from "@/enums/PackingSectionType"
+import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 
 const { packingListManager } = usePackingListStore()
 const { currentAction, currentSectionFocus, currentGroupIDFocus } = storeToRefs(
@@ -246,11 +247,11 @@ const editItemName = (itemID: number) => {
 
 const cardClass = computed(() => {
   let output = "shadow-transition header-font"
-  if (props.isSelected && props.group.isNew) {
+  if (props.isSelected && props.group.status == ExistenceStatus.New) {
     output += " new-selected-group-color"
   } else if (props.isSelected) {
     output += " selected-group-color"
-  } else if (props.group.isNew) {
+  } else if (props.group.status == ExistenceStatus.New) {
     output += " new-group-color"
   }
   return output
