@@ -537,6 +537,106 @@
           }
         }
       }
+    },
+    "/api/User/searchUsers": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "searchingPhrase",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDetails"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDetails"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDetails"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/User/authorizeUser": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/User/setTemporaryPassword": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetTemporaryPassword"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetTemporaryPassword"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetTemporaryPassword"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -544,6 +644,7 @@
       "AuthenticateResponse": {
         "required": [
           "message",
+          "roles",
           "success",
           "token",
           "userID"
@@ -562,6 +663,13 @@
           "token": {
             "minLength": 1,
             "type": "string",
+            "readOnly": true
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserRole"
+            },
             "readOnly": true
           },
           "message": {
@@ -786,7 +894,51 @@
         },
         "additionalProperties": false
       },
+      "SetTemporaryPassword": {
+        "required": [
+          "password",
+          "userID"
+        ],
+        "type": "object",
+        "properties": {
+          "userID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserDetails": {
+        "required": [
+          "authorized",
+          "userID",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "userID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "authorized": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "UserResponse": {
+        "required": [
+          "message",
+          "success"
+        ],
         "type": "object",
         "properties": {
           "success": {
@@ -794,12 +946,18 @@
             "readOnly": true
           },
           "message": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true,
             "readOnly": true
           }
         },
         "additionalProperties": false
+      },
+      "UserRole": {
+        "enum": [
+          "Admin"
+        ],
+        "type": "string"
       }
     },
     "securitySchemes": {

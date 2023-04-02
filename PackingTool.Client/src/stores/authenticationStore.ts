@@ -6,14 +6,17 @@ import {
   UserService,
   type AuthenticateResponse,
   type UserResponse,
+  type UserRole,
 } from "@/api"
 
 export const useAuthenticationStore = defineStore("authentication", () => {
   let _userID = -1
   const _userAuthorized = ref(false)
+  const _userRoles = ref([] as UserRole[])
 
   const userID = () => _userID
   const isAuthorized = () => _userAuthorized.value
+  const isAdmin = () => _userRoles.value.indexOf("Admin") !== -1
 
   const tryAutoLogin = async () => {
     const userName = SessionStorage.getItem("userName") as string
@@ -33,6 +36,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
 
     if (response.success) {
       _userID = response.userID
+      _userRoles.value = response.roles
       _userAuthorized.value = true
       OpenAPI.TOKEN = response.token!
 
@@ -82,6 +86,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
   return {
     userID,
     isAuthorized,
+    isAdmin,
     tryAutoLogin,
     login,
     register,

@@ -42,8 +42,17 @@ namespace PackingTool.Service.Service.User
                     .Failed("Username or password is incorrect");
             }
 
+            var userRolesDb = await _repository.GetUserRoles(userID);
+            var userRoles = userRolesDb
+                .Select(ur =>
+                    Enum.Parse<CoreService.Output.UserRole>(
+                        $"{char.ToUpperInvariant(ur[0])}{ur[1..]}"
+                    )
+                )
+                .ToArray();
+
             var token = _tokenService.GenerateToken(userID);
-            return CoreService.Output.AuthenticateResponse.Succeed(userID, token);
+            return CoreService.Output.AuthenticateResponse.Succeed(userID, userRoles, token);
         }
 
         public async Task<CoreService.Output.UserResponse> Register(
@@ -91,6 +100,40 @@ namespace PackingTool.Service.Service.User
             await _repository.UpdatePassword(userID, newPasswordHash, requestedUserID);
 
             return CoreService.Output.UserResponse.Succeed();
+        }
+
+        public async Task<CoreService.Output.UserDetails[]> SearchUsers(
+            string searchingPhrase
+        )
+        {
+            var userDetailsDb = await _repository.SearchUsers(searchingPhrase);
+            return userDetailsDb
+                .Select(u =>
+                    new CoreService.Output.UserDetails(
+                        userID: u.UserID,
+                        userName: u.UserName,
+                        authorized: u.Authorized
+                    )
+                )
+                .OrderBy(u => u.UserName)
+                .ToArray();
+        }
+
+        public async Task AuthorizeUser(
+            int userID,
+            int requestedUserID
+        )
+        {
+            await _repository.AuthorizeUser(userID, requestedUserID);
+        }
+
+        public async Task SetTemporaryPassword(
+            CoreService.Input.SetTemporaryPassword setTemporaryPassword,
+            int requestedUserID
+        )
+        {
+            var temporaryPasswordHash = BCrypt.Net.BCrypt.HashPassword(setTemporaryPassword.Password);
+            await _repository.SetTemporaryPassword(setTemporaryPassword.UserID, temporaryPasswordHash, requestedUserID);
         }
     }
 }

@@ -1,8 +1,12 @@
-﻿namespace PackingTool.Core.Service.User.Output
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PackingTool.Core.Service.User.Output
 {
     public class UserResponse
     {
+        [Required]
         public bool Success { get; }
+        [Required]
         public string Message { get; }
 
         private UserResponse(

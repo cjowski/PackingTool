@@ -1,12 +1,7 @@
 BEGIN;
 
-INSERT INTO users.user(
-	user_name,
-	password_hash,
-	email,
-	authorized,
-	deleted,
-	last_login_date,
+INSERT INTO users.role(
+	role_name,
 	created_date,
 	created_user_id,
 	modified_date,
@@ -14,11 +9,6 @@ INSERT INTO users.user(
 )
 SELECT
 	'admin',
-	'$2a$11$po8Fve/pEheUp5xv4sFb5uV8ircokBARICNZedT/O1JthtFL9Esjm',
-	'',
-	true,
-	false,
-	CURRENT_TIMESTAMP,
 	CURRENT_TIMESTAMP,
 	1,
 	CURRENT_TIMESTAMP,
@@ -29,5 +19,3 @@ WHERE
     );
 	
 COMMIT;
-	
-	

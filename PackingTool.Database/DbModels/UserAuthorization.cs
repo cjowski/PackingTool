@@ -3,15 +3,21 @@ using System.Collections.Generic;
 
 namespace PackingTool.Database.DbModels;
 
-public partial class UserPackingList
+public partial class UserAuthorization
 {
-    public int UserPackingListId { get; set; }
-
     public int UserId { get; set; }
 
-    public int PackingListId { get; set; }
+    public string PasswordHash { get; set; } = null!;
 
-    public bool Deleted { get; set; }
+    public bool Authorized { get; set; }
+
+    public bool RequiredNewPassword { get; set; }
+
+    public DateTime LastLoginDate { get; set; }
+
+    public int LoginAttemptsLeft { get; set; }
+
+    public DateTime LastLoginAttemptDate { get; set; }
 
     public DateTime CreatedDate { get; set; }
 
@@ -20,8 +26,6 @@ public partial class UserPackingList
     public DateTime ModifiedDate { get; set; }
 
     public int ModifiedUserId { get; set; }
-
-    public virtual PackingList PackingList { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
 }

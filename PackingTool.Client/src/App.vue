@@ -23,6 +23,9 @@
         <q-btn v-if="!isAuthorized()" to="/register" flat no-caps size="20px"
           ><span class="text-bold">Register</span></q-btn
         >
+        <q-btn v-if="isAdmin()" to="/admin" flat no-caps size="20px"
+          ><span class="text-bold">Admin</span></q-btn
+        >
         <q-btn v-if="isAuthorized()" to="/changePassword" flat no-caps size="20px"
           ><span class="text-bold">Change Password</span></q-btn
         >
@@ -47,7 +50,7 @@ import router from "./router"
 import { useAuthenticationStore } from "./stores/authenticationStore"
 import PackingLists from "./components/packing/sideDrawer/PackingLists.vue"
 import { useRoute } from "vue-router"
-const { isAuthorized, logout } = useAuthenticationStore()
+const { isAuthorized, isAdmin, logout } = useAuthenticationStore()
 
 const route = useRoute()
 const $q = useQuasar()

@@ -2,11 +2,8 @@ BEGIN;
 
 INSERT INTO users.user(
 	user_name,
-	password_hash,
 	email,
-	authorized,
 	deleted,
-	last_login_date,
 	created_date,
 	created_user_id,
 	modified_date,
@@ -15,10 +12,7 @@ INSERT INTO users.user(
 SELECT
 	'system',
 	'',
-	'',
-	true,
 	false,
-	CURRENT_TIMESTAMP,
 	CURRENT_TIMESTAMP,
 	1,
 	CURRENT_TIMESTAMP,

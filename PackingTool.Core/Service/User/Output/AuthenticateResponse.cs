@@ -11,23 +11,28 @@ namespace PackingTool.Core.Service.User.Output
         [Required]
         public string Token { get; }
         [Required]
+        public UserRole[] Roles { get; }
+        [Required]
         public string Message { get; }
 
         private AuthenticateResponse(
             bool success,
             int userID,
             string token,
+            UserRole[] roles,
             string message
         )
         {
             Success = success;
             UserID = userID;
             Token = token;
+            Roles = roles;
             Message = message;
         }
 
         public static AuthenticateResponse Succeed(
             int userID,
+            UserRole[] roles,
             string token    
         )
         {
@@ -35,6 +40,7 @@ namespace PackingTool.Core.Service.User.Output
                 success: true,
                 userID: userID,
                 token: token,
+                roles: roles,
                 message: string.Empty
             );
         }
@@ -47,6 +53,7 @@ namespace PackingTool.Core.Service.User.Output
                 success: false,
                 userID: -1,
                 token: string.Empty,
+                roles: Array.Empty<UserRole>(),
                 message: message
             );
         }

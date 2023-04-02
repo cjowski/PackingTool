@@ -219,7 +219,7 @@ const doChangePassword = async () => {
   :deep(.q-icon) {
     margin-top: -15px;
   }
-  :deep(.q-field__messages) {
+  :deep(.q-field__messages div) {
     font-size: 16px;
     font-weight: bold;
   }

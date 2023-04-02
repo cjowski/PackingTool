@@ -4,6 +4,7 @@ import Login from "@/views/user/Login.vue"
 import Register from "@/views/user/Register.vue"
 import ChangePassword from "@/views/user/ChangePassword.vue"
 import PackingList from "@/views/PackingList.vue"
+import AdminPanel from "@/views/AdminPanel.vue"
 import EmptyPage from "@/views/EmptyPage.vue"
 
 const router = createRouter({
@@ -35,6 +36,11 @@ const router = createRouter({
       name: "changePassword",
       component: ChangePassword,
     },
+    {
+      path: "/admin",
+      name: "admin",
+      component: AdminPanel,
+    },
   ],
 })
 
@@ -44,9 +50,13 @@ router.beforeEach(async (to) => {
     return
   }
 
-  const { isAuthorized } = useAuthenticationStore()
+  const { isAuthorized, isAdmin } = useAuthenticationStore()
   if (!isAuthorized()) {
     return { name: "login", replace: true }
+  }
+
+  if (to.path == "admin" && !isAdmin()) {
+    return { name: "home", replace: true }
   }
 })
 

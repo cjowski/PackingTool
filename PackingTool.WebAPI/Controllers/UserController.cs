@@ -50,5 +50,32 @@ namespace PackingTool.WebAPI.Controllers
             var requestedUserID = GetRequestedUserID();
             return await _userService.ChangePassword(changePassword, requestedUserID, requestedUserID);
         }
+
+        //TODO admin role!
+        [HttpGet("searchUsers")]
+        public async Task<UserService.Output.UserDetails[]> SearchUsers(
+            string searchingPhrase
+        )
+        {
+            return await _userService.SearchUsers(searchingPhrase);
+        }
+
+        //TODO admin role!
+        [HttpPost("authorizeUser")]
+        public async Task AuthorizeUser(
+            int userID
+        )
+        {
+            await _userService.AuthorizeUser(userID, GetRequestedUserID());
+        }
+
+        //TODO admin role!
+        [HttpPost("setTemporaryPassword")]
+        public async Task SetTemporaryPassword(
+            [FromBody] UserService.Input.SetTemporaryPassword setTemporaryPassword
+        )
+        {
+            await _userService.SetTemporaryPassword(setTemporaryPassword, GetRequestedUserID());
+        }
     }
 }
