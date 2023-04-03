@@ -9,7 +9,7 @@
         Task<string> GetPasswordHash(int userID);
         Task UpdatePassword(int userID, string password, int requestedUserID);
         Task<Output.UserDetailsDb[]> SearchUsers(string searchingPhrase);
-        Task AuthorizeUser(int userID, int requestedUserID);
+        Task AuthorizeUser(int userID, bool authorized, int requestedUserID);
         Task SetTemporaryPassword(int userID, string password, int requestedUserID);
     }
 }

@@ -124,11 +124,12 @@ namespace PackingTool.Database.Repository
 
         public async Task AuthorizeUser(
             int userID,
+            bool authorized,
             int requestedUserID
         )
         {
             var userAuthorization = await _context.UserAuthorizations.SingleAsync(x => x.UserId == userID);
-            userAuthorization.Authorized = true;
+            userAuthorization.Authorized = authorized;
             userAuthorization.ModifiedUserId = requestedUserID;
             userAuthorization.ModifiedDate = DateTime.Now;
             await _context.SaveChangesAsync();

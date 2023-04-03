@@ -28,7 +28,7 @@
               />
             </q-item-section>
           </q-item>
-          <q-item>
+          <q-item v-if="false">
             <q-item-section>
               <q-input
                 v-model="email"
@@ -153,7 +153,7 @@ const doRegister = async () => {
   validateEmail()
   validatePassword()
 
-  if (userNameError.value || emailError.value || passwordError.value) {
+  if (userNameError.value || passwordError.value) {
     return
   }
 
@@ -165,7 +165,7 @@ const doRegister = async () => {
     messageColor: "cyan",
   })
 
-  const response = await register(userName.value, email.value, password.value)
+  const response = await register(userName.value, password.value)
 
   if (response.success) {
     router.push("/")

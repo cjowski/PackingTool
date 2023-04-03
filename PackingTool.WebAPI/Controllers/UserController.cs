@@ -63,10 +63,11 @@ namespace PackingTool.WebAPI.Controllers
         //TODO admin role!
         [HttpPost("authorizeUser")]
         public async Task AuthorizeUser(
-            int userID
+            int userID,
+            bool authorized
         )
         {
-            await _userService.AuthorizeUser(userID, GetRequestedUserID());
+            await _userService.AuthorizeUser(userID, authorized, GetRequestedUserID());
         }
 
         //TODO admin role!

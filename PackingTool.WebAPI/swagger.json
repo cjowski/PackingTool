@@ -598,6 +598,13 @@
               "type": "integer",
               "format": "int32"
             }
+          },
+          {
+            "name": "authorized",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -873,7 +880,6 @@
       },
       "RegisterUser": {
         "required": [
-          "email",
           "password",
           "userName"
         ],
@@ -884,10 +890,6 @@
             "type": "string"
           },
           "password": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "email": {
             "minLength": 1,
             "type": "string"
           }

@@ -49,11 +49,10 @@ export const useAuthenticationStore = defineStore("authentication", () => {
 
   const register = async (
     userName: string,
-    email: string,
     password: string
   ) => {
     const response = (await UserService.postApiUserRegister({
-      requestBody: { userName: userName, password: password, email: email },
+      requestBody: { userName: userName, password: password },
     })) as UserResponse
 
     return response

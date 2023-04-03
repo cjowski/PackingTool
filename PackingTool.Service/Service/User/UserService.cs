@@ -65,17 +65,17 @@ namespace PackingTool.Service.Service.User
                     .Failed($"User '{user.UserName}' already exists");
             }
 
-            if (await _repository.EmailExists(user.Email))
-            {
-                return CoreService.Output.UserResponse
-                    .Failed($"Email address '{user.Email}' is already taken");
-            }
+            //if (await _repository.EmailExists(user.Email))
+            //{
+            //    return CoreService.Output.UserResponse
+            //        .Failed($"Email address '{user.Email}' is already taken");
+            //}
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(user.Password);
             var registerUserDb = new CoreRepository.Input.RegisterUser(
                 userName: user.UserName,
                 passwordHash: passwordHash,
-                email: user.Email
+                email: string.Empty //user.Email
             );
             var systemUserID = await _repository.GetUserID(CoreRepository.UserContants.SystemUserName);
             await _repository.AddUser(registerUserDb, systemUserID);
@@ -121,10 +121,11 @@ namespace PackingTool.Service.Service.User
 
         public async Task AuthorizeUser(
             int userID,
+            bool authorized,
             int requestedUserID
         )
         {
-            await _repository.AuthorizeUser(userID, requestedUserID);
+            await _repository.AuthorizeUser(userID, authorized, requestedUserID);
         }
 
         public async Task SetTemporaryPassword(
