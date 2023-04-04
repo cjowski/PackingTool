@@ -78,12 +78,10 @@
     </q-card-section>
 
     <q-card-section class="item-list-section">
-      <PackingItem
+      <EditPackingItem
         v-for="item in group.items"
         :item="item"
         :groupID="group.id"
-        :edit="true"
-        :packing="false"
         :selected="selectedItemIDs.includes(item.id)"
         :setSelectedItemID="setSelectedItemID"
         :autofocusAndEditName="editNameForItemID == item.id"
@@ -112,7 +110,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import PackingItem from "./item/PackingItem.vue"
+import EditPackingItem from "./EditPackingItem.vue"
 import type { PackingItemType } from "src/api/models/PackingItemType"
 import type { PackingItemAttribute } from "@/api/models/PackingItemAttribute"
 import type { PackingGroup } from "@/models/packing/list/PackingGroup"
@@ -134,13 +132,9 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  setSelectedGroupID: {
-    type: Function,
-    required: true,
-  },
   setSelectedItemID: {
     type: Function,
-    default: () => {},
+    required: true,
   },
   selectedItemIDs: {
     type: Array as () => Number[],

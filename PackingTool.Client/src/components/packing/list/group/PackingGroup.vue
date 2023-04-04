@@ -1,134 +1,40 @@
 <template>
+  <DisplayPackingGroup
+    v-if="displaying"
+    :group="group"
+    :isSelected="isSelected"
+    :selectedItemIDs="selectedItemIDs"
+    :setSelectedGroupID="selectGroup"
+    :setSelectedItemID="setSelectedItemID"
+    :setEditing="editGroup"
+    :setEditItemName="editItemName"
+    :cardClass="cardClass"
+  />
   <EditPackingGroup
     v-if="editing"
     :group="group"
     :isSelected="isSelected"
     :cardClass="cardClass"
-    :setSelectedGroupID="setSelectedGroupID"
+    :setSelectedGroupID="selectGroup"
     :setSelectedItemID="setSelectedItemID"
     :selectedItemIDs="selectedItemIDs"
     :finishEdit="finishEdit"
     :editNameForItemID="editNameForItemID"
   />
-  <q-card v-else :class="cardClass">
-    <q-card-section
-      horizontal
-      @click="select($event)"
-      @dblclick="edit"
-      class="cursor-pointer"
-    >
-      <q-item class="col">
-        <q-item-section side>
-          <q-icon :name="getIconByItemType(group.type)" />
-        </q-item-section>
-
-        <q-item-section>
-          <q-item-label
-            class="text-capitalize text-body1 text-bold non-selectable"
-          >
-            {{ group.name }}
-          </q-item-label>
-        </q-item-section>
-      </q-item>
-
-      <q-card-actions @click.stop="">
-        <div class="col">
-          <div class="row justify-end">
-            <q-btn icon="more_vert" flat dense color="blue-grey-2" padding="xs">
-              <q-menu
-                v-model="showMoreButtons"
-                anchor="top right"
-                transition-show="jump-down"
-                transition-hide="jump-up"
-                class="transparent no-shadow"
-                :offset="[-10, 25]"
-              >
-                <q-list dense>
-                  <q-item>
-                    <q-btn
-                      icon="edit"
-                      @click="edit"
-                      round
-                      color="green"
-                      size="md"
-                      padding="sm"
-                    />
-                  </q-item>
-                  <q-item v-if="group.status == ExistenceStatus.New">
-                    <q-btn
-                      icon="sync"
-                      @click="synchronize"
-                      round
-                      color="orange"
-                      size="md"
-                      padding="sm"
-                    />
-                  </q-item>
-                  <q-item>
-                    <q-btn
-                      icon="delete"
-                      @click="remove"
-                      round
-                      color="red-5"
-                      size="md"
-                      padding="sm"
-                    />
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn>
-          </div>
-        </div>
-      </q-card-actions>
-    </q-card-section>
-
-    <q-separator dark />
-
-    <q-item
-      v-if="packAllItemsCheckboxVisible"
-      dense
-      clickable
-      @click="packAllItems(!allItemsPacked)"
-      style="padding-left: 20px"
-      class="cursor-pointer"
-    >
-      <q-item-section side>
-        <q-checkbox dense v-model="allItemsPacked" color="primary" keep-color />
-      </q-item-section>
-    </q-item>
-
-    <q-separator v-if="packAllItemsCheckboxVisible" dark />
-
-    <q-card-section>
-      <PackingItem
-        v-for="item in group.items"
-        :item="item"
-        :groupID="group.id"
-        :edit="false"
-        :packing="packing"
-        :selected="selectedItemIDs.includes(item.id)"
-        :setSelectedItemID="setSelectedItemID"
-        :setEditItemName="editItemName"
-      />
-    </q-card-section>
-
-    <q-inner-loading :showing="synchronizing">
-      <q-spinner-ball size="100px" color="orange" />
-    </q-inner-loading>
-  </q-card>
+  <PackPackingGroup v-else-if="packing" :group="group" :cardClass="cardClass" />
 </template>
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue"
-import { QList, useQuasar } from "quasar"
+import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
-import EditPackingGroup from "./EditPackingGroup.vue"
-import PackingItem from "./item/PackingItem.vue"
+import DisplayPackingGroup from "./display/DisplayPackingGroup.vue"
+import EditPackingGroup from "./edit/EditPackingGroup.vue"
+import PackPackingGroup from "./pack/PackPackingGroup.vue"
 import { usePackingListStore } from "@/stores/packingListStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { useClipboardStore } from "@/stores/clipboardStore"
 import type { PackingGroup } from "@/models/packing/list/PackingGroup"
-import getIconByItemType from "@/methods/getIconForItemType"
 import { PackingListAction } from "@/enums/PackingListAction"
 import { PackingSectionType } from "@/enums/PackingSectionType"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
@@ -165,35 +71,14 @@ const showMoreButtons = ref(false)
 const selectedItemIDs = ref([] as number[])
 const editNameForItemID = ref(0)
 
-const packAllItemsCheckboxVisible = computed(
-  () => props.packing && !editing.value && props.group.items.length > 1
-)
+const displaying = computed(() => !editing.value && !props.packing)
 
-const allItemsPacked = computed({
-  get() {
-    return props.group.items.every((item) => item.packed)
-  },
-  set(value: boolean) {
-    packAllItems(value)
-  },
-})
-
-const packAllItems = (value: boolean) => {
-  props.group.items.forEach((item) => (item.packed = value))
-}
-
-const select = (event: MouseEvent) => {
-  props.setSelectedGroupID(!editing.value ? props.group.id : 0, event.ctrlKey)
+const selectGroup = (allowMultiple: boolean) => {
+  props.setSelectedGroupID(props.group.id, allowMultiple)
   selectedItemIDs.value.length = 0
 }
 
-const synchronize = async () => {
-  showMoreButtons.value = false
-  synchronizing.value = true
-  await packingListManager.SynchronizeGroup(props.group.id)
-}
-
-const edit = () => {
+const editGroup = () => {
   editing.value = true
   props.setSelectedGroupID(0, false) //todo clear
   selectedItemIDs.value.length = 0
@@ -205,11 +90,6 @@ const finishEdit = () => {
   editing.value = false
   selectedItemIDs.value.length = 0
   editNameForItemID.value = 0
-}
-
-const remove = () => {
-  showMoreButtons.value = false
-  packingListManager.RemoveGroup(props.group.id)
 }
 
 const setSelectedItemID = (itemID: number, allowMultiple: boolean) => {
@@ -246,7 +126,7 @@ const editItemName = (itemID: number) => {
 }
 
 const cardClass = computed(() => {
-  let output = "shadow-transition header-font"
+  let output = "shadow-transition header-font col-12"
   if (props.isSelected && props.group.status == ExistenceStatus.New) {
     output += " new-selected-group-color"
   } else if (props.isSelected) {
@@ -273,6 +153,7 @@ watch(
   () => props.packing,
   (isPacking) => {
     if (isPacking) {
+      editing.value = false
       selectedItemIDs.value.length = 0
     }
   }

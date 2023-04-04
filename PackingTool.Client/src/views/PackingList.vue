@@ -4,9 +4,6 @@
       <div class="row">
         <PackingGrid :packing="packing" />
       </div>
-      <div class="row" style="margin-top: 70px">
-        <ImportantItems :packing="packing" />
-      </div>
     </div>
 
     <q-dialog v-model="addingGroup">
@@ -101,7 +98,6 @@ import { useQuasar, QSpinnerGrid } from "quasar"
 import { storeToRefs } from "pinia"
 import { usePackingListStore } from "@/stores/packingListStore"
 import PackingGrid from "@/components/packing/list/PackingGrid.vue"
-import ImportantItems from "@/components/packing/list/group/ImportantItems.vue"
 import AddPackingGroup from "@/components/packing/list/AddPackingGroup.vue"
 import { PackingListState } from "@/models/packing/list/PackingListState"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"

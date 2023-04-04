@@ -1,16 +1,5 @@
 <template>
-  <EditPackingItem
-    v-if="edit"
-    :item="item"
-    :groupID="groupID"
-    :selected="selected"
-    :setSelectedItemID="setSelectedItemID"
-    :itemClass="itemClass"
-    :autofocusAndEditName="autofocusAndEditName"
-  />
-  <PackPackingItem v-else-if="packing" :item="item" :itemClass="itemClass" />
   <q-item
-    v-else
     dense
     :class="itemClass"
     :clickable="true"
@@ -18,7 +7,7 @@
     @dblclick="setEditItemName(item.id)"
   >
     <q-btn
-      v-if="isImportant && !packing && !importantSection && !edit"
+      v-if="isImportant"
       icon="priority_high"
       color="red"
       round
@@ -43,11 +32,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
-import PackPackingItem from "./PackPackingItem.vue"
-import EditPackingItem from "./EditPackingItem.vue"
+import { computed } from "vue"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
-import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus";
+import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 
 const props = defineProps({
   item: {
@@ -58,14 +45,6 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  edit: {
-    type: Boolean,
-    required: true,
-  },
-  packing: {
-    type: Boolean,
-    required: true,
-  },
   selected: {
     type: Boolean,
     default: false,
@@ -74,23 +53,14 @@ const props = defineProps({
     type: Function,
     default: () => {},
   },
-  importantSection: {
-    type: Boolean,
-    default: false,
-  },
   setEditItemName: {
     type: Function,
     default: () => {},
-  },
-  autofocusAndEditName: {
-    type: Boolean,
-    default: false,
   },
 })
 
 const itemClass = computed(() => {
   let output = "q-pa-xs label-font shadow-transition"
-  if (props.edit) output += " q-pb-none"
   if (props.item.status == ExistenceStatus.New) output += " new-item-label"
   if (props.selected) output += " selected-item"
   return output
@@ -109,10 +79,7 @@ const isImportant = computed(() => {
   }
 }
 .label-font {
-  // font-family: 'Comic Sans MS';
-  // font-family: 'MV Boli';
   font-family: "Segoe Print";
-  // font-family: 'Segoe Script';
 }
 .important-mark {
   position: absolute;

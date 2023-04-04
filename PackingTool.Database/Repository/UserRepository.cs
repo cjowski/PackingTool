@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Input = PackingTool.Core.Repository.User.Input;
 using Output = PackingTool.Core.Repository.User.Output;
 

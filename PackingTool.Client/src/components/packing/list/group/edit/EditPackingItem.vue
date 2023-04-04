@@ -3,7 +3,7 @@
     dense
     :class="itemClass"
     :clickable="true"
-    @click="(event: MouseEvent) => setSelectedItemID(item.id, event.ctrlKey)"
+    @click="trySelectItem"
     @dblclick="editName"
   >
     <q-item-section>
@@ -61,6 +61,7 @@
 import { computed, ref } from "vue"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
 import { usePackingListStore } from "@/stores/packingListStore"
+import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 
 const { packingListManager } = usePackingListStore()
 
@@ -79,10 +80,6 @@ const props = defineProps({
   },
   setSelectedItemID: {
     type: Function,
-    default: () => {},
-  },
-  itemClass: {
-    type: String,
     required: true,
   },
   autofocusAndEditName: {
@@ -93,10 +90,17 @@ const props = defineProps({
 
 const editingName = ref(props.autofocusAndEditName)
 const modifiedName = ref(props.autofocusAndEditName ? props.item.name : "")
+const importantAttribute = "Important"
 
 const isImportant = computed(() => {
-  return props.item.attributes.indexOf("Important") !== -1
+  return props.item.attributes.indexOf(importantAttribute) !== -1
 })
+
+const trySelectItem = (event: MouseEvent) => {
+  if (!editingName.value) {
+    props.setSelectedItemID(props.item.id, event.ctrlKey)
+  }
+}
 
 const editName = () => {
   editingName.value = true
@@ -110,23 +114,39 @@ const submitModifiedName = () => {
 }
 
 const markImportance = () => {
-  if (props.item.attributes.indexOf("Important") === -1) {
-    props.item.attributes.push("Important")
+  if (props.item.attributes.indexOf(importantAttribute) === -1) {
+    props.item.attributes.push(importantAttribute)
   } else {
     props.item.attributes.splice(
-      props.item.attributes.findIndex((attribute) => attribute === "Important"),
+      props.item.attributes.findIndex(
+        (attribute) => attribute === importantAttribute
+      ),
       1
     )
   }
 }
+
+const itemClass = computed(() => {
+  let output = "q-pa-xs q-pb-none edit-item-font shadow-transition"
+  if (props.item.status == ExistenceStatus.New) output += " new-edit-item-label"
+  if (props.selected) output += " selected-edit-item"
+  return output
+})
 </script>
 
 <style lang="scss" scoped>
-.new-item-label {
+.new-edit-item-label {
   div {
     color: #c6ff00; //lime-13
     font-weight: bold;
   }
+}
+.edit-item-font {
+  font-family: "Segoe Print";
+}
+.selected-edit-item {
+  box-shadow: $selected 0px 0px 0px 3px, $selected 0px 0px 0px 100px inset;
+  color: $selected-text;
 }
 .item-count-input {
   :deep(.q-field__control) {

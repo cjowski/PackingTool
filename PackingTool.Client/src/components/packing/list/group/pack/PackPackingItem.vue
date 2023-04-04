@@ -27,14 +27,11 @@
 <script setup lang="ts">
 import { computed } from "vue"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
+import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 
 const props = defineProps({
   item: {
     type: Object as () => PackingItem,
-    required: true,
-  },
-  itemClass: {
-    type: String,
     required: true,
   },
 })
@@ -42,4 +39,22 @@ const props = defineProps({
 const isImportant = computed(() => {
   return props.item.attributes.indexOf("Important") !== -1
 })
+
+const itemClass = computed(() => {
+  let output = "q-pa-xs q-pb-none pack-item-font shadow-transition"
+  if (props.item.status == ExistenceStatus.New) output += " new-pack-item-label"
+  return output
+})
 </script>
+
+<style lang="scss" scoped>
+.new-pack-item-label {
+  div {
+    color: #c6ff00; //lime-13
+    font-weight: bold;
+  }
+}
+.pack-item-font {
+  font-family: "Segoe Print";
+}
+</style>
