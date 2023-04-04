@@ -85,6 +85,11 @@
               </q-input>
             </q-item-section>
           </q-item>
+          <q-item v-if="requiredNewPassword()">
+            <q-item-section class="text-orange text-bold text-body1">
+              Please change your temporary password
+            </q-item-section>
+          </q-item>
         </q-card-section>
 
         <q-card-actions vertical class="q-pt-none">
@@ -107,7 +112,7 @@ import { QSpinnerHourglass, useQuasar } from "quasar"
 import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 
-const { changePassword } = useAuthenticationStore()
+const { requiredNewPassword, changePassword } = useAuthenticationStore()
 
 const $q = useQuasar()
 

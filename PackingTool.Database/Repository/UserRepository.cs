@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Input = PackingTool.Core.Repository.User.Input;
 using Output = PackingTool.Core.Repository.User.Output;
 
@@ -32,14 +33,44 @@ namespace PackingTool.Database.Repository
             return await _context.Users.AnyAsync(u => u.Email == email);
         }
 
-        public async Task<string[]> GetUserRoles(
+        public async Task<Output.UserAuthenticationDetailsDb> GetUserAuthenticationDetails(
             int userID
         )
         {
-            return await _context.UserRoles
+            var userRoles = await _context.UserRoles
                 .Where(ur => ur.UserId == userID)
                 .Select(ur => ur.Role.RoleName)
                 .ToArrayAsync();
+
+            return await _context.UserAuthorizations
+                .Where(ua => ua.UserId == userID)
+                .Select(ua =>
+                    new Output.UserAuthenticationDetailsDb(
+                        ua.PasswordHash,
+                        userRoles,
+                        ua.Authorized,
+                        ua.RequiredNewPassword
+                    )
+                )
+                .SingleAsync();
+        }
+
+        public async Task SetLoginDate(
+            int userID,
+            DateTime lastLoginDate,
+            bool onlyAttempt,
+            int requestedUserID
+        )
+        {
+            var userAuthorization = await _context.UserAuthorizations.SingleAsync(x => x.UserId == userID);
+            userAuthorization.LastLoginAttemptDate = lastLoginDate;
+            if (!onlyAttempt)
+            {
+                userAuthorization.LastLoginDate = lastLoginDate;
+            }
+            userAuthorization.ModifiedUserId = requestedUserID;
+            userAuthorization.ModifiedDate = DateTime.Now;
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddUser(
@@ -96,6 +127,7 @@ namespace PackingTool.Database.Repository
         {
             var userAuthorization = await _context.UserAuthorizations.SingleAsync(x => x.UserId == userID);
             userAuthorization.PasswordHash = password;
+            userAuthorization.RequiredNewPassword = false;
             userAuthorization.ModifiedUserId = requestedUserID;
             userAuthorization.ModifiedDate = DateTime.Now;
             await _context.SaveChangesAsync();
@@ -110,13 +142,22 @@ namespace PackingTool.Database.Repository
                 : _context.Users.Where(u => u.UserName.Contains(searchingPhrase));
 
             return await query
-                .Where(u => u.UserAuthorization != null)
+                .SelectMany(u =>
+                    _context.UserRoles
+                        .Where(ur => ur.UserId == u.UserId)
+                        .DefaultIfEmpty(),
+                        (user, role) => new { user, role.Role.RoleName }
+                )
+                .Where(u =>
+                    u.user.UserAuthorization != null
+                    && u.RoleName != "admin"
+                )
                 .Take(10)
                 .Select(u =>
                     new Output.UserDetailsDb(
-                        u.UserId,
-                        u.UserName,
-                        u.UserAuthorization!.Authorized
+                        u.user.UserId,
+                        u.user.UserName,
+                        u.user.UserAuthorization!.Authorized
                     )
                 )
                 .ToArrayAsync();

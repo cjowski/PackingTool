@@ -13,6 +13,8 @@ namespace PackingTool.Core.Service.User.Output
         [Required]
         public UserRole[] Roles { get; }
         [Required]
+        public bool RequiredNewPassword { get; }
+        [Required]
         public string Message { get; }
 
         private AuthenticateResponse(
@@ -20,6 +22,7 @@ namespace PackingTool.Core.Service.User.Output
             int userID,
             string token,
             UserRole[] roles,
+            bool requiredNewPassword,
             string message
         )
         {
@@ -27,13 +30,15 @@ namespace PackingTool.Core.Service.User.Output
             UserID = userID;
             Token = token;
             Roles = roles;
+            RequiredNewPassword = requiredNewPassword;
             Message = message;
         }
 
         public static AuthenticateResponse Succeed(
             int userID,
             UserRole[] roles,
-            string token    
+            string token,
+            bool requiredNewPassword
         )
         {
             return new AuthenticateResponse(
@@ -41,6 +46,7 @@ namespace PackingTool.Core.Service.User.Output
                 userID: userID,
                 token: token,
                 roles: roles,
+                requiredNewPassword: requiredNewPassword,
                 message: string.Empty
             );
         }
@@ -54,6 +60,7 @@ namespace PackingTool.Core.Service.User.Output
                 userID: -1,
                 token: string.Empty,
                 roles: Array.Empty<UserRole>(),
+                requiredNewPassword: false,
                 message: message
             );
         }

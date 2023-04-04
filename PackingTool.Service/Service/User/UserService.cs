@@ -35,15 +35,22 @@ namespace PackingTool.Service.Service.User
                     .Failed("Username or password is incorrect");
             }
 
-            var passwordHash = await _repository.GetPasswordHash(userID);
-            if (!BCrypt.Net.BCrypt.Verify(user.Password, passwordHash))
+            var userAuthenticationDetails = await _repository.GetUserAuthenticationDetails(userID);
+            if (!BCrypt.Net.BCrypt.Verify(user.Password, userAuthenticationDetails.PasswordHash))
             {
+                await _repository.SetLoginDate(userID, DateTime.Now, true, userID);
                 return CoreService.Output.AuthenticateResponse
                     .Failed("Username or password is incorrect");
             }
 
-            var userRolesDb = await _repository.GetUserRoles(userID);
-            var userRoles = userRolesDb
+            if (!userAuthenticationDetails.IsAuthorized)
+            {
+                await _repository.SetLoginDate(userID, DateTime.Now, true, userID);
+                return CoreService.Output.AuthenticateResponse
+                    .Failed("User is not authorized. Please contact with administrator.");
+            }
+
+            var userRoles = userAuthenticationDetails.Roles
                 .Select(ur =>
                     Enum.Parse<CoreService.Output.UserRole>(
                         $"{char.ToUpperInvariant(ur[0])}{ur[1..]}"
@@ -52,7 +59,16 @@ namespace PackingTool.Service.Service.User
                 .ToArray();
 
             var token = _tokenService.GenerateToken(userID);
-            return CoreService.Output.AuthenticateResponse.Succeed(userID, userRoles, token);
+
+            await _repository.SetLoginDate(userID, DateTime.Now, false, userID);
+
+            return CoreService.Output.AuthenticateResponse
+                .Succeed(
+                    userID: userID,
+                    roles: userRoles,
+                    token: token,
+                    requiredNewPassword: userAuthenticationDetails.RequiredNewPassword
+                );
         }
 
         public async Task<CoreService.Output.UserResponse> Register(

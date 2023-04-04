@@ -77,7 +77,7 @@ import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 import { usePackingListStore } from "@/stores/packingListStore"
 
-const { tryAutoLogin, login } = useAuthenticationStore()
+const { requiredNewPassword, tryAutoLogin, login } = useAuthenticationStore()
 const { packingListManager } = usePackingListStore()
 
 const $q = useQuasar()
@@ -131,7 +131,11 @@ const doLogin = async () => {
 
   if (response.success) {
     packingListManager.FetchListDescriptions()
-    router.push("/")
+    if (requiredNewPassword()) {
+      router.push("/changePassword")
+    } else {
+      router.push("/")
+    }
   } else if (response.message! == loginError.value) {
     anotherLoginError.value = true
   } else {

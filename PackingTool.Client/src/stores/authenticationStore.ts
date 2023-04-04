@@ -13,10 +13,13 @@ export const useAuthenticationStore = defineStore("authentication", () => {
   let _userID = -1
   const _userAuthorized = ref(false)
   const _userRoles = ref([] as UserRole[])
+  const _requiredNewPassword = ref(false)
 
   const userID = () => _userID
   const isAuthorized = () => _userAuthorized.value
   const isAdmin = () => _userRoles.value.indexOf("Admin") !== -1
+  const requiredNewPassword = () => _requiredNewPassword.value
+  const enablePackingLists = () => _userAuthorized.value && !_requiredNewPassword.value
 
   const tryAutoLogin = async () => {
     const userName = SessionStorage.getItem("userName") as string
@@ -38,6 +41,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
       _userID = response.userID
       _userRoles.value = response.roles
       _userAuthorized.value = true
+      _requiredNewPassword.value = response.requiredNewPassword
       OpenAPI.TOKEN = response.token!
 
       SessionStorage.set("userName", userName)
@@ -47,10 +51,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
     return response
   }
 
-  const register = async (
-    userName: string,
-    password: string
-  ) => {
+  const register = async (userName: string, password: string) => {
     const response = (await UserService.postApiUserRegister({
       requestBody: { userName: userName, password: password },
     })) as UserResponse
@@ -70,6 +71,7 @@ export const useAuthenticationStore = defineStore("authentication", () => {
     })) as UserResponse
 
     if (response.success) {
+      _requiredNewPassword.value = false
       SessionStorage.set("password", newPassword)
     }
 
@@ -86,6 +88,8 @@ export const useAuthenticationStore = defineStore("authentication", () => {
     userID,
     isAuthorized,
     isAdmin,
+    requiredNewPassword,
+    enablePackingLists,
     tryAutoLogin,
     login,
     register,

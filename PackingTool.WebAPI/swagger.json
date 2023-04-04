@@ -651,6 +651,7 @@
       "AuthenticateResponse": {
         "required": [
           "message",
+          "requiredNewPassword",
           "roles",
           "success",
           "token",
@@ -677,6 +678,10 @@
             "items": {
               "$ref": "#/components/schemas/UserRole"
             },
+            "readOnly": true
+          },
+          "requiredNewPassword": {
+            "type": "boolean",
             "readOnly": true
           },
           "message": {

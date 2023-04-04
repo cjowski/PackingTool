@@ -4,7 +4,8 @@
     {
         Task<int> GetUserID(string userName);
         Task<bool> EmailExists(string email);
-        Task<string[]> GetUserRoles(int userID);
+        Task<Output.UserAuthenticationDetailsDb> GetUserAuthenticationDetails(int userID);
+        Task SetLoginDate(int userID, DateTime lastLoginDate, bool onlyAttempt, int requestedUserID);
         Task AddUser(Input.RegisterUser registerUser, int requestedUserID);
         Task<string> GetPasswordHash(int userID);
         Task UpdatePassword(int userID, string password, int requestedUserID);

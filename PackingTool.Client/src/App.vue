@@ -3,7 +3,7 @@
     <q-header elevated height-hint="98" class="z-top">
       <q-toolbar class="toolbar-font">
         <q-btn
-          v-if="isAuthorized()"
+          v-if="enablePackingLists()"
           flat
           @click="showPackingLists"
           round
@@ -50,12 +50,12 @@ import router from "./router"
 import { useAuthenticationStore } from "./stores/authenticationStore"
 import PackingLists from "./components/packing/sideDrawer/PackingLists.vue"
 import { useRoute } from "vue-router"
-const { isAuthorized, isAdmin, logout } = useAuthenticationStore()
+const { isAuthorized, enablePackingLists, isAdmin, logout } = useAuthenticationStore()
 
 const route = useRoute()
 const $q = useQuasar()
 $q.dark.toggle()
-const packingListsShown = ref(isAuthorized())
+const packingListsShown = ref(enablePackingLists())
 
 const doLogout = async () => {
   await logout()
@@ -63,7 +63,7 @@ const doLogout = async () => {
 }
 
 const showPackingLists = () => {
-  if (!isAuthorized()) {
+  if (!enablePackingLists()) {
     return false
   }
 
@@ -73,7 +73,7 @@ const showPackingLists = () => {
 watch(
   route,
   () => {
-    packingListsShown.value = isAuthorized()
+    packingListsShown.value = enablePackingLists()
   },
   { flush: "pre", immediate: true, deep: true }
 )
