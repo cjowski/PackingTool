@@ -67,7 +67,6 @@ const props = defineProps({
 const $q = useQuasar()
 const synchronizing = ref(false)
 const editing = ref(false)
-const showMoreButtons = ref(false)
 const selectedItemIDs = ref([] as number[])
 const editNameForItemID = ref(0)
 
@@ -85,10 +84,13 @@ const editGroup = () => {
   editNameForItemID.value = 0
 }
 
+const editItemName = (itemID: number) => {
+  editing.value = true
+  editNameForItemID.value = itemID
+}
+
 const finishEdit = () => {
-  showMoreButtons.value = false
   editing.value = false
-  selectedItemIDs.value.length = 0
   editNameForItemID.value = 0
 }
 
@@ -118,11 +120,6 @@ const setSelectedItemID = (itemID: number, allowMultiple: boolean) => {
   } else {
     selectedItemIDs.value.splice(selectedItemIDs.value.indexOf(itemID), 1)
   }
-}
-
-const editItemName = (itemID: number) => {
-  editNameForItemID.value = itemID
-  editing.value = true
 }
 
 const cardClass = computed(() => {
