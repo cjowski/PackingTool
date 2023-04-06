@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LpR fFf">
+  <q-layout view="hHh LpR lFr">
     <q-header elevated height-hint="98" class="z-top">
       <q-toolbar class="toolbar-font">
         <q-btn
@@ -26,7 +26,12 @@
         <q-btn v-if="isAdmin()" to="/admin" flat no-caps size="20px"
           ><span class="text-bold">Admin</span></q-btn
         >
-        <q-btn v-if="isAuthorized()" to="/changePassword" flat no-caps size="20px"
+        <q-btn
+          v-if="isAuthorized()"
+          to="/changePassword"
+          flat
+          no-caps
+          size="20px"
           ><span class="text-bold">Change Password</span></q-btn
         >
         <q-btn v-if="isAuthorized()" @click="doLogout" flat no-caps size="20px"
@@ -36,6 +41,7 @@
     </q-header>
 
     <PackingLists v-model="packingListsShown"></PackingLists>
+    <PackingListActions />
     <RightDrawer v-model="packingListsShown"></RightDrawer>
 
     <q-page-container>
@@ -45,19 +51,24 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { onMounted, watch } from "vue"
 import { useQuasar } from "quasar"
+import { storeToRefs } from "pinia"
 import router from "./router"
 import { useAuthenticationStore } from "./stores/authenticationStore"
+import { useAllPackingListsStore } from "./stores/allPackingListsStore"
 import PackingLists from "./components/packing/leftDrawer/PackingLists.vue"
+import PackingListActions from "./components/packing/rightDrawer/PackingListActions.vue"
 import RightDrawer from "./components/packing/rightDrawer/RightDrawer.vue"
 import { useRoute } from "vue-router"
-const { isAuthorized, enablePackingLists, isAdmin, logout } = useAuthenticationStore()
+
+const { isAuthorized, enablePackingLists, isAdmin, logout } =
+  useAuthenticationStore()
+const { packingListsShown } = storeToRefs(useAllPackingListsStore())
 
 const route = useRoute()
 const $q = useQuasar()
 $q.dark.toggle()
-const packingListsShown = ref(enablePackingLists())
 
 const doLogout = async () => {
   await logout()
@@ -79,6 +90,10 @@ watch(
   },
   { flush: "pre", immediate: true, deep: true }
 )
+
+onMounted(() => {
+  packingListsShown.value = enablePackingLists()
+})
 </script>
 
 <style scoped lang="scss">

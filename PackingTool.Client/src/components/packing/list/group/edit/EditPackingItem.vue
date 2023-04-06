@@ -147,6 +147,7 @@ watch(editingNameForItemID, (itemID) => {
 }
 .edit-item-font {
   font-family: "Segoe Print";
+  font-weight: bold;
 }
 .selected-edit-item {
   box-shadow: $selected 0px 0px 0px 3px, $selected 0px 0px 0px 100px inset;
@@ -159,6 +160,7 @@ watch(editingNameForItemID, (itemID) => {
   }
   :deep(input) {
     padding-top: 10px;
+    font-weight: bold;
   }
   width: 45px;
 }

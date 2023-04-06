@@ -80,6 +80,8 @@ export const useAuthenticationStore = defineStore("authentication", () => {
 
   const logout = async () => {
     _userAuthorized.value = false
+    _userRoles.value.length = 0
+    _requiredNewPassword.value = false
     OpenAPI.TOKEN = ""
     SessionStorage.clear()
   }

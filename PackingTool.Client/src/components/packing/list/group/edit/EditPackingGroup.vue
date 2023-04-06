@@ -174,6 +174,7 @@ const submitNewItem = () => {
   :deep(input) {
     padding-top: 12px;
     font-size: 18px;
+    font-weight: bold;
   }
 
   width: calc(100% - 60px);
@@ -190,9 +191,12 @@ const submitNewItem = () => {
   :deep(input) {
     padding-top: 10px;
     font-size: 16px;
+    font-weight: bold;
   }
 }
 .new-item-count-input {
+  font-family: "Segoe Print";
+
   :deep(.q-field__control) {
     padding: 0 4px 0 8px;
     height: 50px;
@@ -200,8 +204,8 @@ const submitNewItem = () => {
   :deep(input) {
     padding-top: 10px;
     font-size: 16px;
+    font-weight: bold;
   }
-  font-family: "Segoe Print";
 }
 .item-type-select {
   :deep(.q-field__marginal) {
