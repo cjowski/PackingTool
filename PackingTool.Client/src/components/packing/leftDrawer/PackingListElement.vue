@@ -87,15 +87,15 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import router from "@/router"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { PackingListState } from "@/models/packing/list/PackingListState"
 import ListNameInput from "./ListNameInput.vue"
 import { PackingSectionType } from "@/enums/PackingSectionType"
 import { PackingListService } from "@/api/services/PackingListService"
 
-const { packingListManager } = usePackingListStore()
-const { selectedListName } = storeToRefs(usePackingListStore())
+const { packingListManager } = useAllPackingListsStore()
+const { selectedListName } = storeToRefs(useAllPackingListsStore())
 const { currentSectionFocus } = storeToRefs(useOperationStatusStore())
 const $q = useQuasar()
 

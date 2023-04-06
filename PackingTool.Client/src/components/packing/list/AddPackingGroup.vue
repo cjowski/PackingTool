@@ -75,10 +75,10 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import type { PackingItemType } from "@/api/models/PackingItemType";
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import getIconByItemType from "@/methods/getIconForItemType"
 
-const { packingListManager } = usePackingListStore()
+const { packingListManager } = useAllPackingListsStore()
 
 const props = defineProps({
   closeAddGroupDialog: {

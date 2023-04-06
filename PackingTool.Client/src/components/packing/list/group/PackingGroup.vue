@@ -1,27 +1,21 @@
 <template>
-  <DisplayPackingGroup
-    v-if="displaying"
-    :group="group"
-    :isSelected="isSelected"
-    :selectedItemIDs="selectedItemIDs"
-    :setSelectedGroupID="selectGroup"
-    :setSelectedItemID="setSelectedItemID"
-    :setEditing="editGroup"
-    :setEditItemName="editItemName"
-    :cardClass="cardClass"
-  />
-  <EditPackingGroup
-    v-if="editing"
-    :group="group"
-    :isSelected="isSelected"
-    :cardClass="cardClass"
-    :setSelectedGroupID="selectGroup"
-    :setSelectedItemID="setSelectedItemID"
-    :selectedItemIDs="selectedItemIDs"
-    :finishEdit="finishEdit"
-    :editNameForItemID="editNameForItemID"
-  />
-  <PackPackingGroup v-else-if="packing" :group="group" :cardClass="cardClass" />
+  <div>
+    <DisplayPackingGroup
+      v-if="displaying"
+      :group="group"
+      :cardClass="cardClass"
+    />
+    <EditPackingGroup
+      v-else-if="editing"
+      :group="group"
+      :cardClass="cardClass"
+    />
+    <PackPackingGroup
+      v-else-if="packing"
+      :group="group"
+      :cardClass="cardClass"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -31,7 +25,8 @@ import { storeToRefs } from "pinia"
 import DisplayPackingGroup from "./display/DisplayPackingGroup.vue"
 import EditPackingGroup from "./edit/EditPackingGroup.vue"
 import PackPackingGroup from "./pack/PackPackingGroup.vue"
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { useClipboardStore } from "@/stores/clipboardStore"
 import type { PackingGroup } from "@/models/packing/list/PackingGroup"
@@ -39,7 +34,9 @@ import { PackingListAction } from "@/enums/PackingListAction"
 import { PackingSectionType } from "@/enums/PackingSectionType"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 
-const { packingListManager } = usePackingListStore()
+const { packingListManager } = useAllPackingListsStore()
+const { packing, selectedGroupIDs, selectedItemIDs, editingGroupIDs } =
+  storeToRefs(useOpenedPackingListStore())
 const { currentAction, currentSectionFocus, currentGroupIDFocus } = storeToRefs(
   useOperationStatusStore()
 )
@@ -50,83 +47,26 @@ const props = defineProps({
     type: Object as () => PackingGroup,
     required: true,
   },
-  isSelected: {
-    type: Boolean,
-    required: true,
-  },
-  packing: {
-    type: Boolean,
-    required: true,
-  },
-  setSelectedGroupID: {
-    type: Function,
-    required: true,
-  },
 })
 
 const $q = useQuasar()
 const synchronizing = ref(false)
-const editing = ref(false)
-const selectedItemIDs = ref([] as number[])
-const editNameForItemID = ref(0)
 
-const displaying = computed(() => !editing.value && !props.packing)
-
-const selectGroup = (allowMultiple: boolean) => {
-  props.setSelectedGroupID(props.group.id, allowMultiple)
-  selectedItemIDs.value.length = 0
-}
-
-const editGroup = () => {
-  editing.value = true
-  props.setSelectedGroupID(0, false) //todo clear
-  selectedItemIDs.value.length = 0
-  editNameForItemID.value = 0
-}
-
-const editItemName = (itemID: number) => {
-  editing.value = true
-  editNameForItemID.value = itemID
-}
-
-const finishEdit = () => {
-  editing.value = false
-  editNameForItemID.value = 0
-}
-
-const setSelectedItemID = (itemID: number, allowMultiple: boolean) => {
-  props.setSelectedGroupID(0, false)
-  currentSectionFocus.value = PackingSectionType.Items
-  currentGroupIDFocus.value = props.group.id
-
-  if (itemID == 0 || (props.packing && !editing.value)) {
-    selectedItemIDs.value.length = 0
-    return
-  }
-
-  const selectedItemsCount = selectedItemIDs.value.length
-  const containsItem = selectedItemIDs.value.indexOf(itemID) !== -1
-
-  if (!allowMultiple) {
-    selectedItemIDs.value.length = 0
-    if (!containsItem || selectedItemsCount > 1) {
-      selectedItemIDs.value.push(itemID)
-    }
-    return
-  }
-
-  if (!containsItem) {
-    selectedItemIDs.value.push(itemID)
-  } else {
-    selectedItemIDs.value.splice(selectedItemIDs.value.indexOf(itemID), 1)
-  }
-}
+const editing = computed(
+  () => editingGroupIDs.value.indexOf(props.group.id) !== -1
+)
+const displaying = computed(
+  () => editingGroupIDs.value.indexOf(props.group.id) === -1 && !packing.value
+)
+const selected = computed(
+  () => selectedGroupIDs.value.indexOf(props.group.id) !== -1
+)
 
 const cardClass = computed(() => {
   let output = "shadow-transition header-font col-12"
-  if (props.isSelected && props.group.status == ExistenceStatus.New) {
+  if (selected.value && props.group.status == ExistenceStatus.New) {
     output += " new-selected-group-color"
-  } else if (props.isSelected) {
+  } else if (selected.value) {
     output += " selected-group-color"
   } else if (props.group.status == ExistenceStatus.New) {
     output += " new-group-color"
@@ -134,27 +74,11 @@ const cardClass = computed(() => {
   return output
 })
 
-watch(currentGroupIDFocus, (groupIDFocus) => {
-  if (groupIDFocus != props.group.id) {
-    selectedItemIDs.value.length = 0
-  }
-})
-
 watch(currentAction, (action) => {
   if (action != PackingListAction.Fetching && synchronizing) {
     synchronizing.value = false
   }
 })
-
-watch(
-  () => props.packing,
-  (isPacking) => {
-    if (isPacking) {
-      editing.value = false
-      selectedItemIDs.value.length = 0
-    }
-  }
-)
 
 const selectAllItems = (event: KeyboardEvent) => {
   if (
@@ -164,7 +88,11 @@ const selectAllItems = (event: KeyboardEvent) => {
     event.key.toLowerCase() === "a"
   ) {
     event.preventDefault()
-    selectedItemIDs.value = props.group.items.map((item) => item.id)
+    if (selectedItemIDs.value.length != props.group.items.length) {
+      selectedItemIDs.value = props.group.items.map((item) => item.id)
+    } else {
+      selectedItemIDs.value.length = 0
+    }
   }
 }
 
@@ -187,6 +115,8 @@ const copyItems = (event: KeyboardEvent) => {
 }
 
 const cutItems = (event: KeyboardEvent) => {
+  if (currentGroupIDFocus.value != props.group.id) return
+
   if (
     currentSectionFocus.value == PackingSectionType.Items &&
     selectedItemIDs.value.length > 0 &&
@@ -205,7 +135,7 @@ const cutItems = (event: KeyboardEvent) => {
 }
 
 const pasteItems = (event: KeyboardEvent) => {
-  if (!props.isSelected) return
+  if (currentGroupIDFocus.value != props.group.id) return
 
   if (
     copiedItems.value.length &&
@@ -225,6 +155,8 @@ const pasteItems = (event: KeyboardEvent) => {
 }
 
 const deleteItems = (event: KeyboardEvent) => {
+  if (currentGroupIDFocus.value != props.group.id) return
+
   if (
     currentSectionFocus.value == PackingSectionType.Items &&
     selectedItemIDs.value.length > 0 &&
@@ -238,7 +170,11 @@ const deleteItems = (event: KeyboardEvent) => {
 }
 
 const changeItemSelection = (event: KeyboardEvent) => {
-  if (selectedItemIDs.value.length != 1 || (editing.value && event.altKey))
+  if (
+    currentGroupIDFocus.value != props.group.id ||
+    selectedItemIDs.value.length != 1 ||
+    event.altKey
+  )
     return
 
   const selectedItemID = selectedItemIDs.value[0]
@@ -270,7 +206,11 @@ const changeItemSelection = (event: KeyboardEvent) => {
 }
 
 const changeItemSort = (event: KeyboardEvent) => {
-  if (!editing.value || selectedItemIDs.value.length != 1 || !event.altKey)
+  if (
+    currentGroupIDFocus.value != props.group.id ||
+    selectedItemIDs.value.length != 1 ||
+    !event.altKey
+  )
     return
 
   const selectedItemID = selectedItemIDs.value[0]

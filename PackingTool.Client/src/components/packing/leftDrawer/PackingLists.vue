@@ -86,13 +86,13 @@ import PackingListElement from "./PackingListElement.vue"
 import ListNameInput from "./ListNameInput.vue"
 import JSZip from "jszip"
 import { storeToRefs } from "pinia"
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { PackingListService } from "@/api/services/PackingListService"
 
 const $q = useQuasar()
 const route = useRoute()
-const { packingListManager } = usePackingListStore()
-const { allPackingLists } = storeToRefs(usePackingListStore())
+const { packingListManager } = useAllPackingListsStore()
+const { allPackingLists } = storeToRefs(useAllPackingListsStore())
 
 defineProps({
   modelValue: {

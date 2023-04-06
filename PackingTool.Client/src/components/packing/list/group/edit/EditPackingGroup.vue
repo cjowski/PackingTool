@@ -82,9 +82,6 @@
         v-for="item in group.items"
         :item="item"
         :groupID="group.id"
-        :selected="selectedItemIDs.includes(item.id)"
-        :setSelectedItemID="setSelectedItemID"
-        :autofocusAndEditName="editNameForItemID == item.id"
       />
     </q-card-section>
 
@@ -99,7 +96,7 @@
               padding="xs"
               icon="check"
               class="full-width text-right"
-              @click="finishEdit()"
+              @click="finishEditGroup(group.id)"
             />
           </div>
         </div>
@@ -115,37 +112,19 @@ import type { PackingItemType } from "src/api/models/PackingItemType"
 import type { PackingItemAttribute } from "@/api/models/PackingItemAttribute"
 import type { PackingGroup } from "@/models/packing/list/PackingGroup"
 import getIconByItemType from "@/methods/getIconForItemType"
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 
-const { packingListManager } = usePackingListStore()
+const { packingListManager } = useAllPackingListsStore()
+const { finishEditGroup } = useOpenedPackingListStore()
 
 const props = defineProps({
   group: {
     type: Object as () => PackingGroup,
     required: true,
   },
-  isSelected: {
-    type: Boolean,
-    required: true,
-  },
   cardClass: {
     type: String,
-    required: true,
-  },
-  setSelectedItemID: {
-    type: Function,
-    required: true,
-  },
-  selectedItemIDs: {
-    type: Array as () => Number[],
-    required: true,
-  },
-  finishEdit: {
-    type: Function,
-    required: true,
-  },
-  editNameForItemID: {
-    type: Number,
     required: true,
   },
 })

@@ -4,8 +4,8 @@
       <q-checkbox
         dense
         v-model="item.packed"
-        :color="isImportant ? 'red' : 'primary'"
-        :keep-color="isImportant"
+        :color="important ? 'red' : 'primary'"
+        :keep-color="important"
       />
     </q-item-section>
 
@@ -36,7 +36,7 @@ const props = defineProps({
   },
 })
 
-const isImportant = computed(() => {
+const important = computed(() => {
   return props.item.attributes.indexOf("Important") !== -1
 })
 

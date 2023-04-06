@@ -3,8 +3,8 @@
     dense
     :class="itemClass"
     :clickable="true"
-    @click="(event: MouseEvent) => setSelectedItemID(item.id, event.ctrlKey)"
-    @dblclick="setEditItemName(item.id)"
+    @click="(event: MouseEvent) => setSelectedItemID(groupID, item.id, event.ctrlKey)"
+    @dblclick="editItemName(groupID, item.id)"
   >
     <q-btn
       v-if="isImportant"
@@ -33,8 +33,13 @@
 
 <script setup lang="ts">
 import { computed } from "vue"
+import { storeToRefs } from "pinia"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
+
+const { setSelectedItemID, editItemName } = useOpenedPackingListStore()
+const { selectedItemIDs } = storeToRefs(useOpenedPackingListStore())
 
 const props = defineProps({
   item: {
@@ -45,24 +50,16 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  selected: {
-    type: Boolean,
-    default: false,
-  },
-  setSelectedItemID: {
-    type: Function,
-    default: () => {},
-  },
-  setEditItemName: {
-    type: Function,
-    default: () => {},
-  },
 })
+
+const selected = computed(
+  () => selectedItemIDs.value.indexOf(props.item.id) !== -1
+)
 
 const itemClass = computed(() => {
   let output = "q-pa-xs label-font shadow-transition"
   if (props.item.status == ExistenceStatus.New) output += " new-item-label"
-  if (props.selected) output += " selected-item"
+  if (selected.value) output += " selected-item"
   return output
 })
 

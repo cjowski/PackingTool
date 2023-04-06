@@ -2,7 +2,7 @@
   <q-page padding class="flex flex-top q-mt-md">
     <div class="column" v-if="selectedListName">
       <div class="row">
-        <PackingGrid :packing="packing" />
+        <PackingGrid />
       </div>
     </div>
 
@@ -96,22 +96,23 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { useRoute } from "vue-router"
 import { useQuasar, QSpinnerGrid } from "quasar"
 import { storeToRefs } from "pinia"
-import { usePackingListStore } from "@/stores/packingListStore"
 import PackingGrid from "@/components/packing/list/PackingGrid.vue"
 import AddPackingGroup from "@/components/packing/list/AddPackingGroup.vue"
-import { PackingListState } from "@/models/packing/list/PackingListState"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
+import { PackingListState } from "@/models/packing/list/PackingListState"
 import { PackingListAction } from "@/enums/PackingListAction"
 
-const { packingListManager } = usePackingListStore()
-const { packingList, selectedListName, allListsFetched } = storeToRefs(
-  usePackingListStore()
+const { packingListManager } = useAllPackingListsStore()
+const { selectedListName, allListsFetched } = storeToRefs(
+  useAllPackingListsStore()
 )
+const { packingList, packing } = storeToRefs(useOpenedPackingListStore())
 const { currentAction, previousAction } = storeToRefs(useOperationStatusStore())
 
 const route = useRoute()
 const $q = useQuasar()
-const packing = ref(false)
 const addingGroup = ref(false)
 const configuringGrid = ref(false)
 selectedListName.value = route.query.name?.toString() ?? ""

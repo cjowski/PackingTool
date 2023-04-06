@@ -75,10 +75,10 @@ import { onMounted, ref } from "vue"
 import { QSpinnerHourglass, useQuasar } from "quasar"
 import router from "@/router"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 
 const { requiredNewPassword, tryAutoLogin, login } = useAuthenticationStore()
-const { packingListManager } = usePackingListStore()
+const { packingListManager } = useAllPackingListsStore()
 
 const $q = useQuasar()
 

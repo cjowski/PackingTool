@@ -36,6 +36,7 @@
     </q-header>
 
     <PackingLists v-model="packingListsShown"></PackingLists>
+    <RightDrawer v-model="packingListsShown"></RightDrawer>
 
     <q-page-container>
       <router-view />
@@ -48,7 +49,8 @@ import { ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import router from "./router"
 import { useAuthenticationStore } from "./stores/authenticationStore"
-import PackingLists from "./components/packing/sideDrawer/PackingLists.vue"
+import PackingLists from "./components/packing/leftDrawer/PackingLists.vue"
+import RightDrawer from "./components/packing/rightDrawer/RightDrawer.vue"
 import { useRoute } from "vue-router"
 const { isAuthorized, enablePackingLists, isAdmin, logout } = useAuthenticationStore()
 

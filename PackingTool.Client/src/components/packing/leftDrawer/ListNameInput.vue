@@ -17,9 +17,9 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { storeToRefs } from "pinia"
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 
-const { allPackingLists } = storeToRefs(usePackingListStore())
+const { allPackingLists } = storeToRefs(useAllPackingListsStore())
 
 const props = defineProps({
   modelValue: {

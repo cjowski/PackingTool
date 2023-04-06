@@ -3,7 +3,7 @@
     <q-card-section
       horizontal
       @click="select($event)"
-      @dblclick="setEditing()"
+      @dblclick="editGroup(group.id)"
       class="cursor-pointer"
     >
       <q-item class="col">
@@ -36,7 +36,7 @@
                   <q-item>
                     <q-btn
                       icon="edit"
-                      @click="setEditing()"
+                      @click="editGroup(group.id)"
                       round
                       color="green"
                       size="md"
@@ -78,10 +78,6 @@
         v-for="item in group.items"
         :item="item"
         :groupID="group.id"
-        :edit="false"
-        :selected="selectedItemIDs.includes(item.id)"
-        :setSelectedItemID="setSelectedItemID"
-        :setEditItemName="setEditItemName"
       />
     </q-card-section>
 
@@ -95,40 +91,18 @@
 import { ref } from "vue"
 import { QList } from "quasar"
 import DisplayPackingItem from "./DisplayPackingItem.vue"
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import type { PackingGroup } from "@/models/packing/list/PackingGroup"
 import getIconByItemType from "@/methods/getIconForItemType"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 
-const { packingListManager } = usePackingListStore()
+const { packingListManager } = useAllPackingListsStore()
+const { setSelectedGroupID, editGroup } = useOpenedPackingListStore()
 
 const props = defineProps({
   group: {
     type: Object as () => PackingGroup,
-    required: true,
-  },
-  isSelected: {
-    type: Boolean,
-    required: true,
-  },
-  selectedItemIDs: {
-    type: Array as () => Number[],
-    required: true,
-  },
-  setSelectedGroupID: {
-    type: Function,
-    required: true,
-  },
-  setSelectedItemID: {
-    type: Function,
-    required: true,
-  },
-  setEditing: {
-    type: Function,
-    required: true,
-  },
-  setEditItemName: {
-    type: Function,
     required: true,
   },
   cardClass: {
@@ -141,7 +115,7 @@ const synchronizing = ref(false)
 const showMoreButtons = ref(false)
 
 const select = (event: MouseEvent) => {
-  props.setSelectedGroupID(props.group.id, event.ctrlKey)
+  setSelectedGroupID(props.group.id, event.ctrlKey)
 }
 
 const synchronize = async () => {

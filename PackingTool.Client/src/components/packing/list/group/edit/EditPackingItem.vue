@@ -4,7 +4,7 @@
     :class="itemClass"
     :clickable="true"
     @click="trySelectItem"
-    @dblclick="editName"
+    @dblclick="editItemName(groupID, item.id)"
   >
     <q-item-section>
       <div v-if="!editingName" class="non-selectable new-item-label">
@@ -17,7 +17,7 @@
           dense
           autofocus
           @keydown.enter.prevent="submitModifiedName"
-          @keydown.esc.prevent="editingName = false"
+          @keydown.esc.prevent="cancelEditingName"
           @focusout="submitModifiedName"
           class="item-name-input"
         ></q-input>
@@ -48,7 +48,7 @@
             dense
             icon="priority_high"
             size="10px"
-            :color="isImportant ? 'red' : 'white'"
+            :color="important ? 'red' : 'white'"
             @click="markImportance"
           />
         </div>
@@ -58,12 +58,18 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
+import { storeToRefs } from "pinia"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
-import { usePackingListStore } from "@/stores/packingListStore"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 
-const { packingListManager } = usePackingListStore()
+const { packingListManager } = useAllPackingListsStore()
+const { setSelectedItemID, editItemName } = useOpenedPackingListStore()
+const { selectedItemIDs, editingNameForItemID } = storeToRefs(
+  useOpenedPackingListStore()
+)
 
 const props = defineProps({
   item: {
@@ -74,43 +80,35 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  selected: {
-    type: Boolean,
-    default: false,
-  },
-  setSelectedItemID: {
-    type: Function,
-    required: true,
-  },
-  autofocusAndEditName: {
-    type: Boolean,
-    default: false,
-  },
 })
 
-const editingName = ref(props.autofocusAndEditName)
-const modifiedName = ref(props.autofocusAndEditName ? props.item.name : "")
+const editingName = computed(() => editingNameForItemID.value == props.item.id)
+
+const modifiedName = ref(editingName.value ? props.item.name : "")
 const importantAttribute = "Important"
 
-const isImportant = computed(() => {
+const selected = computed(
+  () => selectedItemIDs.value.indexOf(props.item.id) !== -1
+)
+
+const important = computed(() => {
   return props.item.attributes.indexOf(importantAttribute) !== -1
 })
 
 const trySelectItem = (event: MouseEvent) => {
   if (!editingName.value) {
-    props.setSelectedItemID(props.item.id, event.ctrlKey)
+    setSelectedItemID(props.groupID, props.item.id, event.ctrlKey)
   }
-}
-
-const editName = () => {
-  editingName.value = true
-  modifiedName.value = props.item.name
-  props.setSelectedItemID(0, false)
 }
 
 const submitModifiedName = () => {
   props.item.name = modifiedName.value
-  editingName.value = false
+  editingNameForItemID.value = 0
+}
+
+const cancelEditingName = () => {
+  modifiedName.value = props.item.name
+  editingNameForItemID.value = 0
 }
 
 const markImportance = () => {
@@ -129,8 +127,14 @@ const markImportance = () => {
 const itemClass = computed(() => {
   let output = "q-pa-xs q-pb-none edit-item-font shadow-transition"
   if (props.item.status == ExistenceStatus.New) output += " new-edit-item-label"
-  if (props.selected) output += " selected-edit-item"
+  if (selected.value) output += " selected-edit-item"
   return output
+})
+
+watch(editingNameForItemID, (itemID) => {
+  if (itemID == props.item.id) {
+    modifiedName.value = props.item.name
+  }
 })
 </script>
 

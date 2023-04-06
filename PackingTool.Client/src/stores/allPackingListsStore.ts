@@ -2,15 +2,16 @@ import { computed, ref, watch } from "vue"
 import { defineStore, storeToRefs } from "pinia"
 import { useClipboardStore } from "./clipboardStore"
 import { useOperationStatusStore } from "./operationStatusStore"
-import { PackingList } from "@/models/packing/list/PackingList"
+import { useOpenedPackingListStore } from "./openedPackingListStore"
+import type { PackingList } from "@/models/packing/list/PackingList"
 import { PackingListManager } from "@/logic/PackingListManager"
 
-export const usePackingListStore = defineStore("packingList", () => {
+export const useAllPackingListsStore = defineStore("allPackingListsStore", () => {
   const { currentAction, previousAction } = storeToRefs(useOperationStatusStore())
   const { copiedGroups, copiedItems } = storeToRefs(useClipboardStore())
+  const { packingList } = storeToRefs(useOpenedPackingListStore())
 
   const allPackingLists = ref([] as PackingList[])
-  const packingList = ref(PackingList.Undefined())
   const selectedListName = ref("")
   const allListsFetched = ref(false)
 
@@ -47,7 +48,6 @@ export const usePackingListStore = defineStore("packingList", () => {
 
   return {
     allPackingLists,
-    packingList,
     selectedListName,
     allListsFetched,
     importantItems,

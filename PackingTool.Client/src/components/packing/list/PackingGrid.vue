@@ -9,9 +9,6 @@
         <div v-for="node in gridColumn" class="row">
           <PackingGroup
             :group="packingListManager.GetGroup(node.element.id)"
-            :isSelected="selectedGroupIDs.indexOf(node.element.id) !== -1"
-            :packing="packing"
-            :setSelectedGroupID="setSelectedGroupID"
             style="width: 100%"
           />
         </div>
@@ -21,10 +18,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from "vue"
+import { computed, onMounted, onUnmounted, watch } from "vue"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
-import { usePackingListStore } from "@/stores/packingListStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { useClipboardStore } from "@/stores/clipboardStore"
 import { Grid } from "@/models/packing/grid/Grid"
@@ -32,22 +30,12 @@ import { NeighborDirection } from "@/models/packing/grid/NeighborDirection"
 import PackingGroup from "@/components/packing/list/group/PackingGroup.vue"
 import { PackingSectionType } from "@/enums/PackingSectionType"
 
-const { packingListManager } = usePackingListStore()
-const { packingList } = storeToRefs(usePackingListStore())
-const { currentSectionFocus, currentGroupIDFocus } = storeToRefs(
-  useOperationStatusStore()
-)
+const { packingListManager } = useAllPackingListsStore()
+const { packingList, selectedGroupIDs } = storeToRefs(useOpenedPackingListStore())
+const { currentSectionFocus } = storeToRefs(useOperationStatusStore())
 const { copiedGroups } = storeToRefs(useClipboardStore())
 
-defineProps({
-  packing: {
-    type: Boolean,
-    required: true,
-  },
-})
-
 const $q = useQuasar()
-const selectedGroupIDs = ref([] as number[])
 
 const grid = computed(() => {
   return Grid.FromGridElements(
@@ -60,35 +48,7 @@ const columnsWidth = computed(() => {
   return `${(1 / packingList.value.content.gridColumnCount) * 100}%`
 })
 
-const setSelectedGroupID = (groupID: number, allowMultiple: boolean) => {
-  currentSectionFocus.value = PackingSectionType.Grid
-
-  if (groupID == 0) {
-    selectedGroupIDs.value.length = 0
-    return
-  }
-
-  const selectedGroupsCount = selectedGroupIDs.value.length
-  const containsGroup = selectedGroupIDs.value.indexOf(groupID) !== -1
-
-  if (!allowMultiple) {
-    currentGroupIDFocus.value = groupID
-    selectedGroupIDs.value.length = 0
-    if (!containsGroup || selectedGroupsCount > 1) {
-      selectedGroupIDs.value.push(groupID)
-    }
-    return
-  }
-
-  if (!containsGroup) {
-    selectedGroupIDs.value.push(groupID)
-  } else {
-    selectedGroupIDs.value.splice(selectedGroupIDs.value.indexOf(groupID), 1)
-  }
-}
-
 watch(packingList, (updatedList) => {
-  selectedGroupIDs.value = [] as number[]
   const groupsLength = updatedList.content.groups.length
   if (groupsLength < updatedList.content.gridColumnCount) {
     updatedList.content.gridColumnCount = groupsLength
