@@ -1,4 +1,4 @@
-import { computed, ref, watch } from "vue"
+import { computed, ref } from "vue"
 import { defineStore, storeToRefs } from "pinia"
 import { useOperationStatusStore } from "./operationStatusStore"
 import { PackingList } from "@/models/packing/list/PackingList"

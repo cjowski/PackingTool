@@ -42,7 +42,7 @@
 
     <PackingLists v-model="packingListsShown"></PackingLists>
     <PackingListActions />
-    <RightDrawer v-model="packingListsShown"></RightDrawer>
+    <RightDrawer v-model="rightDrawerShown"></RightDrawer>
 
     <q-page-container>
       <router-view />
@@ -64,7 +64,7 @@ import { useRoute } from "vue-router"
 
 const { isAuthorized, enablePackingLists, isAdmin, logout } =
   useAuthenticationStore()
-const { packingListsShown } = storeToRefs(useAllPackingListsStore())
+const { packingListsShown, rightDrawerShown } = storeToRefs(useAllPackingListsStore())
 
 const route = useRoute()
 const $q = useQuasar()

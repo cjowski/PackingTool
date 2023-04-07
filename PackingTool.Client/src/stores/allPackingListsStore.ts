@@ -1,4 +1,4 @@
-import { computed, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import { defineStore, storeToRefs } from "pinia"
 import { useClipboardStore } from "./clipboardStore"
 import { useOperationStatusStore } from "./operationStatusStore"
@@ -19,6 +19,7 @@ export const useAllPackingListsStore = defineStore(
     const selectedListName = ref("")
     const allListsFetched = ref(false)
     const packingListsShown = ref(false)
+    const rightDrawerShown = ref(false)
 
     const packingListManager = new PackingListManager(
       allPackingLists,
@@ -30,12 +31,6 @@ export const useAllPackingListsStore = defineStore(
       copiedGroups,
       copiedItems
     )
-
-    const importantItems = computed(() => {
-      return packingList.value.content.groups.flatMap((group) =>
-        group.items.filter((item) => item.attributes.includes("Important"))
-      )
-    })
 
     watch(selectedListName, (currentListName) => {
       if (allListsFetched.value && currentListName) {
@@ -49,12 +44,18 @@ export const useAllPackingListsStore = defineStore(
       }
     })
 
+    watch(packingListsShown, (areShown) => {
+      if (!areShown) {
+        rightDrawerShown.value = false
+      }
+    })
+
     return {
       allPackingLists,
       selectedListName,
       allListsFetched,
       packingListsShown,
-      importantItems,
+      rightDrawerShown,
       packingListManager,
     }
   }
