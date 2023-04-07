@@ -1,11 +1,11 @@
 <template>
-  <q-item dense :class="itemClass" :clickable="true">
+  <q-item dense :class="itemClass" clickable>
     <q-item-section side>
       <q-checkbox
         dense
         v-model="item.packed"
-        :color="important ? 'red' : 'primary'"
-        :keep-color="important"
+        :color="checkboxColor"
+        :keep-color="important || toBuy || bought"
       />
     </q-item-section>
 
@@ -36,14 +36,27 @@ const props = defineProps({
   },
 })
 
-const important = computed(() => {
-  return props.item.attributes.indexOf("Important") !== -1
-})
+const important = computed(
+  () => props.item.attributes.indexOf("Important") !== -1
+)
+const toBuy = computed(() => props.item.attributes.indexOf("ToBuy") !== -1)
+const bought = computed(() => props.item.attributes.indexOf("Bought") !== -1)
 
 const itemClass = computed(() => {
   let output = "q-pa-xs q-pb-none pack-item-font shadow-transition"
   if (props.item.status == ExistenceStatus.New) output += " new-pack-item-label"
   return output
+})
+
+const checkboxColor = computed(() => {
+  if (important.value) {
+    return "red"
+  } else if (toBuy.value) {
+    return "amber"
+  } else if (bought.value) {
+    return "green"
+  }
+  return "primary"
 })
 </script>
 

@@ -4,6 +4,7 @@
     {
         Undefined,
         Important,
-        ToBuy
+        ToBuy,
+        Bought
     }
 }

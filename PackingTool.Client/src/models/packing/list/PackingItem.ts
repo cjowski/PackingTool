@@ -36,7 +36,15 @@ export class PackingItem implements ApiPackingItem {
     sort: number,
     attributes: PackingItemAttribute[]
   ) {
-    return new PackingItem(id, name, count, sort, attributes, ExistenceStatus.New, false)
+    return new PackingItem(
+      id,
+      name,
+      count,
+      sort,
+      attributes,
+      ExistenceStatus.New,
+      false
+    )
   }
 
   static Undefined() {
@@ -80,5 +88,12 @@ export class PackingItem implements ApiPackingItem {
     this.sort = otherItem.sort
     this.attributes = [...otherItem.attributes]
     this.packed = otherItem.packed
+  }
+
+  RemoveAttribute(attribute: PackingItemAttribute) {
+    this.attributes.splice(
+      this.attributes.findIndex((attr) => attr === attribute),
+      1
+    )
   }
 }

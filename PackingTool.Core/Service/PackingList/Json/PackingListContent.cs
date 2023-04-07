@@ -7,23 +7,34 @@ namespace PackingTool.Core.Service.PackingList.Json
     {
         [Required]
         public int GridColumnCount { get; set; }
+        [Required(AllowEmptyStrings = true)]
+        public string Notes { get; set; }
         [Required]
         public PackingGroup[] Groups { get; set; }
+        [Required]
+        public PackingTask[] Tasks { get; set; }
 
         public PackingListContent()
         {
             GridColumnCount = 0;
+            Notes = string.Empty;
             Groups = Array.Empty<PackingGroup>();
+            Tasks = Array.Empty<PackingTask>();
         }
 
         [JsonConstructor]
         private PackingListContent(
+
             int gridColumnCount,
-            PackingGroup[] groups
+            string notes,
+            PackingGroup[] groups,
+            PackingTask[] tasks
         )
         {
             GridColumnCount = gridColumnCount;
+            Notes = notes ?? string.Empty;
             Groups = groups;
+            Tasks = tasks ?? Array.Empty<PackingTask>();
         }
 
         public static PackingListContent FromJson(

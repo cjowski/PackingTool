@@ -48,13 +48,6 @@ const columnsWidth = computed(() => {
   return `${(1 / packingList.value.content.gridColumnCount) * 100}%`
 })
 
-watch(packingList, (updatedList) => {
-  const groupsLength = updatedList.content.groups.length
-  if (groupsLength < updatedList.content.gridColumnCount) {
-    updatedList.content.gridColumnCount = groupsLength
-  }
-})
-
 const selectAllGroups = (event: KeyboardEvent) => {
   if (
     currentSectionFocus.value == PackingSectionType.Grid &&

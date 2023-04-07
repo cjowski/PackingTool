@@ -17,10 +17,22 @@ export const useOpenedPackingListStore = defineStore(
     const selectedItemIDs = ref([] as number[])
     const editingGroupIDs = ref([] as number[])
     const editingNameForItemID = ref(0)
+    const highlightImportantItems = ref(false)
+    const highlightShoppingItems = ref(false)
 
     const importantItems = computed(() => {
       return packingList.value.content.groups.flatMap((group) =>
         group.items.filter((item) => item.attributes.includes("Important"))
+      )
+    })
+
+    const shoppingItems = computed(() => {
+      return packingList.value.content.groups.flatMap((group) =>
+        group.items.filter(
+          (item) =>
+            item.attributes.includes("ToBuy") ||
+            item.attributes.includes("Bought")
+        )
       )
     })
 
@@ -106,7 +118,10 @@ export const useOpenedPackingListStore = defineStore(
       selectedItemIDs,
       editingGroupIDs,
       editingNameForItemID,
+      highlightImportantItems,
+      highlightShoppingItems,
       importantItems,
+      shoppingItems,
       setSelectedGroupID,
       setSelectedItemID,
       editGroup,

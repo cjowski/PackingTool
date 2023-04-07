@@ -7,13 +7,31 @@
     @dblclick="editItemName(groupID, item.id)"
   >
     <q-btn
-      v-if="isImportant"
+      v-if="isImportant && highlightImportantItems"
       icon="priority_high"
       color="red"
       round
       :ripple="false"
-      size="6px"
-      class="important-mark no-pointer-events"
+      size="8px"
+      class="item-attribute-mark no-pointer-events"
+    ></q-btn>
+    <q-btn
+      v-if="isToBuy && highlightShoppingItems"
+      icon="shopping_cart"
+      color="primary"
+      round
+      :ripple="false"
+      size="8px"
+      class="item-attribute-mark no-pointer-events"
+    ></q-btn>
+    <q-btn
+      v-if="isBought && highlightShoppingItems"
+      icon="done"
+      color="green"
+      round
+      :ripple="false"
+      size="8px"
+      class="item-attribute-mark no-pointer-events"
     ></q-btn>
 
     <q-item-section>
@@ -36,10 +54,13 @@ import { computed } from "vue"
 import { storeToRefs } from "pinia"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
+import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 
+const { currentGroupIDFocus } = storeToRefs(useOperationStatusStore())
 const { setSelectedItemID, editItemName } = useOpenedPackingListStore()
-const { selectedItemIDs } = storeToRefs(useOpenedPackingListStore())
+const { selectedItemIDs, highlightImportantItems, highlightShoppingItems } =
+  storeToRefs(useOpenedPackingListStore())
 
 const props = defineProps({
   item: {
@@ -53,7 +74,9 @@ const props = defineProps({
 })
 
 const selected = computed(
-  () => selectedItemIDs.value.indexOf(props.item.id) !== -1
+  () =>
+    selectedItemIDs.value.indexOf(props.item.id) !== -1 &&
+    currentGroupIDFocus.value == props.groupID
 )
 
 const itemClass = computed(() => {
@@ -63,9 +86,11 @@ const itemClass = computed(() => {
   return output
 })
 
-const isImportant = computed(() => {
-  return props.item.attributes.indexOf("Important") !== -1
-})
+const isImportant = computed(
+  () => props.item.attributes.indexOf("Important") !== -1
+)
+const isToBuy = computed(() => props.item.attributes.indexOf("ToBuy") !== -1)
+const isBought = computed(() => props.item.attributes.indexOf("Bought") !== -1)
 </script>
 
 <style lang="scss" scoped>
@@ -78,10 +103,10 @@ const isImportant = computed(() => {
 .label-font {
   font-family: "Segoe Print";
 }
-.important-mark {
+.item-attribute-mark {
   position: absolute;
-  left: -26px;
-  top: 6px;
+  left: -30px;
+  top: 3px;
 }
 .selected-item {
   box-shadow: $selected 0px 0px 0px 3px, $selected 0px 0px 0px 100px inset;

@@ -7,6 +7,7 @@
     overlay
     persistent
     :width="rightDrawerShown ? 382 : 82"
+    class="cursor-pointer"
     @click="rightDrawerShown = !rightDrawerShown"
   >
     <q-scroll-area class="fit">
@@ -117,7 +118,7 @@ import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import { PackingListState } from "@/models/packing/list/PackingListState"
 
 const { packingListManager } = useAllPackingListsStore()
-const { selectedListName, packingListsShown, rightDrawerShown } = storeToRefs(
+const { selectedListName, rightDrawerShown } = storeToRefs(
   useAllPackingListsStore()
 )
 const { packingList, packing } = storeToRefs(useOpenedPackingListStore())

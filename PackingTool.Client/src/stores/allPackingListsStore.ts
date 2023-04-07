@@ -36,6 +36,9 @@ export const useAllPackingListsStore = defineStore(
       if (allListsFetched.value && currentListName) {
         packingListManager.SetupList(currentListName)
       }
+      if (!currentListName) {
+        rightDrawerShown.value = false
+      }
     })
 
     watch(allListsFetched, (areListsFetched) => {

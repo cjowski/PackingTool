@@ -255,7 +255,7 @@ onUnmounted(() => {
   box-shadow: $selected 0px 0px 0px 3px;
 }
 .new-group-color {
-  box-shadow: rgb(102, 255, 0) 0px 0px 0px 3px,
+  box-shadow: rgb(50, 200, 0) 0px 0px 0px 3px,
     rgba(198, 255, 0, 0.25) 0px 30px 60px -12px inset,
     rgba(0, 110, 10, 0.3) 0px 18px 36px -18px inset;
 }

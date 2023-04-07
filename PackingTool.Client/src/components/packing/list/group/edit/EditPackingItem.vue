@@ -6,6 +6,27 @@
     @click="trySelectItem"
     @dblclick="editItemName(groupID, item.id)"
   >
+    <q-btn
+      icon="priority_high"
+      :color="important ? 'red' : 'grey'"
+      round
+      dense
+      size="10px"
+      class="edit-item-importance-mark"
+      @click="markImportance"
+      @click.stop=""
+    ></q-btn>
+    <q-btn
+      icon="shopping_cart"
+      :color="forShopping ? 'primary' : 'grey'"
+      round
+      dense
+      size="10px"
+      class="edit-item-shopping-mark"
+      @click="markForShopping"
+      @click.stop=""
+    ></q-btn>
+
     <q-item-section>
       <div v-if="!editingName" class="non-selectable new-item-label">
         {{ item.name }}
@@ -35,7 +56,7 @@
             class="item-count-input"
           ></q-input>
         </div>
-        <div class="column">
+        <div class="column" @click.stop="">
           <q-btn
             flat
             dense
@@ -43,14 +64,39 @@
             size="10px"
             @click="packingListManager.RemoveItem(item.id, groupID)"
           />
-          <q-btn
-            flat
-            dense
-            icon="priority_high"
-            size="10px"
-            :color="important ? 'red' : 'white'"
-            @click="markImportance"
-          />
+          <q-btn flat dense icon="more_vert" size="10px">
+            <q-menu
+              v-model="editingAttributes"
+              anchor="top right"
+              transition-show="jump-down"
+              transition-hide="jump-up"
+              class="transparent no-shadow"
+              :offset="[-10, 0]"
+            >
+              <q-list dense>
+                <q-item>
+                  <q-btn
+                    icon="priority_high"
+                    round
+                    :color="important ? 'red' : 'grey'"
+                    size="md"
+                    padding="sm"
+                    @click="markImportance"
+                  />
+                </q-item>
+                <q-item>
+                  <q-btn
+                    icon="shopping_cart"
+                    round
+                    :color="forShopping ? 'primary' : 'grey'"
+                    size="md"
+                    padding="sm"
+                    @click="markForShopping"
+                  />
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
         </div>
       </div>
     </q-item-section>
@@ -85,14 +131,21 @@ const props = defineProps({
 const editingName = computed(() => editingNameForItemID.value == props.item.id)
 
 const modifiedName = ref(editingName.value ? props.item.name : "")
-const importantAttribute = "Important"
+const editingAttributes = ref(false)
 
 const selected = computed(
   () => selectedItemIDs.value.indexOf(props.item.id) !== -1
 )
 
 const important = computed(() => {
-  return props.item.attributes.indexOf(importantAttribute) !== -1
+  return props.item.attributes.indexOf("Important") !== -1
+})
+
+const forShopping = computed(() => {
+  return (
+    props.item.attributes.indexOf("ToBuy") !== -1 ||
+    props.item.attributes.indexOf("Bought") !== -1
+  )
 })
 
 const trySelectItem = (event: MouseEvent) => {
@@ -112,15 +165,23 @@ const cancelEditingName = () => {
 }
 
 const markImportance = () => {
-  if (props.item.attributes.indexOf(importantAttribute) === -1) {
-    props.item.attributes.push(importantAttribute)
+  if (props.item.attributes.indexOf("Important") === -1) {
+    props.item.attributes.push("Important")
   } else {
-    props.item.attributes.splice(
-      props.item.attributes.findIndex(
-        (attribute) => attribute === importantAttribute
-      ),
-      1
-    )
+    props.item.RemoveAttribute("Important")
+  }
+}
+
+const markForShopping = () => {
+  if (
+    props.item.attributes.indexOf("ToBuy") === -1 &&
+    props.item.attributes.indexOf("Bought") === -1
+  ) {
+    props.item.attributes.push("ToBuy")
+  } else if (props.item.attributes.indexOf("ToBuy") !== -1) {
+    props.item.RemoveAttribute("ToBuy")
+  } else if (props.item.attributes.indexOf("Bought") !== -1) {
+    props.item.RemoveAttribute("Bought")
   }
 }
 
@@ -172,5 +233,15 @@ watch(editingNameForItemID, (itemID) => {
   :deep(input) {
     padding-top: 6px;
   }
+}
+.edit-item-importance-mark {
+  position: absolute;
+  left: -30px;
+  top: 5px;
+}
+.edit-item-shopping-mark {
+  position: absolute;
+  left: -30px;
+  top: 30px;
 }
 </style>
