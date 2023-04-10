@@ -1,5 +1,5 @@
 <template>
-  <q-list v-if="tasks.length != 0">
+  <div>
     <q-item clickable @click="finishAllTasks(!allTasksDone)">
       <q-item-section>
         <q-checkbox
@@ -14,34 +14,46 @@
       </q-item-section>
 
       <q-item-section side @click.stop="">
-        <q-btn flat dense icon="edit" @click="editing = true" />
+        <q-btn
+          flat
+          dense
+          icon="edit"
+          color="yellow-5"
+          @click="editing = true"
+        />
       </q-item-section>
     </q-item>
 
     <q-separator dark />
 
-    <q-item v-for="task in tasks" :item="task" clickable>
-      <q-item-section side>
-        <q-checkbox dense v-model="task.done" color="amber-10" keep-color />
-      </q-item-section>
+    <q-scroll-area :style="`height: ${scrollAreaHeight}px`">
+      <q-list>
+        <q-item v-for="task in tasks" :item="task" clickable>
+          <q-item-section side>
+            <q-checkbox dense v-model="task.done" color="amber-10" keep-color />
+          </q-item-section>
 
-      <q-item-section @click="task.done = !task.done">
-        <div class="row q-gutter-xs non-selectable">
-          <div class="col-12 q-ma-none">
-            <span class="todo-task-font">{{ task.name }}</span>
-          </div>
-        </div>
-      </q-item-section>
-    </q-item>
-  </q-list>
+          <q-item-section @click="task.done = !task.done">
+            <div class="row q-gutter-xs non-selectable">
+              <div class="col-12 q-ma-none">
+                <span class="todo-task-font">{{ task.name }}</span>
+              </div>
+            </div>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-scroll-area>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { storeToRefs } from "pinia"
 import { useTodoTasksStore } from "@/stores/todoTasksStore"
 
 const { tasks, editing } = storeToRefs(useTodoTasksStore())
+
+const scrollAreaHeight = ref(0)
 
 const allTasksDone = computed({
   get() {
@@ -55,6 +67,10 @@ const allTasksDone = computed({
 const finishAllTasks = (value: boolean) => {
   tasks.value.forEach((task) => (task.done = value))
 }
+
+onMounted(() => {
+  scrollAreaHeight.value = window.innerHeight - 180
+})
 </script>
 
 <style lang="scss" scoped>

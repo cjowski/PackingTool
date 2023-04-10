@@ -11,9 +11,9 @@
           outlined
           autogrow
           label="New task"
-          @keydown.enter.prevent="addTask"
+          @keydown.enter.prevent="addNewTask"
           @keydown.esc.prevent="cancelAddingTask"
-          class="new-todo-task-input"
+          class="todo-task-input"
         />
       </q-item-section>
       <q-item-section side>
@@ -27,64 +27,108 @@
         />
       </q-item-section>
     </q-item>
-    <q-list v-if="tasks.length != 0">
-      <q-item clickable>
-        <q-item-section />
 
-        <q-item-section v-if="editing" side @click.stop="">
-          <q-btn
-            flat
-            dense
-            icon="check"
-            color="green"
-            @click="editing = false"
-          />
-        </q-item-section>
+    <q-item>
+      <q-item-section />
 
-        <q-item-section side @click.stop="" style="padding-left: 0px">
-          <q-btn flat dense icon="close" color="red" @click="removeAllTasks" />
-        </q-item-section>
-      </q-item>
+      <q-item-section v-if="tasks.length != 0" side @click.stop="">
+        <q-btn flat dense icon="check" color="green" @click="editing = false" />
+      </q-item-section>
 
-      <q-separator dark />
+      <q-item-section
+        v-if="tasks.length != 0"
+        side
+        @click.stop=""
+        style="padding-left: 0px"
+      >
+        <q-btn
+          flat
+          dense
+          icon="close"
+          color="red"
+          @click="showRemoveAllTasksConfirmation = true"
+        />
+      </q-item-section>
+    </q-item>
 
-      <q-item v-for="task in tasks" :item="task">
-        <q-item-section @click="task.done = !task.done">
-          <div class="row q-gutter-xs non-selectable">
-            <div class="col-12 q-ma-none">
-              <span class="todo-task-font">{{ task.name }}</span>
-            </div>
-          </div>
-        </q-item-section>
+    <q-separator v-if="tasks.length != 0" dark />
 
-        <q-item-section side @click.stop="" style="padding-left: 0px">
-          <q-btn flat dense icon="edit" @click="editingTask = true" />
-        </q-item-section>
+    <q-scroll-area :style="`height: ${scrollAreaHeight}px`">
+      <q-list>
+        <q-item v-for="task in tasks" :item="task">
+          <q-item-section
+            v-if="editingTaskID != task.id"
+            class="todo-task-font"
+          >
+            {{ task.name }}
+          </q-item-section>
+          <q-item-section v-else>
+            <q-input
+              v-model="editedTask"
+              type="textarea"
+              :spellcheck="false"
+              autofocus
+              outlined
+              autogrow
+              label="Edit task"
+              @keydown.enter.prevent="submitEditedTask"
+              @keydown.esc.prevent="cancelEditingTask"
+              @focusout="cancelEditingTask"
+              class="todo-task-input"
+            />
+          </q-item-section>
 
-        <q-item-section side @click.stop="" style="padding-left: 0px">
-          <q-btn flat dense icon="close" @click="removeTask(task.id)" />
-        </q-item-section>
-      </q-item>
-    </q-list>
+          <q-item-section
+            v-if="editingTaskID != task.id"
+            side
+            @click.stop=""
+            style="padding-left: 0px"
+          >
+            <q-btn flat dense icon="edit" @click="editTask(task)" />
+          </q-item-section>
+
+          <q-item-section
+            v-if="editingTaskID != task.id"
+            side
+            @click.stop=""
+            style="padding-left: 0px"
+          >
+            <q-btn flat dense icon="close" @click="removeTask(task.id)" />
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-scroll-area>
 
     <q-dialog v-model="showRemoveAllTasksConfirmation" position="right">
-      <div></div>
+      <q-card class="todo-task-font">
+        <q-card-section> Do you want to remove all tasks? </q-card-section>
+
+        <q-separator dark />
+
+        <q-card-actions align="around">
+          <q-btn flat @click="removeAllTasksAndClosePopup">Yes</q-btn>
+          <q-btn flat @click="showRemoveAllTasksConfirmation = false">No</q-btn>
+        </q-card-actions>
+      </q-card>
     </q-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
 import { storeToRefs } from "pinia"
 import { useTodoTasksStore } from "@/stores/todoTasksStore"
+import type { PackingTask } from "@/api"
 
 const { tasks, editing } = storeToRefs(useTodoTasksStore())
 const { addTask, removeTask, removeAllTasks } = useTodoTasksStore()
 
 const newTask = ref("")
+const editedTask = ref("")
 const showNewTaskInput = ref(true)
-const editingTask = ref(false)
+const editingTaskID = ref(0)
 const showRemoveAllTasksConfirmation = ref(false)
+const scrollAreaHeight = ref(0)
 
 const addNewTask = () => {
   if (!newTask.value) return
@@ -101,6 +145,31 @@ const addNewTask = () => {
 const cancelAddingTask = () => {
   newTask.value = ""
 }
+
+const editTask = (task: PackingTask) => {
+  editingTaskID.value = task.id
+  editedTask.value = task.name
+}
+
+const submitEditedTask = (task: PackingTask) => {
+  task.name = editedTask.value
+  editingTaskID.value = 0
+  editedTask.value = ""
+}
+
+const cancelEditingTask = () => {
+  editingTaskID.value = 0
+  editedTask.value = ""
+}
+
+const removeAllTasksAndClosePopup = () => {
+  removeAllTasks()
+  showRemoveAllTasksConfirmation.value = false
+}
+
+onMounted(() => {
+  scrollAreaHeight.value = window.innerHeight - 280
+})
 </script>
 
 <style lang="scss" scoped>
@@ -109,7 +178,7 @@ const cancelAddingTask = () => {
   font-weight: bold;
   font-size: 14px;
 }
-.new-todo-task-input {
+.todo-task-input {
   font-family: "Ink Free";
   font-size: 16px;
 
@@ -122,13 +191,6 @@ const cancelAddingTask = () => {
     padding-top: 10px;
     font-size: 18px;
     font-weight: bold;
-  }
-}
-.todo-task-all-done-label {
-  :deep(.q-checkbox__label) {
-    font-family: "Ink Free";
-    font-weight: bold;
-    font-size: 20px;
   }
 }
 </style>
