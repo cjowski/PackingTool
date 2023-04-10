@@ -52,9 +52,9 @@
 import { ref, watch } from "vue"
 import { storeToRefs } from "pinia"
 import TodoTab from "./rightDrawerTab/todo/TodoTab.vue"
-import ImportantItemsTab from "./rightDrawerTab/ImportantItemsTab.vue"
-import ShoppingItemsTab from "./rightDrawerTab/ShoppingItemsTab.vue"
-import NotesTab from "./rightDrawerTab/NotesTab.vue"
+import ImportantItemsTab from "./rightDrawerTab/important/ImportantItemsTab.vue"
+import ShoppingItemsTab from "./rightDrawerTab/shopping/ShoppingItemsTab.vue"
+import NotesTab from "./rightDrawerTab/notes/NotesTab.vue"
 import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 
 const {
