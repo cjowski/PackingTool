@@ -5,7 +5,7 @@
         dense
         v-model="item.packed"
         :color="checkboxColor"
-        :keep-color="important || toBuy || bought"
+        :keep-color="important || toBuy"
       />
     </q-item-section>
 
@@ -40,7 +40,6 @@ const important = computed(
   () => props.item.attributes.indexOf("Important") !== -1
 )
 const toBuy = computed(() => props.item.attributes.indexOf("ToBuy") !== -1)
-const bought = computed(() => props.item.attributes.indexOf("Bought") !== -1)
 
 const itemClass = computed(() => {
   let output = "q-pa-xs q-pb-none pack-item-font shadow-transition"
@@ -53,8 +52,6 @@ const checkboxColor = computed(() => {
     return "red"
   } else if (toBuy.value) {
     return "amber"
-  } else if (bought.value) {
-    return "green"
   }
   return "primary"
 })

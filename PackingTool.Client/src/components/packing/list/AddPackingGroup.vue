@@ -30,6 +30,7 @@
         <q-item-section>
           <q-select
             outlined
+            use-input
             v-model="itemType"
             :options="itemTypes"
             label="Item type"
@@ -74,7 +75,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import type { PackingItemType } from "@/api/models/PackingItemType";
+import type { PackingItemType } from "@/api/models/PackingItemType"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import getIconByItemType from "@/methods/getIconForItemType"
 

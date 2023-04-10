@@ -9,11 +9,9 @@
           round
           dense
           icon="menu"
+          size="lg"
         />
-        <q-toolbar-title
-          class="text-bold non-selectable cursor-pointer"
-          @click="showPackingLists"
-        >
+        <q-toolbar-title class="text-bold non-selectable">
           Packing lists
         </q-toolbar-title>
 
@@ -64,7 +62,9 @@ import { useRoute } from "vue-router"
 
 const { isAuthorized, enablePackingLists, isAdmin, logout } =
   useAuthenticationStore()
-const { packingListsShown, rightDrawerShown } = storeToRefs(useAllPackingListsStore())
+const { packingListsShown, rightDrawerShown } = storeToRefs(
+  useAllPackingListsStore()
+)
 
 const route = useRoute()
 const $q = useQuasar()

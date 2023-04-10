@@ -1,17 +1,34 @@
 <template>
-  <q-input
-    v-model="modelValue"
-    autofocus
-    outlined
-    label="Name"
-    class="q-pa-none q-ma-none drawer-list-name-input"
-    @keydown.delete.stop=""
-    @keydown.enter.prevent="submit"
-    @keydown.esc.prevent="cancel"
-    @focusout="cancel"
-    :error="!!newListNameError"
-    :error-message="newListNameError"
-  ></q-input>
+  <div>
+    <q-item>
+      <q-item-section>
+        <q-input
+          v-model="modelValue"
+          autofocus
+          outlined
+          label="Name"
+          class="q-pa-none q-ma-none drawer-list-name-input"
+          @keydown.delete.stop=""
+          @keydown.enter.prevent="submit"
+          @keydown.esc.prevent="cancel"
+          :error="!!newListNameError"
+          :error-message="newListNameError"
+        />
+      </q-item-section>
+      <q-item-section side class="q-pa-none">
+        <q-btn flat icon="undo" class="q-ma-none q-pa-sm" @click="cancel" />
+      </q-item-section>
+    </q-item>
+    <q-item class="q-pt-md q-pb-md">
+      <q-btn
+        color="green"
+        padding="xs"
+        icon="check"
+        class="full-width"
+        @click="submit"
+      />
+    </q-item>
+  </div>
 </template>
 
 <script setup lang="ts">

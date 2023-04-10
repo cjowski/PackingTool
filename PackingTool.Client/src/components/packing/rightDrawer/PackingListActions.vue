@@ -4,9 +4,8 @@
     side="right"
     behavior="desktop"
     bordered
-    overlay
     persistent
-    :width="rightDrawerShown ? 382 : 82"
+    :width="rightDrawerShown ? 362 : 62"
     class="cursor-pointer"
     @click="rightDrawerShown = !rightDrawerShown"
   >
@@ -16,6 +15,7 @@
           <q-btn
             v-if="!packing"
             flat
+            dense
             icon="luggage"
             color="green-14"
             size="lg"
@@ -25,6 +25,7 @@
           <q-btn
             v-else
             flat
+            dense
             icon="no_luggage"
             color="deep-orange"
             size="lg"
@@ -35,6 +36,7 @@
         <q-item class="q-pa-sm">
           <q-btn
             flat
+            dense
             :icon="allGroupsPacked ? 'remove_done' : 'done_all'"
             :color="allGroupsPacked ? 'orange' : 'teal-13'"
             size="lg"
@@ -45,8 +47,31 @@
         </q-item>
         <q-item class="q-pa-sm">
           <q-btn
+            flat
+            dense
+            icon="library_add"
+            color="light-green-14"
+            size="lg"
+            @click="addingGroup = true"
+            @click.stop=""
+          />
+        </q-item>
+        <q-item class="q-pa-sm">
+          <q-btn
+            flat
+            dense
+            icon="save"
+            color="light-blue-13"
+            size="lg"
+            @click="packingListManager.SavePackingList"
+            @click.stop=""
+          />
+        </q-item>
+        <q-item class="q-pa-sm">
+          <q-btn
             v-if="!configuringGrid"
             flat
+            dense
             icon="grid_view"
             color="purple-13"
             size="lg"
@@ -67,33 +92,14 @@
             @focusout="configuringGrid = false"
             @click.stop=""
             color="purple-13"
-            class="q-mt-xs q-mb-sm q-ml-none q-mr-none"
+            class="grid-column-count-input"
           ></q-input>
-        </q-item>
-        <q-item class="q-pa-sm">
-          <q-btn
-            flat
-            icon="playlist_add"
-            color="cyan-13"
-            size="lg"
-            @click="addingGroup = true"
-            @click.stop=""
-          />
-        </q-item>
-        <q-item class="q-pa-sm">
-          <q-btn
-            flat
-            icon="save"
-            color="light-blue-13"
-            size="lg"
-            @click="packingListManager.SavePackingList"
-            @click.stop=""
-          />
         </q-item>
         <q-item class="q-pa-sm">
           <q-btn
             v-if="packingList.state != PackingListState.New"
             flat
+            dense
             icon="sync"
             color="orange"
             size="lg"
@@ -157,3 +163,15 @@ const packAllGroups = (value: boolean) => {
   )
 }
 </script>
+
+<style lang="scss" scoped>
+.grid-column-count-input {
+  :deep(.q-field__control) {
+    padding: 0 4px 0 8px;
+    height: 40px;
+  }
+  :deep(input) {
+    padding-top: 6px;
+  }
+}
+</style>

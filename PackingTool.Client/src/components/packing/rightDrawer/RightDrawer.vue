@@ -4,7 +4,6 @@
     side="right"
     behavior="desktop"
     bordered
-    overlay
     persistent
   >
     <q-scroll-area class="fit">
@@ -57,7 +56,7 @@
 <script setup lang="ts">
 import { ref, watch } from "vue"
 import { storeToRefs } from "pinia"
-import TodoTab from "./rightDrawerTab/TodoTab.vue"
+import TodoTab from "./rightDrawerTab/todo/TodoTab.vue"
 import ImportantItemsTab from "./rightDrawerTab/ImportantItemsTab.vue"
 import ShoppingItemsTab from "./rightDrawerTab/ShoppingItemsTab.vue"
 import NotesTab from "./rightDrawerTab/NotesTab.vue"

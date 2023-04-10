@@ -90,7 +90,7 @@ import { storeToRefs } from "pinia"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { PackingListState } from "@/models/packing/list/PackingListState"
-import ListNameInput from "./ListNameInput.vue"
+import ListNameInput from "./AddPackingList.vue"
 import { PackingSectionType } from "@/enums/PackingSectionType"
 import { PackingListService } from "@/api/services/PackingListService"
 

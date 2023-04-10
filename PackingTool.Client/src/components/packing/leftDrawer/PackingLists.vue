@@ -4,13 +4,12 @@
     side="left"
     behavior="desktop"
     bordered
-    overlay
     persistent
   >
     <q-scroll-area class="fit">
       <q-list>
-        <q-item dense>
-          <q-card-actions v-if="!addingList" style="width: 100%">
+        <q-item v-if="!addingList" dense>
+          <q-card-actions style="width: 100%">
             <div class="col">
               <input
                 style="display: none"
@@ -29,11 +28,11 @@
                   padding="xs"
                 />
                 <q-btn
-                  icon="add"
+                  icon="playlist_add"
                   @click="addingList = true"
                   flat
                   dense
-                  color="cyan"
+                  color="cyan-13"
                   padding="xs"
                 />
                 <q-btn
@@ -55,14 +54,13 @@
               </div>
             </div>
           </q-card-actions>
-          <q-item-section v-else>
-            <ListNameInput
-              v-model="newListName"
-              :onSubmit="addNewList"
-              :onCancel="cancelAddNewList"
-            ></ListNameInput>
-          </q-item-section>
         </q-item>
+        <AddPackingList
+          v-else
+          v-model="newListName"
+          :onSubmit="addNewList"
+          :onCancel="cancelAddNewList"
+        />
         <q-separator />
         <template v-for="list in allPackingLists">
           <PackingListElement
@@ -83,7 +81,7 @@ import { useQuasar } from "quasar"
 import { useRoute } from "vue-router"
 import router from "@/router"
 import PackingListElement from "./PackingListElement.vue"
-import ListNameInput from "./ListNameInput.vue"
+import AddPackingList from "./AddPackingList.vue"
 import JSZip from "jszip"
 import { storeToRefs } from "pinia"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
