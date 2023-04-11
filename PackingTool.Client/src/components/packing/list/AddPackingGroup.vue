@@ -1,5 +1,5 @@
 <template>
-  <q-card class="add-group-card">
+  <q-card class="add-group-card q-mt-xl">
     <q-card-section horizontal>
       <q-item class="col">
         <q-item-section>
@@ -31,9 +31,11 @@
           <q-select
             outlined
             use-input
+            clearable
             v-model="itemType"
-            :options="itemTypes"
+            :options="foundItemTypes"
             label="Item type"
+            @filter="searchItemTypes"
             @keydown.enter.prevent="add"
             class="new-group-type-select"
           >
@@ -90,6 +92,9 @@ const props = defineProps({
 
 const name = ref("")
 const itemType = ref("Other" as PackingItemType)
+const searchingItemTypePhrase = ref("")
+const foundItemTypes = ref([] as PackingItemType[])
+
 const itemTypes = [
   "Cloth",
   "Electronics",
@@ -100,6 +105,24 @@ const itemTypes = [
   "Medicaments",
   "Other",
 ] as PackingItemType[] //TODO make it automated
+
+const searchItemTypes = (
+  text: string,
+  doneFn: (callbackFn: () => void) => void
+) => {
+  searchingItemTypePhrase.value = text
+  doneFn(() => {
+    if (searchingItemTypePhrase.value) {
+      foundItemTypes.value = itemTypes.filter((itemType) =>
+        itemType
+          .toLowerCase()
+          .startsWith(searchingItemTypePhrase.value.toLowerCase())
+      )
+    } else {
+      foundItemTypes.value = itemTypes
+    }
+  })
+}
 
 const add = () => {
   if (name.value) {

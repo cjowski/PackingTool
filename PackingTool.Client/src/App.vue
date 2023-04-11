@@ -39,8 +39,11 @@
     </q-header>
 
     <PackingLists v-model="packingListsShown"></PackingLists>
-    <PackingListActions />
-    <RightDrawer v-model="rightDrawerShown"></RightDrawer>
+    <PackingListActions @click="setRightDrawerFocus" />
+    <RightDrawer
+      v-model="rightDrawerShown"
+      @click="setRightDrawerFocus"
+    ></RightDrawer>
 
     <q-page-container>
       <router-view />
@@ -53,18 +56,21 @@ import { onMounted, watch } from "vue"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
 import router from "./router"
+import { useRoute } from "vue-router"
 import { useAuthenticationStore } from "./stores/authenticationStore"
 import { useAllPackingListsStore } from "./stores/allPackingListsStore"
+import { useOperationStatusStore } from "./stores/operationStatusStore"
 import PackingLists from "./components/packing/leftDrawer/PackingLists.vue"
 import PackingListActions from "./components/packing/rightDrawer/PackingListActions.vue"
 import RightDrawer from "./components/packing/rightDrawer/RightDrawer.vue"
-import { useRoute } from "vue-router"
+import { PackingSectionType } from "./enums/PackingSectionType"
 
 const { isAuthorized, enablePackingLists, isAdmin, logout } =
   useAuthenticationStore()
 const { packingListsShown, rightDrawerShown } = storeToRefs(
   useAllPackingListsStore()
 )
+const { currentSectionFocus } = storeToRefs(useOperationStatusStore())
 
 const route = useRoute()
 const $q = useQuasar()
@@ -81,6 +87,10 @@ const showPackingLists = () => {
   }
 
   packingListsShown.value = !packingListsShown.value
+}
+
+const setRightDrawerFocus = () => {
+  currentSectionFocus.value = PackingSectionType.RightDrawer
 }
 
 watch(

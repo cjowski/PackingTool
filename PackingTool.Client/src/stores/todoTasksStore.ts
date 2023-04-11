@@ -25,7 +25,7 @@ export const useTodoTasksStore = defineStore("todoTasks", () => {
   }
 
   watch(selectedListName, () => {
-    editing.value = tasks.value.length == 0
+    editing.value = packingList.value.content.tasks.length == 0
   })
 
   return {
