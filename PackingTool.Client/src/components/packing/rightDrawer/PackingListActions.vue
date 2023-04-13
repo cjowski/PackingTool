@@ -6,6 +6,7 @@
       behavior="desktop"
       bordered
       persistent
+      :overlay="$q.screen.lt.md"
       :width="rightDrawerShown ? 362 : 62"
       class="cursor-pointer"
       @click="rightDrawerShown = !rightDrawerShown"
@@ -68,7 +69,7 @@
               @click.stop=""
             />
           </q-item>
-          <q-item class="q-pa-sm">
+          <q-item v-if="$q.screen.gt.sm" class="q-pa-sm">
             <q-btn
               v-if="!configuringGrid"
               flat

@@ -1,8 +1,15 @@
 <template>
   <q-page padding class="flex flex-top q-mt-md">
     <div class="column" v-if="selectedListName">
-      <div class="row">
+      <div v-if="$q.screen.gt.sm" class="row">
         <PackingGrid />
+      </div>
+      <div
+        v-else
+        v-for="group in packingList.content.groups"
+        class="row q-mt-md"
+      >
+        <PackingGroup :group="packingListManager.GetGroup(group.id)" />
       </div>
     </div>
   </q-page>
@@ -14,6 +21,7 @@ import { useRoute } from "vue-router"
 import { useQuasar, QSpinnerGrid } from "quasar"
 import { storeToRefs } from "pinia"
 import PackingGrid from "@/components/packing/list/PackingGrid.vue"
+import PackingGroup from "@/components/packing/list/group/PackingGroup.vue"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
@@ -23,7 +31,7 @@ const { packingListManager } = useAllPackingListsStore()
 const { selectedListName, allListsFetched } = storeToRefs(
   useAllPackingListsStore()
 )
-const { packing } = storeToRefs(useOpenedPackingListStore())
+const { packingList, packing } = storeToRefs(useOpenedPackingListStore())
 const { currentAction, previousAction } = storeToRefs(useOperationStatusStore())
 
 const route = useRoute()

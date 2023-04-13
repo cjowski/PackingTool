@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="width: 100%">
     <DisplayPackingGroup
       v-if="displaying"
       :group="group"

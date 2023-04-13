@@ -5,6 +5,7 @@
     behavior="desktop"
     bordered
     persistent
+    :overlay="$q.screen.lt.md"
     id="right-drawer"
   >
     <q-tabs v-model="selectedTab" narrow-indicator>

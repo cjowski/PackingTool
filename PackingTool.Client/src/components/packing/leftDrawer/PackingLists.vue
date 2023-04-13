@@ -5,6 +5,7 @@
     behavior="desktop"
     bordered
     persistent
+    :overlay="$q.screen.lt.md"
   >
     <q-scroll-area class="fit">
       <q-list>

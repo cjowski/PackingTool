@@ -7,10 +7,7 @@
         :style="`width: ${columnsWidth}`"
       >
         <div v-for="node in gridColumn" class="row">
-          <PackingGroup
-            :group="packingListManager.GetGroup(node.element.id)"
-            style="width: 100%"
-          />
+          <PackingGroup :group="packingListManager.GetGroup(node.element.id)" />
         </div>
       </div>
     </div>
@@ -31,7 +28,9 @@ import PackingGroup from "@/components/packing/list/group/PackingGroup.vue"
 import { PackingSectionType } from "@/enums/PackingSectionType"
 
 const { packingListManager } = useAllPackingListsStore()
-const { packingList, selectedGroupIDs } = storeToRefs(useOpenedPackingListStore())
+const { packingList, selectedGroupIDs } = storeToRefs(
+  useOpenedPackingListStore()
+)
 const { currentSectionFocus } = storeToRefs(useOperationStatusStore())
 const { copiedGroups } = storeToRefs(useClipboardStore())
 
