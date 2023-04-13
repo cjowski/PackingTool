@@ -29,33 +29,34 @@
     <q-separator v-if="importantItems.length > 1" dark />
 
     <q-scroll-area :style="`height: ${scrollAreaHeight}px`">
-      <q-list>
-        <q-item v-for="item in importantItems" :item="item" clickable>
-          <q-item-section side>
-            <q-checkbox dense v-model="item.packed" color="red" keep-color />
-          </q-item-section>
+      <q-item
+        v-for="item in importantItems"
+        :item="item"
+        clickable
+        class="important-item-font"
+      >
+        <q-item-section side>
+          <q-checkbox dense v-model="item.packed" color="red" keep-color />
+        </q-item-section>
 
-          <q-item-section @click="item.packed = !item.packed">
-            <div class="row q-gutter-xs non-selectable">
-              <div class="col-11 q-ma-none">
-                <span class="important-item-font">{{ item.name }}</span>
-              </div>
-              <div class="col-1 q-ma-none text-left">
-                <span
-                  class="important-item-font"
-                  :style="item.count == 1 ? 'visibility: hidden' : ''"
-                >
-                  {{ item.count }}
-                </span>
-              </div>
-            </div>
-          </q-item-section>
+        <q-item-section @click="item.packed = !item.packed">
+          {{ item.name }}
+        </q-item-section>
 
-          <q-item-section side @click.stop="">
-            <q-btn flat dense icon="close" @click="removeImportance(item)" />
-          </q-item-section>
-        </q-item>
-      </q-list>
+        <q-item-section v-if="item.count > 1" side @click.stop="">
+          <q-badge rounded outline color="red-2" :label="item.count" />
+        </q-item-section>
+
+        <q-item-section side @click.stop="" style="padding-left: 4px">
+          <q-btn
+            flat
+            dense
+            icon="close"
+            color="red-2"
+            @click="removeImportance(item)"
+          />
+        </q-item-section>
+      </q-item>
     </q-scroll-area>
 
     <q-dialog v-model="showRemoveAllConfirmation" position="right">
@@ -109,7 +110,7 @@ const removeImportanceForAll = () => {
 }
 
 onMounted(() => {
-  scrollAreaHeight.value = window.innerHeight - 180
+  scrollAreaHeight.value = window.innerHeight - 200
 })
 </script>
 
@@ -123,7 +124,6 @@ onMounted(() => {
 }
 .important-item-font {
   font-family: "Segoe Print";
-  font-weight: bold;
   font-size: 15px;
 }
 </style>

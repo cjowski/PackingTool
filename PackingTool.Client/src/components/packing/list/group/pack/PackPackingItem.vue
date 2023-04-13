@@ -10,16 +10,11 @@
     </q-item-section>
 
     <q-item-section @click="item.packed = !item.packed">
-      <div class="row q-gutter-xs non-selectable">
-        <div class="col-11 q-ma-none">
-          <span>{{ item.name }}</span>
-        </div>
-        <div class="col-1 q-ma-none text-left">
-          <span :style="item.count == 1 ? 'visibility: hidden' : ''">
-            {{ item.count }}
-          </span>
-        </div>
-      </div>
+      {{ item.name }}
+    </q-item-section>
+
+    <q-item-section v-if="item.count > 1" side>
+      <q-badge rounded outline color="indigo-2" :label="item.count" />
     </q-item-section>
   </q-item>
 </template>
@@ -51,7 +46,7 @@ const checkboxColor = computed(() => {
   if (important.value) {
     return "red"
   } else if (toBuy.value) {
-    return "amber"
+    return "amber-9"
   }
   return "primary"
 })

@@ -103,7 +103,7 @@ const removeAllFromShopping = () => {
 }
 
 onMounted(() => {
-  scrollAreaHeight.value = window.innerHeight - 180
+  scrollAreaHeight.value = window.innerHeight - 200
 })
 </script>
 

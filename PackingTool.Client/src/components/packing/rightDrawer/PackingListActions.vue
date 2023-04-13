@@ -51,7 +51,7 @@
               flat
               dense
               icon="library_add"
-              color="light-green-14"
+              color="light-green-6"
               size="lg"
               @click="addingGroup = true"
               @click.stop=""
@@ -74,7 +74,7 @@
               flat
               dense
               icon="grid_view"
-              color="purple-13"
+              color="purple-12"
               size="lg"
               @click="configuringGrid = true"
               @click.stop=""
@@ -92,7 +92,7 @@
               @keydown.esc.prevent="configuringGrid = false"
               @focusout="configuringGrid = false"
               @click.stop=""
-              color="purple-13"
+              color="purple-12"
               class="grid-column-count-input"
             ></q-input>
           </q-item>
@@ -173,6 +173,7 @@ const packAllGroups = (value: boolean) => {
   :deep(.q-field__control) {
     padding: 0 4px 0 8px;
     height: 40px;
+    width: 45px;
   }
   :deep(input) {
     padding-top: 6px;

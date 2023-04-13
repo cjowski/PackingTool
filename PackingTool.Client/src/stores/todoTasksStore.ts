@@ -1,15 +1,14 @@
 import { computed, ref, watch } from "vue"
 import { defineStore, storeToRefs } from "pinia"
 import { useOpenedPackingListStore } from "./openedPackingListStore"
-import { useAllPackingListsStore } from "./allPackingListsStore"
 
 export const useTodoTasksStore = defineStore("todoTasks", () => {
-  const { selectedListName } = storeToRefs(useAllPackingListsStore())
   const { packingList } = storeToRefs(useOpenedPackingListStore())
 
-  const editing = ref(false)
+  const editing = ref(true)
 
   const tasks = computed(() => packingList.value.content.tasks)
+  const tasksLength = computed(() => packingList.value.content.tasks.length)
 
   const addTask = (taskName: string) => {
     packingList.value.content.AddTask(taskName)
@@ -24,8 +23,8 @@ export const useTodoTasksStore = defineStore("todoTasks", () => {
     taskIDs.forEach((taskID) => packingList.value.content.RemoveTask(taskID))
   }
 
-  watch(selectedListName, () => {
-    editing.value = packingList.value.content.tasks.length == 0
+  watch(tasksLength, (currentTasksLength) => {
+    editing.value = currentTasksLength == 0
   })
 
   return {

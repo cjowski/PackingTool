@@ -34,11 +34,7 @@
           </q-item-section>
 
           <q-item-section @click="task.done = !task.done">
-            <div class="row q-gutter-xs non-selectable">
-              <div class="col-12 q-ma-none">
-                <span class="todo-task-font">{{ task.name }}</span>
-              </div>
-            </div>
+            <span class="todo-task-font">{{ task.name }}</span>
           </q-item-section>
         </q-item>
       </q-list>
@@ -69,7 +65,7 @@ const finishAllTasks = (value: boolean) => {
 }
 
 onMounted(() => {
-  scrollAreaHeight.value = window.innerHeight - 180
+  scrollAreaHeight.value = window.innerHeight - 200
 })
 </script>
 

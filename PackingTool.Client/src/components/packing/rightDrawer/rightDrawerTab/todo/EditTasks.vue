@@ -54,49 +54,7 @@
     <q-separator v-if="tasks.length != 0" dark />
 
     <q-scroll-area :style="`height: ${scrollAreaHeight}px`">
-      <q-list>
-        <q-item v-for="task in tasks" :item="task">
-          <q-item-section
-            v-if="editingTaskID != task.id"
-            class="todo-task-font"
-          >
-            {{ task.name }}
-          </q-item-section>
-          <q-item-section v-else>
-            <q-input
-              v-model="editedTask"
-              type="textarea"
-              :spellcheck="false"
-              autofocus
-              outlined
-              autogrow
-              label="Edit task"
-              @keydown.enter.prevent="submitEditedTask"
-              @keydown.esc.prevent="cancelEditingTask"
-              @focusout="cancelEditingTask"
-              class="todo-task-input"
-            />
-          </q-item-section>
-
-          <q-item-section
-            v-if="editingTaskID != task.id"
-            side
-            @click.stop=""
-            style="padding-left: 0px"
-          >
-            <q-btn flat dense icon="edit" @click="editTask(task)" />
-          </q-item-section>
-
-          <q-item-section
-            v-if="editingTaskID != task.id"
-            side
-            @click.stop=""
-            style="padding-left: 0px"
-          >
-            <q-btn flat dense icon="close" @click="removeTask(task.id)" />
-          </q-item-section>
-        </q-item>
-      </q-list>
+      <EditTask v-for="task in tasks" :task="task" />
     </q-scroll-area>
 
     <q-dialog v-model="showRemoveAllTasksConfirmation" position="right">
@@ -118,15 +76,13 @@
 import { onMounted, ref } from "vue"
 import { storeToRefs } from "pinia"
 import { useTodoTasksStore } from "@/stores/todoTasksStore"
-import type { PackingTask } from "@/api"
+import EditTask from "./EditTask.vue"
 
 const { tasks, editing } = storeToRefs(useTodoTasksStore())
-const { addTask, removeTask, removeAllTasks } = useTodoTasksStore()
+const { addTask, removeAllTasks } = useTodoTasksStore()
 
 const newTask = ref("")
-const editedTask = ref("")
 const showNewTaskInput = ref(true)
-const editingTaskID = ref(0)
 const showRemoveAllTasksConfirmation = ref(false)
 const scrollAreaHeight = ref(0)
 
@@ -144,22 +100,6 @@ const addNewTask = () => {
 
 const cancelAddingTask = () => {
   newTask.value = ""
-}
-
-const editTask = (task: PackingTask) => {
-  editingTaskID.value = task.id
-  editedTask.value = task.name
-}
-
-const submitEditedTask = (task: PackingTask) => {
-  task.name = editedTask.value
-  editingTaskID.value = 0
-  editedTask.value = ""
-}
-
-const cancelEditingTask = () => {
-  editingTaskID.value = 0
-  editedTask.value = ""
 }
 
 const removeAllTasksAndClosePopup = () => {

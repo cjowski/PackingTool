@@ -21,7 +21,7 @@ const { packingList } = storeToRefs(useOpenedPackingListStore())
 const scrollAreaHeight = ref(0)
 
 onMounted(() => {
-  scrollAreaHeight.value = window.innerHeight - 140
+  scrollAreaHeight.value = window.innerHeight - 150
 })
 </script>
 

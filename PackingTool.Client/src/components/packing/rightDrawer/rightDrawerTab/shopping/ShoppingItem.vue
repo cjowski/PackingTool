@@ -1,32 +1,19 @@
 <template>
-  <q-item clickable>
+  <q-item clickable class="shopping-item-font">
     <q-item-section side>
-      <q-checkbox
-        dense
-        v-model="bought"
-        color="green"
-        keep-color
-      />
+      <q-checkbox dense v-model="bought" color="green" keep-color />
     </q-item-section>
 
     <q-item-section @click="setAsBought(!bought)">
-      <div class="row q-gutter-xs non-selectable">
-        <div class="col-11 q-ma-none">
-          <span class="shopping-item-font">{{ item.name }}</span>
-        </div>
-        <div class="col-1 q-ma-none text-left">
-          <span
-            class="shopping-item-font"
-            :style="item.count == 1 ? 'visibility: hidden' : ''"
-          >
-            {{ item.count }}
-          </span>
-        </div>
-      </div>
+      {{ item.name }}
     </q-item-section>
 
-    <q-item-section side @click.stop="">
-      <q-btn flat dense icon="close" @click="removeFromShopping()" />
+    <q-item-section v-if="item.count > 1" side @click.stop="">
+      <q-badge rounded outline color="green-2" :label="item.count" />
+    </q-item-section>
+
+    <q-item-section side @click.stop="" style="padding-left: 4px">
+      <q-btn flat dense icon="close" color="green-2" @click="removeFromShopping()" />
     </q-item-section>
   </q-item>
 </template>
@@ -74,7 +61,6 @@ const removeFromShopping = () => {
 <style lang="scss" scoped>
 .shopping-item-font {
   font-family: "Segoe Print";
-  font-weight: bold;
   font-size: 15px;
 }
 </style>

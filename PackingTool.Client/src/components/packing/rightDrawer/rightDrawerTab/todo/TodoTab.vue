@@ -13,5 +13,3 @@ import { useTodoTasksStore } from "@/stores/todoTasksStore"
 
 const { editing } = storeToRefs(useTodoTasksStore())
 </script>
-
-<style lang="scss" scoped></style>

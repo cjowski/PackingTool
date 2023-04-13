@@ -7,23 +7,21 @@
     persistent
     id="right-drawer"
   >
-    <q-tabs
-      v-model="selectedTab"
-      dense
-      class="text-grey"
-      active-color="primary"
-      indicator-color="primary"
-      align="justify"
-      narrow-indicator
-    >
-      <q-tab name="todo" icon="task_alt" />
+    <q-tabs v-model="selectedTab" narrow-indicator>
+      <q-tab name="todo" icon="task_alt" class="text-orange" />
       <q-tab
         v-if="importantItems.length"
         name="important"
         icon="priority_high"
+        class="text-red-12"
       />
-      <q-tab v-if="shoppingItems.length" name="shopping" icon="shopping_cart" />
-      <q-tab name="notes" icon="text_snippet" />
+      <q-tab
+        v-if="shoppingItems.length"
+        name="shopping"
+        icon="shopping_cart"
+        class="text-blue-5"
+      />
+      <q-tab name="notes" icon="text_snippet" class="text-lime-3" />
     </q-tabs>
 
     <q-separator />
