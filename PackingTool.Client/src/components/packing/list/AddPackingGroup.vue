@@ -1,6 +1,6 @@
 <template>
   <q-card class="add-group-card q-mt-xl">
-    <q-card-section horizontal :class="$q.screen.lt.md ? 'q-mt-xl' : ''">
+    <q-card-section horizontal :class="$q.screen.lt.md ? 'q-mt-md' : ''">
       <q-item class="col">
         <q-item-section>
           <q-item-label class="q-ml-sm q-mt-xs text-h6 text-bold">
@@ -79,9 +79,11 @@
 import { ref } from "vue"
 import type { PackingItemType } from "@/api/models/PackingItemType"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import getIconByItemType from "@/methods/getIconForItemType"
 
 const { packingListManager } = useAllPackingListsStore()
+const { editGroup, addItemsForGroup } = useOpenedPackingListStore()
 
 const props = defineProps({
   closeAddGroupDialog: {
@@ -126,7 +128,13 @@ const searchItemTypes = (
 
 const add = () => {
   if (name.value) {
-    packingListManager.AddGroup(name.value, itemType.value as PackingItemType)
+    const group = packingListManager.AddGroup(
+      name.value,
+      itemType.value as PackingItemType
+    )
+    addItemsForGroup(group.id)
+    editGroup(group.id)
+
     name.value = ""
     itemType.value = "Other"
     props.closeAddGroupDialog()

@@ -1,85 +1,105 @@
 <template>
-  <q-item
-    :to="`/list?name=${name}`"
-    :active="selected"
-    clickable
-    v-ripple
-    dense
-    :active-class="editingListName ? '' : 'selected-list'"
-    :class="elementClass"
-    @click="select"
-    @keydown.delete.prevent="doDeleteList"
-    @dblclick="editListName"
-  >
-    <q-item-section v-if="!editingListName">
-      <q-item-label class="text-body1 text-bold label-font">
-        {{ name }}
-      </q-item-label>
-    </q-item-section>
-    <q-item-section v-else>
-      <ListNameInput
-        v-model="editedListName"
-        :onSubmit="doUpdateListName"
-        :onCancel="cancelEditingListName"
-      ></ListNameInput>
-    </q-item-section>
-    <q-item-section v-if="!editingListName" side>
-      <q-card-actions @click.prevent="" class="q-pa-xs">
+  <div>
+    <q-item
+      :active="selected"
+      clickable
+      v-ripple
+      dense
+      :active-class="editingListName ? '' : 'selected-list'"
+      :class="elementClass"
+      @click="select"
+      @keydown.delete.prevent="confirmDelete"
+      @dblclick="editListName"
+    >
+      <q-item-section v-if="!editingListName">
+        <q-item-label class="text-body1 text-bold label-font">
+          {{ name }}
+        </q-item-label>
+      </q-item-section>
+
+      <q-item-section v-else>
+        <ListNameInput
+          v-model="editedListName"
+          :onSubmit="doUpdateListName"
+          :onCancel="cancelEditingListName"
+        ></ListNameInput>
+      </q-item-section>
+
+      <q-item-section v-if="!editingListName && !showDeleteListConfirmation" side @click.stop="">
         <q-btn
-          v-if="state != PackingListState.New"
-          icon="download"
-          @click="downloadFile"
+          v-if="!showToolbar"
           flat
           dense
-          color="blue-grey-2"
-          padding="xs"
+          icon="edit"
+          @click="showToolbar = true"
         />
-        <q-btn icon="more_vert" flat dense color="blue-grey-2" padding="xs">
-          <q-menu
-            v-model="showMoreButtons"
-            anchor="top right"
-            transition-show="jump-down"
-            transition-hide="jump-up"
-            class="transparent no-shadow"
-            :offset="[0, 25]"
-          >
-            <q-list dense>
-              <q-item>
-                <q-btn
-                  icon="edit"
-                  round
-                  color="green"
-                  size="md"
-                  padding="sm"
-                  @click="editListName"
-                />
-              </q-item>
-              <q-item>
-                <q-btn
-                  icon="content_copy"
-                  round
-                  color="purple"
-                  size="md"
-                  padding="sm"
-                  @click="copyList"
-                />
-              </q-item>
-              <q-item>
-                <q-btn
-                  icon="delete"
-                  round
-                  color="red-5"
-                  size="md"
-                  padding="sm"
-                  @click="doDeleteList"
-                />
-              </q-item>
-            </q-list>
-          </q-menu>
-        </q-btn>
-      </q-card-actions>
-    </q-item-section>
-  </q-item>
+        <q-btn v-else flat dense icon="edit_off" @click="showToolbar = false" />
+      </q-item-section>
+
+      <q-item-section
+        v-if="!editingListName && !showDeleteListConfirmation"
+        side
+        @click.stop=""
+        style="padding-left: 4px"
+      >
+        <q-btn flat dense icon="close" size="md" @click="confirmDelete" />
+      </q-item-section>
+    </q-item>
+
+    <q-expansion-item v-model="showToolbar" header-style="display: none">
+      <q-item v-if="!showDeleteListConfirmation">
+        <q-item-section>
+          <q-btn
+            flat
+            dense
+            icon="format_size"
+            color="cyan-5"
+            @click="editListName"
+          />
+        </q-item-section>
+
+        <q-item-section>
+          <q-btn
+            flat
+            dense
+            icon="content_copy"
+            color="purple"
+            @click="copyList"
+          />
+        </q-item-section>
+
+        <q-item-section v-if="id !== 0">
+          <q-btn
+            flat
+            dense
+            icon="download"
+            color="blue-grey-2"
+            @click="downloadFile"
+          />
+        </q-item-section>
+      </q-item>
+
+      <div v-else>
+        <q-item>
+          <q-item-label class="text-body1 text-bold text-center label-font">
+            Are you sure you want to delete list?
+          </q-item-label>
+        </q-item>
+
+        <q-item>
+          <q-item-section>
+            <q-btn dense icon="check" color="red-5" @click="doDeleteList" />
+          </q-item-section>
+
+          <q-item-section>
+            <q-btn flat dense icon="undo" @click="cancelDeleteList" />
+          </q-item-section>
+        </q-item>
+      </div>
+
+      <q-separator dark />
+    </q-expansion-item>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -120,7 +140,8 @@ const props = defineProps({
   },
 })
 
-const showMoreButtons = ref(false)
+const showToolbar = ref(false)
+const showDeleteListConfirmation = ref(false)
 const editingListName = ref(false)
 const editedListName = ref("")
 
@@ -141,6 +162,7 @@ const select = () => {
   if ($q.screen.lt.md) {
     setPackingListsShown(false)
   }
+  router.push(`/list?name=${props.name}`)
 }
 
 const downloadFile = async () => {
@@ -159,7 +181,6 @@ const downloadFile = async () => {
 
 const editListName = () => {
   editingListName.value = true
-  showMoreButtons.value = false
 }
 
 const doUpdateListName = async (name: string) => {
@@ -180,8 +201,17 @@ const copyList = async () => {
   router.push(`/list?name=${copiedListName}`)
 }
 
+const confirmDelete = () => {
+  showToolbar.value = true
+  showDeleteListConfirmation.value = true
+}
+
+const cancelDeleteList = () => {
+  showToolbar.value = false
+  showDeleteListConfirmation.value = false
+}
+
 const doDeleteList = async () => {
-  showMoreButtons.value = false
   await packingListManager.DeleteList(props.id)
   $q.notify({
     message: "Deleted",

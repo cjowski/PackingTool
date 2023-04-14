@@ -24,6 +24,7 @@
           icon="edit"
           @click="editGroup(group.id)"
         />
+
         <q-btn
           v-else
           flat
@@ -69,6 +70,7 @@ const select = (event: MouseEvent) => {
 }
 
 const remove = () => {
+  finishEditGroup(props.group.id)
   packingListManager.RemoveGroup(props.group.id)
 }
 </script>

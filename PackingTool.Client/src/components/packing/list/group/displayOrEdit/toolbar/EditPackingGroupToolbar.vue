@@ -26,7 +26,7 @@
         />
       </q-item-section>
 
-      <q-item-section v-if="group.status !== ExistenceStatus.New">
+      <q-item-section v-if="!isNew">
         <q-btn
           flat
           dense
@@ -37,7 +37,7 @@
         />
       </q-item-section>
 
-      <q-item-section v-if="group.status !== ExistenceStatus.New">
+      <q-item-section>
         <q-btn
           flat
           dense
@@ -49,7 +49,11 @@
       </q-item-section>
     </q-item>
 
-    <AddPackingItem v-else-if="addingItemsGroup" :groupID="props.group.id" />
+    <AddPackingItem
+      v-else-if="addingItemsGroup"
+      :groupID="props.group.id"
+      :isNew="isNew"
+    />
 
     <q-item v-else-if="editingAttributes" class="q-pt-xs q-pb-xs">
       <q-item-section>
@@ -61,7 +65,7 @@
         />
       </q-item-section>
 
-      <q-item-section>
+      <q-item-section v-if="group.status !== ExistenceStatus.New">
         <q-btn color="orange" padding="xs" icon="sync" @click="synchronize" />
       </q-item-section>
     </q-item>
@@ -97,6 +101,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const isNew = computed(() => props.group.status === ExistenceStatus.New)
 
 const editing = computed(
   () => editingGroupIDs.value.indexOf(props.group.id) !== -1

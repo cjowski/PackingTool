@@ -9,60 +9,69 @@
   >
     <q-scroll-area class="fit">
       <q-list>
-        <q-item v-if="!addingList" dense>
-          <q-card-actions style="width: 100%">
-            <div class="col">
-              <input
-                style="display: none"
-                type="file"
-                accept="application/json"
-                ref="uploadJsonFile"
-                @change="tryUploadList"
-              />
-              <div class="row justify-end">
-                <q-btn
-                  icon="playlist_add"
-                  @click="addingList = true"
-                  flat
-                  dense
-                  color="green-14"
-                  padding="xs"
-                />
-                <q-btn
-                  icon="sync"
-                  @click="packingListManager.FetchListDescriptions"
-                  flat
-                  dense
-                  color="orange"
-                  padding="xs"
-                />
-                <q-btn
-                  icon="upload"
-                  @click="chooseFileToUpload"
-                  flat
-                  dense
-                  color="blue-grey-2"
-                  padding="xs"
-                />
-                <q-btn
-                  icon="download"
-                  @click="downloadAllLists"
-                  flat
-                  dense
-                  color="blue-grey-2"
-                  padding="xs"
-                />
-              </div>
-            </div>
-          </q-card-actions>
+        <q-item v-if="!addingList">
+          <q-item-section>
+            <q-btn
+              icon="playlist_add"
+              @click="addingList = true"
+              flat
+              dense
+              color="green-14"
+              padding="xs"
+            />
+          </q-item-section>
+
+          <q-item-section>
+            <q-btn
+              icon="sync"
+              @click="packingListManager.FetchListDescriptions"
+              flat
+              dense
+              color="orange"
+              padding="xs"
+            />
+          </q-item-section>
+
+          <q-item-section>
+            <input
+              style="display: none"
+              type="file"
+              accept="application/json"
+              ref="uploadJsonFile"
+              @change="tryUploadList"
+            />
+            <q-btn
+              icon="upload"
+              @click="chooseFileToUpload"
+              flat
+              dense
+              color="blue-grey-2"
+              padding="xs"
+            />
+          </q-item-section>
+
+          <q-item-section>
+            <q-btn
+              v-if="allPackingLists.length > 0"
+              icon="download"
+              @click="downloadAllLists"
+              flat
+              dense
+              color="blue-grey-2"
+              padding="xs"
+            />
+          </q-item-section>
         </q-item>
+
         <AddPackingList
           v-else
           v-model="newListName"
           :onSubmit="addNewList"
           :onCancel="cancelAddNewList"
         />
+
         <q-separator />
+
         <template v-for="list in allPackingLists">
           <PackingListElement
             :id="list.id"

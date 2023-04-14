@@ -27,7 +27,7 @@ import type { PackingItem } from "@/models/packing/list/PackingItem"
 import DisplayPackingItem from "./DisplayPackingItem.vue"
 import EditPackingItem from "./EditPackingItem.vue"
 
-const props = defineProps({
+defineProps({
   item: {
     type: Object as () => PackingItem,
     required: true,

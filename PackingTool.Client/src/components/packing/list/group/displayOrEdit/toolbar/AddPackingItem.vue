@@ -42,7 +42,7 @@
         <q-btn color="green" padding="xs" icon="add" :disable="!name" @click="add" />
       </q-item-section>
 
-      <q-item-section>
+      <q-item-section v-if="!isNew">
         <q-btn color="orange" padding="xs" icon="sync" @click="synchronize" />
       </q-item-section>
 
@@ -67,6 +67,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  isNew: {
+    type: Boolean,
+    required: true,
+  }
 })
 
 const name = ref("")
