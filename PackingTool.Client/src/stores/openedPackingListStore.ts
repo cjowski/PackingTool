@@ -16,6 +16,7 @@ export const useOpenedPackingListStore = defineStore(
     const selectedGroupIDs = ref([] as number[])
     const selectedItemIDs = ref([] as number[])
     const editingGroupIDs = ref([] as number[])
+    const editingAttributesGroupIDs = ref([] as number[])
     const editingNameForItemID = ref(0)
     const highlightImportantItems = ref(false)
     const highlightShoppingItems = ref(false)
@@ -107,8 +108,23 @@ export const useOpenedPackingListStore = defineStore(
     }
 
     const finishEditGroup = (groupID: number) => {
+      finishEditAttributesForGroup(groupID)
       editingGroupIDs.value.splice(editingGroupIDs.value.indexOf(groupID), 1)
       editingNameForItemID.value = 0
+    }
+
+    const editAttributesForGroup = (groupID: number) => {
+      setSelectedGroupID(0, false)
+      editingAttributesGroupIDs.value.push(groupID)
+    }
+
+    const finishEditAttributesForGroup = (groupID: number) => {
+      const editingAttributesGroupID =
+        editingAttributesGroupIDs.value.indexOf(groupID)
+
+      if (editingAttributesGroupID !== -1) {
+        editingAttributesGroupIDs.value.splice(editingAttributesGroupID, 1)
+      }
     }
 
     return {
@@ -117,6 +133,7 @@ export const useOpenedPackingListStore = defineStore(
       selectedGroupIDs,
       selectedItemIDs,
       editingGroupIDs,
+      editingAttributesGroupIDs,
       editingNameForItemID,
       highlightImportantItems,
       highlightShoppingItems,
@@ -127,6 +144,8 @@ export const useOpenedPackingListStore = defineStore(
       editGroup,
       editItemName,
       finishEditGroup,
+      editAttributesForGroup,
+      finishEditAttributesForGroup,
     }
   }
 )

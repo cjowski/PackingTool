@@ -1,17 +1,12 @@
 <template>
   <div :style="`width: ${$q.screen.gt.sm ? '250px' : '100%'}`">
     <DisplayPackingGroup
-      v-if="displaying"
-      :group="group"
-      :cardClass="cardClass"
-    />
-    <EditPackingGroup
-      v-else-if="editing"
+      v-if="!packing"
       :group="group"
       :cardClass="cardClass"
     />
     <PackPackingGroup
-      v-else-if="packing"
+      v-else
       :group="group"
       :cardClass="cardClass"
     />
@@ -23,7 +18,6 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
 import DisplayPackingGroup from "./new/DisplayPackingGroup.vue"
-import EditPackingGroup from "./edit/EditPackingGroup.vue"
 import PackPackingGroup from "./pack/PackPackingGroup.vue"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
