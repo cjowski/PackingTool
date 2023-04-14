@@ -13,7 +13,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
-import DisplayPackingGroup from "./new/DisplayPackingGroup.vue"
+import DisplayPackingGroup from "./displayOrEdit/DisplayPackingGroup.vue"
 import PackPackingGroup from "./pack/PackPackingGroup.vue"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
