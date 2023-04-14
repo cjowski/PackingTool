@@ -18,6 +18,7 @@
         <div class="row">
           <q-btn flat dense icon="keyboard_arrow_up" @click="increaseCount" />
         </div>
+
         <div class="row">
           <q-badge
             rounded
@@ -27,6 +28,7 @@
             :style="modifiedCount < 10 ? 'margin-right: 4px' : ''"
           />
         </div>
+
         <div class="row">
           <q-btn flat dense icon="keyboard_arrow_down" @click="decreaseCount" />
         </div>
@@ -37,6 +39,7 @@
       <q-item-section>
         <q-btn color="green" padding="xs" icon="check" @click="submit" />
       </q-item-section>
+
       <q-item-section>
         <q-btn flat padding="xs" icon="undo" @click="cancel" />
       </q-item-section>
@@ -86,29 +89,21 @@ const cancel = () => {
 }
 
 const itemClass = computed(() => {
-  let output = "q-pa-xs q-pb-none edit-item-font shadow-transition"
+  let output = "q-pa-xs q-pb-none shadow-transition"
   if (props.item.status == ExistenceStatus.New) output += " new-edit-item-label"
   return output
 })
 </script>
 
 <style lang="scss" scoped>
-.new-edit-item-label {
-  div {
-    color: #c6ff00; //lime-13
-    font-weight: bold;
-  }
-}
-.edit-item-font {
-  font-family: "Segoe Print";
-  font-weight: bold;
-}
 .item-name-input {
   :deep(.q-field__control) {
     padding: 0 4px 0 8px;
   }
-  :deep(input) {
-    padding-top: 6px;
+  :deep(textarea) {
+    font-size: 16px;
+    font-weight: bold;
   }
+  font-family: "Ink Free";
 }
 </style>

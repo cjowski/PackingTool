@@ -1,5 +1,6 @@
-import { computed, ref } from "vue"
+import { computed, ref, watch } from "vue"
 import { defineStore, storeToRefs } from "pinia"
+import { useAllPackingListsStore } from "./allPackingListsStore"
 import { useOperationStatusStore } from "./operationStatusStore"
 import { PackingList } from "@/models/packing/list/PackingList"
 import { PackingSectionType } from "@/enums/PackingSectionType"
@@ -7,18 +8,21 @@ import { PackingSectionType } from "@/enums/PackingSectionType"
 export const useOpenedPackingListStore = defineStore(
   "openedPackingListStore",
   () => {
+    const { selectedListName } = storeToRefs(useAllPackingListsStore())
     const { currentSectionFocus, currentGroupIDFocus } = storeToRefs(
       useOperationStatusStore()
     )
 
     const packingList = ref(PackingList.Undefined())
     const packing = ref(false)
+
     const selectedGroupIDs = ref([] as number[])
     const selectedItemIDs = ref([] as number[])
 
     const editingGroupIDs = ref([] as number[])
     const editingHeaderGroupIDs = ref([] as number[])
     const editingAttributesGroupIDs = ref([] as number[])
+    const addingItemsGroupIDs = ref([] as number[])
 
     const highlightImportantItems = ref(false)
     const highlightShoppingItems = ref(false)
@@ -97,10 +101,6 @@ export const useOpenedPackingListStore = defineStore(
       }
     }
 
-    const editItemName = (groupID: number, itemID: number) => {
-      editGroup(groupID)
-    }
-
     const editGroup = (groupID: number) => {
       setSelectedGroupID(0, false)
       selectedItemIDs.value.length = 0
@@ -117,9 +117,15 @@ export const useOpenedPackingListStore = defineStore(
       editingAttributesGroupIDs.value.push(groupID)
     }
 
+    const addItemsForGroup = (groupID: number) => {
+      setSelectedGroupID(0, false)
+      addingItemsGroupIDs.value.push(groupID)
+    }
+
     const finishEditGroup = (groupID: number) => {
       finishEditHeaderForGroup(groupID)
       finishEditAttributesForGroup(groupID)
+      finishAddingItemsForGroup(groupID)
       editingGroupIDs.value.splice(editingGroupIDs.value.indexOf(groupID), 1)
     }
 
@@ -140,27 +146,55 @@ export const useOpenedPackingListStore = defineStore(
       }
     }
 
+    const finishAddingItemsForGroup = (groupID: number) => {
+      const addingItemsGroupID = addingItemsGroupIDs.value.indexOf(groupID)
+
+      if (addingItemsGroupID !== -1) {
+        addingItemsGroupIDs.value.splice(addingItemsGroupID, 1)
+      }
+    }
+
+    const clearAllSelectionsAndEdits = () => {
+      selectedGroupIDs.value.length = 0
+      selectedItemIDs.value.length = 0
+
+      editingGroupIDs.value.length = 0
+      editingHeaderGroupIDs.value.length = 0
+      editingAttributesGroupIDs.value.length = 0
+      addingItemsGroupIDs.value.length = 0
+    }
+
     return {
       packingList,
       packing,
       selectedGroupIDs,
       selectedItemIDs,
+
       editingGroupIDs,
       editingHeaderGroupIDs,
       editingAttributesGroupIDs,
+      addingItemsGroupIDs,
+
       highlightImportantItems,
       highlightShoppingItems,
+
       importantItems,
       shoppingItems,
+
       setSelectedGroupID,
       setSelectedItemID,
+
       editGroup,
-      editItemName,
       editHeaderForGroup,
       editAttributesForGroup,
+      addItemsForGroup,
+
       finishEditGroup,
       finishEditHeaderForGroup,
       finishEditAttributesForGroup,
+      finishAddingItemsForGroup,
+
+      clearAllSelectionsAndEdits,
     }
   }
 )

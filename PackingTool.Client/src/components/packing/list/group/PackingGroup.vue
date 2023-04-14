@@ -5,11 +5,7 @@
       :group="group"
       :cardClass="cardClass"
     />
-    <PackPackingGroup
-      v-else
-      :group="group"
-      :cardClass="cardClass"
-    />
+    <PackPackingGroup v-else :group="group" :cardClass="cardClass" />
   </div>
 </template>
 
@@ -29,8 +25,9 @@ import { PackingSectionType } from "@/enums/PackingSectionType"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 
 const { packingListManager } = useAllPackingListsStore()
-const { packing, selectedGroupIDs, selectedItemIDs, editingGroupIDs } =
-  storeToRefs(useOpenedPackingListStore())
+const { packing, selectedGroupIDs, selectedItemIDs } = storeToRefs(
+  useOpenedPackingListStore()
+)
 const { currentAction, currentSectionFocus, currentGroupIDFocus } = storeToRefs(
   useOperationStatusStore()
 )
@@ -46,12 +43,6 @@ const props = defineProps({
 const $q = useQuasar()
 const synchronizing = ref(false)
 
-const editing = computed(
-  () => editingGroupIDs.value.indexOf(props.group.id) !== -1
-)
-const displaying = computed(
-  () => editingGroupIDs.value.indexOf(props.group.id) === -1 && !packing.value
-)
 const selected = computed(
   () => selectedGroupIDs.value.indexOf(props.group.id) !== -1
 )
@@ -92,6 +83,7 @@ const selectAllItems = (event: KeyboardEvent) => {
 
 const copyItems = (event: KeyboardEvent) => {
   if (
+    currentGroupIDFocus.value == props.group.id &&
     currentSectionFocus.value == PackingSectionType.Items &&
     selectedItemIDs.value.length > 0 &&
     event.ctrlKey &&

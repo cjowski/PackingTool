@@ -7,7 +7,7 @@
     dense
     :active-class="editingListName ? '' : 'selected-list'"
     :class="elementClass"
-    @click="currentSectionFocus = PackingSectionType.Lists"
+    @click="select"
     @keydown.delete.prevent="doDeleteList"
     @dblclick="editListName"
   >
@@ -88,6 +88,7 @@ import router from "@/router"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
 import { PackingListState } from "@/models/packing/list/PackingListState"
 import ListNameInput from "./AddPackingList.vue"
@@ -95,6 +96,7 @@ import { PackingSectionType } from "@/enums/PackingSectionType"
 import { PackingListService } from "@/api/services/PackingListService"
 
 const { packingListManager } = useAllPackingListsStore()
+const { clearAllSelectionsAndEdits } = useOpenedPackingListStore()
 const { selectedListName } = storeToRefs(useAllPackingListsStore())
 const { currentSectionFocus } = storeToRefs(useOperationStatusStore())
 const $q = useQuasar()
@@ -132,6 +134,11 @@ const elementClass = computed(() => {
       return ""
   }
 })
+
+const select = () => {
+  currentSectionFocus.value = PackingSectionType.Lists
+  clearAllSelectionsAndEdits()
+}
 
 const downloadFile = async () => {
   const fileName = `${props.name.toString()}.json`

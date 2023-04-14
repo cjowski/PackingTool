@@ -7,32 +7,34 @@
     @dblclick="setEditing()"
   >
     <q-btn
-      v-if="!editing && isImportant && highlightImportantItems"
+      v-if="!editingAttributes && isImportant && highlightImportantItems"
       icon="priority_high"
       color="red"
       round
       :ripple="false"
       size="8px"
       class="item-attribute-mark no-pointer-events"
-    ></q-btn>
+    />
+
     <q-btn
-      v-if="!editing && isToBuy && highlightShoppingItems"
+      v-if="!editingAttributes && isToBuy && highlightShoppingItems"
       icon="shopping_cart"
       color="primary"
       round
       :ripple="false"
       size="8px"
       class="item-attribute-mark no-pointer-events"
-    ></q-btn>
+    />
+
     <q-btn
-      v-if="!editing && isBought && highlightShoppingItems"
+      v-if="!editingAttributes && isBought && highlightShoppingItems"
       icon="done"
       color="green"
       round
       :ripple="false"
       size="8px"
       class="item-attribute-mark no-pointer-events"
-    ></q-btn>
+    />
 
     <q-item-section
       v-if="editing && !editingAttributes"

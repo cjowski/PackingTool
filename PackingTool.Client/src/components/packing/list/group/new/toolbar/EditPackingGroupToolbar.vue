@@ -2,7 +2,7 @@
   <q-expansion-item v-model="editing" header-style="display: none">
     <q-separator dark />
 
-    <q-item v-if="!editingAttributes">
+    <q-item v-if="!addingItemsGroup && !editingAttributes">
       <q-item-section>
         <q-btn
           flat
@@ -10,7 +10,7 @@
           icon="playlist_add"
           color="green-14"
           size="md"
-          @click=""
+          @click="addItemsForGroup(group.id)"
         />
       </q-item-section>
 
@@ -49,7 +49,9 @@
       </q-item-section>
     </q-item>
 
-    <q-item v-else class="q-pt-xs q-pb-xs">
+    <AddPackingItem v-else-if="addingItemsGroup" :groupID="props.group.id" />
+
+    <q-item v-else-if="editingAttributes" class="q-pt-xs q-pb-xs">
       <q-item-section>
         <q-btn
           color="green"
@@ -69,6 +71,7 @@
 <script lang="ts" setup>
 import { computed } from "vue"
 import { storeToRefs } from "pinia"
+import AddPackingItem from "./AddPackingItem.vue"
 import type { PackingGroup } from "@/models/packing/list/PackingGroup"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
@@ -78,10 +81,15 @@ const { packingListManager } = useAllPackingListsStore()
 const {
   editHeaderForGroup,
   editAttributesForGroup,
+  addItemsForGroup,
   finishEditAttributesForGroup,
 } = useOpenedPackingListStore()
-const { editingGroupIDs, editingHeaderGroupIDs, editingAttributesGroupIDs } =
-  storeToRefs(useOpenedPackingListStore())
+const {
+  editingGroupIDs,
+  editingHeaderGroupIDs,
+  editingAttributesGroupIDs,
+  addingItemsGroupIDs,
+} = storeToRefs(useOpenedPackingListStore())
 
 const props = defineProps({
   group: {
@@ -92,6 +100,10 @@ const props = defineProps({
 
 const editing = computed(
   () => editingGroupIDs.value.indexOf(props.group.id) !== -1
+)
+
+const addingItemsGroup = computed(
+  () => addingItemsGroupIDs.value.indexOf(props.group.id) !== -1
 )
 
 const editingHeader = computed(
