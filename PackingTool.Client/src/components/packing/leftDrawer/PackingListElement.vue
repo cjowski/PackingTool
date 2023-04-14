@@ -25,7 +25,11 @@
         ></ListNameInput>
       </q-item-section>
 
-      <q-item-section v-if="!editingListName && !showDeleteListConfirmation" side @click.stop="">
+      <q-item-section
+        v-if="!editingListName && !showDeleteListConfirmation"
+        side
+        @click.stop=""
+      >
         <q-btn
           v-if="!showToolbar"
           flat
@@ -81,7 +85,10 @@
 
       <div v-else>
         <q-item>
-          <q-item-label class="text-body1 text-bold text-center label-font">
+          <q-item-label
+            class="text-body1 text-bold text-center label-font"
+            style="color: #ef9a9a"
+          >
             Are you sure you want to delete list?
           </q-item-label>
         </q-item>
@@ -208,7 +215,9 @@ const confirmDelete = () => {
 
 const cancelDeleteList = () => {
   showToolbar.value = false
-  showDeleteListConfirmation.value = false
+  setTimeout(() => {
+    showDeleteListConfirmation.value = false
+  }, 500)
 }
 
 const doDeleteList = async () => {
