@@ -19,6 +19,7 @@
         <q-btn flat icon="undo" class="q-ma-none q-pa-sm" @click="cancel" />
       </q-item-section>
     </q-item>
+    
     <q-item class="q-pt-md q-pb-md">
       <q-btn
         color="green"

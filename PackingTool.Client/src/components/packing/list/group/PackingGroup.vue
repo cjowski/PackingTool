@@ -1,5 +1,5 @@
 <template>
-  <div style="width: 100%">
+  <div :style="`width: ${$q.screen.gt.sm ? '250px' : '100%'}`">
     <DisplayPackingGroup
       v-if="displaying"
       :group="group"
@@ -22,7 +22,7 @@
 import { computed, onMounted, onUnmounted, ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
-import DisplayPackingGroup from "./display/DisplayPackingGroup.vue"
+import DisplayPackingGroup from "./new/DisplayPackingGroup.vue"
 import EditPackingGroup from "./edit/EditPackingGroup.vue"
 import PackPackingGroup from "./pack/PackPackingGroup.vue"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"

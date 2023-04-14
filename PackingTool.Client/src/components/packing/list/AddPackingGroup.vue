@@ -34,7 +34,7 @@
             clearable
             v-model="itemType"
             :options="foundItemTypes"
-            label="Item type"
+            label="Group type"
             @filter="searchItemTypes"
             @keydown.enter.prevent="add"
             class="new-group-type-select"

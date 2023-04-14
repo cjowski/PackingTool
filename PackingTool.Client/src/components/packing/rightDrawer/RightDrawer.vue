@@ -9,20 +9,28 @@
     id="right-drawer"
   >
     <q-tabs v-model="selectedTab" narrow-indicator>
-      <q-tab name="todo" icon="task_alt" class="text-orange" />
+      <q-tab
+        name="todo"
+        icon="task_alt"
+        :class="`${selectedTab == 'todo' ? 'text-orange' : 'text-grey'}`"
+      />
       <q-tab
         v-if="importantItems.length"
         name="important"
         icon="priority_high"
-        class="text-red-12"
+        :class="`${selectedTab == 'important' ? 'text-red-12' : 'text-grey'}`"
       />
       <q-tab
         v-if="shoppingItems.length"
         name="shopping"
         icon="shopping_cart"
-        class="text-blue-5"
+        :class="`${selectedTab == 'shopping' ? 'text-blue-5' : 'text-grey'}`"
       />
-      <q-tab name="notes" icon="text_snippet" class="text-lime-3" />
+      <q-tab
+        name="notes"
+        icon="text_snippet"
+        :class="`${selectedTab == 'notes' ? 'text-lime-3' : 'text-grey'}`"
+      />
     </q-tabs>
 
     <q-separator />
