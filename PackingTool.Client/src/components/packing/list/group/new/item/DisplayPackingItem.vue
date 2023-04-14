@@ -81,9 +81,7 @@
 
     <q-item-section v-if="editingAttributes" side @click.stop="">
       <q-btn
-        round
         dense
-        size="sm"
         icon="shopping_cart"
         :color="isToBuy || isBought ? 'blue' : 'grey'"
         @click="markForShopping"
@@ -97,9 +95,7 @@
       style="padding-left: 8px"
     >
       <q-btn
-        round
         dense
-        size="sm"
         icon="priority_high"
         :color="isImportant ? 'red-5' : 'grey'"
         @click="markImportance"

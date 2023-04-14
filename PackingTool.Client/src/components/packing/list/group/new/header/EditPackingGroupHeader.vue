@@ -61,14 +61,13 @@ import { ref } from "vue"
 import type { PackingItemType } from "@/api/models/PackingItemType"
 import type { PackingGroup } from "@/models/packing/list/PackingGroup"
 import getIconByItemType from "@/methods/getIconForItemType"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
+
+const { finishEditHeaderForGroup } = useOpenedPackingListStore()
 
 const props = defineProps({
   group: {
     type: Object as () => PackingGroup,
-    required: true,
-  },
-  onClosing: {
-    type: Function,
     required: true,
   },
 })
@@ -110,11 +109,11 @@ const searchItemTypes = (
 const submit = () => {
   props.group.name = modifiedName.value
   props.group.type = modifiedItemType.value
-  props.onClosing()
+  finishEditHeaderForGroup(props.group.id)
 }
 
 const cancel = () => {
-  props.onClosing()
+  finishEditHeaderForGroup(props.group.id)
 }
 </script>
 

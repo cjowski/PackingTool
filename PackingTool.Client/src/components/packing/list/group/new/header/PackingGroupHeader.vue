@@ -1,38 +1,28 @@
 <template>
   <div>
-    <DisplayPackingGroupHeader
-      v-if="!editingHeader"
-      :group="group"
-      :setEditingHeader="
-        () => {
-          editingHeader = true
-        }
-      "
-    />
-    <EditPackingGroupHeader
-      v-else
-      :group="group"
-      :onClosing="
-        () => {
-          editingHeader = false
-        }
-      "
-    />
+    <DisplayPackingGroupHeader v-if="!editing" :group="group" />
+    <EditPackingGroupHeader v-else :group="group" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue"
+import { computed } from "vue"
+import { storeToRefs } from "pinia"
 import DisplayPackingGroupHeader from "./DisplayPackingGroupHeader.vue"
 import EditPackingGroupHeader from "./EditPackingGroupHeader.vue"
 import type { PackingGroup } from "@/models/packing/list/PackingGroup"
+import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 
-defineProps({
+const { editingHeaderGroupIDs } = storeToRefs(useOpenedPackingListStore())
+
+const props = defineProps({
   group: {
     type: Object as () => PackingGroup,
     required: true,
   },
 })
 
-const editingHeader = ref(false)
+const editing = computed(
+  () => editingHeaderGroupIDs.value.indexOf(props.group.id) !== -1
+)
 </script>

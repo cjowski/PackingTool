@@ -21,19 +21,19 @@
               />
               <div class="row justify-end">
                 <q-btn
+                  icon="playlist_add"
+                  @click="addingList = true"
+                  flat
+                  dense
+                  color="green-14"
+                  padding="xs"
+                />
+                <q-btn
                   icon="sync"
                   @click="packingListManager.FetchListDescriptions"
                   flat
                   dense
                   color="orange"
-                  padding="xs"
-                />
-                <q-btn
-                  icon="playlist_add"
-                  @click="addingList = true"
-                  flat
-                  dense
-                  color="cyan-13"
                   padding="xs"
                 />
                 <q-btn
