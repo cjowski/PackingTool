@@ -1,6 +1,6 @@
 <template>
   <q-card class="add-group-card q-mt-xl">
-    <q-card-section horizontal>
+    <q-card-section horizontal :class="$q.screen.lt.md ? 'q-mt-xl' : ''">
       <q-item class="col">
         <q-item-section>
           <q-item-label class="q-ml-sm q-mt-xs text-h6 text-bold">

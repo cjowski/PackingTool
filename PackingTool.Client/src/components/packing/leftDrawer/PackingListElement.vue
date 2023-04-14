@@ -95,7 +95,7 @@ import ListNameInput from "./AddPackingList.vue"
 import { PackingSectionType } from "@/enums/PackingSectionType"
 import { PackingListService } from "@/api/services/PackingListService"
 
-const { packingListManager } = useAllPackingListsStore()
+const { packingListManager, setPackingListsShown } = useAllPackingListsStore()
 const { clearAllSelectionsAndEdits } = useOpenedPackingListStore()
 const { selectedListName } = storeToRefs(useAllPackingListsStore())
 const { currentSectionFocus } = storeToRefs(useOperationStatusStore())
@@ -138,6 +138,9 @@ const elementClass = computed(() => {
 const select = () => {
   currentSectionFocus.value = PackingSectionType.Lists
   clearAllSelectionsAndEdits()
+  if ($q.screen.lt.md) {
+    setPackingListsShown(false)
+  }
 }
 
 const downloadFile = async () => {

@@ -9,7 +9,7 @@
       :overlay="$q.screen.lt.md"
       :width="rightDrawerShown ? 362 : 62"
       class="cursor-pointer"
-      @click="rightDrawerShown = !rightDrawerShown"
+      @click="toggleRightDrawerShown"
     >
       <q-scroll-area class="fit">
         <q-list class="q-mt-md">
@@ -21,9 +21,11 @@
               icon="luggage"
               color="green-14"
               size="lg"
+              :disable="disableDrawer"
               @click="packing = true"
               @click.stop=""
             />
+
             <q-btn
               v-else
               flat
@@ -31,10 +33,12 @@
               icon="no_luggage"
               color="deep-orange"
               size="lg"
+              :disable="disableDrawer"
               @click="packing = false"
               @click.stop=""
             />
           </q-item>
+
           <q-item class="q-pa-sm">
             <q-btn
               flat
@@ -43,10 +47,12 @@
               :color="allGroupsPacked ? 'orange' : 'teal-13'"
               size="lg"
               :style="packing ? '' : 'visibility: hidden;'"
+              :disable="disableDrawer"
               @click="packAllGroups(!allGroupsPacked)"
               @click.stop=""
             />
           </q-item>
+
           <q-item class="q-pa-sm">
             <q-btn
               flat
@@ -54,10 +60,12 @@
               icon="library_add"
               color="light-green-6"
               size="lg"
+              :disable="disableDrawer"
               @click="addingGroup = true"
               @click.stop=""
             />
           </q-item>
+
           <q-item class="q-pa-sm">
             <q-btn
               flat
@@ -65,10 +73,12 @@
               icon="save"
               color="light-blue-13"
               size="lg"
+              :disable="disableDrawer"
               @click="packingListManager.SavePackingList"
               @click.stop=""
             />
           </q-item>
+
           <q-item v-if="$q.screen.gt.sm" class="q-pa-sm">
             <q-btn
               v-if="!configuringGrid"
@@ -77,9 +87,11 @@
               icon="grid_view"
               color="purple-12"
               size="lg"
+              :disable="disableDrawer"
               @click="configuringGrid = true"
               @click.stop=""
             />
+
             <q-input
               v-else
               type="number"
@@ -97,6 +109,7 @@
               class="grid-column-count-input"
             ></q-input>
           </q-item>
+
           <q-item class="q-pa-sm">
             <q-btn
               v-if="packingList.state != PackingListState.New"
@@ -105,9 +118,11 @@
               icon="sync"
               color="orange"
               size="lg"
+              :disable="disableDrawer"
               @click="packingListManager.FetchPackingList"
               @click.stop=""
-          /></q-item>
+            />
+          </q-item>
         </q-list>
       </q-scroll-area>
 
@@ -119,25 +134,30 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue"
+import { computed, ref } from "vue"
+import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
 import AddPackingGroup from "@/components/packing/list/AddPackingGroup.vue"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import { PackingListState } from "@/models/packing/list/PackingListState"
 
+const $q = useQuasar()
+
 const { packingListManager } = useAllPackingListsStore()
-const { selectedListName, rightDrawerShown } = storeToRefs(
+const { selectedListName, packingListsShown, rightDrawerShown } = storeToRefs(
   useAllPackingListsStore()
 )
 const { packingList, packing } = storeToRefs(useOpenedPackingListStore())
 
 const addingGroup = ref(false)
 const configuringGrid = ref(false)
-
-// const packingListActionsShown = computed(() => !!selectedListName.value)
-const unhideDrawer = computed(() => !!selectedListName.value)
 const packingListActionsShown = ref(true)
+
+const unhideDrawer = computed(() => !!selectedListName.value)
+const disableDrawer = computed(
+  () => $q.screen.lt.md && packingListsShown.value
+)
 
 const minColumnsInRow = computed(() => {
   return packingList.value.content.groups.length < 2
@@ -161,6 +181,11 @@ const allGroupsPacked = computed({
     packAllGroups(value)
   },
 })
+
+const toggleRightDrawerShown = () => {
+  if (disableDrawer.value) return
+  rightDrawerShown.value = !rightDrawerShown.value
+}
 
 const packAllGroups = (value: boolean) => {
   packingList.value.content.groups.forEach((group) =>

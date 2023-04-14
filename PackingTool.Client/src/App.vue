@@ -10,31 +10,59 @@
           dense
           icon="menu"
           size="lg"
+          :disable="rightDrawerShown"
         />
-        <q-toolbar-title class="text-bold non-selectable">
-          Packing lists
+        <q-toolbar-title>
+          <span v-if="!smallScreen" class="text-bold non-selectable"
+            >Packing lists</span
+          >
         </q-toolbar-title>
 
-        <q-btn v-if="!isAuthorized()" to="/login" flat no-caps size="20px"
-          ><span class="text-bold">LogIn</span></q-btn
+        <q-btn
+          v-if="!isAuthorized()"
+          to="/login"
+          flat
+          no-caps
+          :size="smallScreen ? '17px' : '20px'"
         >
-        <q-btn v-if="!isAuthorized()" to="/register" flat no-caps size="20px"
-          ><span class="text-bold">Register</span></q-btn
+          <span class="text-bold">LogIn</span>
+        </q-btn>
+        <q-btn
+          v-if="!isAuthorized()"
+          to="/register"
+          flat
+          no-caps
+          :size="smallScreen ? '17px' : '20px'"
         >
-        <q-btn v-if="isAdmin()" to="/admin" flat no-caps size="20px"
-          ><span class="text-bold">Admin</span></q-btn
+          <span class="text-bold">Register</span>
+        </q-btn>
+        <q-btn
+          v-if="isAdmin()"
+          to="/admin"
+          flat
+          no-caps
+          :size="smallScreen ? '17px' : '20px'"
         >
+          <span class="text-bold">Admin</span>
+        </q-btn>
         <q-btn
           v-if="isAuthorized()"
           to="/changePassword"
           flat
           no-caps
-          size="20px"
-          ><span class="text-bold">Change Password</span></q-btn
+          :size="smallScreen ? '17px' : '20px'"
         >
-        <q-btn v-if="isAuthorized()" @click="doLogout" flat no-caps size="20px"
-          ><span class="text-bold">LogOut</span></q-btn
+          <span class="text-bold">Change Password</span>
+        </q-btn>
+        <q-btn
+          v-if="isAuthorized()"
+          @click="doLogout"
+          flat
+          no-caps
+          :size="smallScreen ? '17px' : '20px'"
         >
+          <span class="text-bold">LogOut</span>
+        </q-btn>
       </q-toolbar>
     </q-header>
 
@@ -52,11 +80,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from "vue"
+import { onMounted } from "vue"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
 import router from "./router"
-import { useRoute } from "vue-router"
 import { useAuthenticationStore } from "./stores/authenticationStore"
 import { useAllPackingListsStore } from "./stores/allPackingListsStore"
 import { useOperationStatusStore } from "./stores/operationStatusStore"
@@ -64,45 +91,38 @@ import PackingLists from "./components/packing/leftDrawer/PackingLists.vue"
 import PackingListActions from "./components/packing/rightDrawer/PackingListActions.vue"
 import RightDrawer from "./components/packing/rightDrawer/RightDrawer.vue"
 import { PackingSectionType } from "./enums/PackingSectionType"
+import { computed } from "@vue/reactivity"
 
 const { isAuthorized, enablePackingLists, isAdmin, logout } =
   useAuthenticationStore()
+const { setPackingListsShown } = useAllPackingListsStore()
 const { packingListsShown, rightDrawerShown } = storeToRefs(
   useAllPackingListsStore()
 )
 const { currentSectionFocus } = storeToRefs(useOperationStatusStore())
 
-const route = useRoute()
+const smallScreen = computed(() => $q.screen.lt.md)
+
 const $q = useQuasar()
 $q.dark.toggle()
 
 const doLogout = async () => {
+  setPackingListsShown(false)
   await logout()
   router.push("/login")
 }
 
 const showPackingLists = () => {
-  if (!enablePackingLists()) {
-    return false
-  }
-
-  packingListsShown.value = !packingListsShown.value
+  if (!enablePackingLists()) return false
+  setPackingListsShown(!packingListsShown.value)
 }
 
 const setRightDrawerFocus = () => {
   currentSectionFocus.value = PackingSectionType.RightDrawer
 }
 
-watch(
-  route,
-  () => {
-    packingListsShown.value = enablePackingLists()
-  },
-  { flush: "pre", immediate: true, deep: true }
-)
-
 onMounted(() => {
-  packingListsShown.value = enablePackingLists()
+  setPackingListsShown(enablePackingLists())
 })
 </script>
 

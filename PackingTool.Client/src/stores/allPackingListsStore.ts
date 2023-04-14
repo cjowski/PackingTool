@@ -32,6 +32,10 @@ export const useAllPackingListsStore = defineStore(
       copiedItems
     )
 
+    const setPackingListsShown = (areShown: boolean) => {
+      packingListsShown.value = areShown
+    }
+
     watch(selectedListName, (currentListName) => {
       if (allListsFetched.value && currentListName) {
         packingListManager.SetupList(currentListName)
@@ -60,6 +64,7 @@ export const useAllPackingListsStore = defineStore(
       packingListsShown,
       rightDrawerShown,
       packingListManager,
+      setPackingListsShown
     }
   }
 )

@@ -1,15 +1,16 @@
 <template>
-  <q-page padding class="flex flex-top q-mt-md">
+  <q-page
+    :padding="$q.screen.gt.sm"
+    :class="$q.screen.gt.sm ? 'flex flex-top q-mt-md' : ''"
+  >
     <div class="column" v-if="selectedListName">
       <div v-if="$q.screen.gt.sm" class="row">
         <PackingGrid />
       </div>
-      <div
-        v-else
-        v-for="group in packingList.content.groups"
-        class="row q-mt-md"
-      >
-        <PackingGroup :group="packingListManager.GetGroup(group.id)" />
+      <div v-else style="margin-top: -20px">
+        <div v-for="group in packingList.content.groups" class="row q-mt-md">
+          <PackingGroup :group="packingListManager.GetGroup(group.id)" />
+        </div>
       </div>
     </div>
   </q-page>

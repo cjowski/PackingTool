@@ -1,5 +1,5 @@
 <template>
-  <div :style="`width: ${$q.screen.gt.sm ? '250px' : '100%'}`">
+  <div :style="`width: ${$q.screen.gt.sm ? '250px' : '250px'}`">
     <DisplayPackingGroup
       v-if="!packing"
       :group="group"

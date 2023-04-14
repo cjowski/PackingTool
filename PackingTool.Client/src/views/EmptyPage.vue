@@ -1,18 +1,14 @@
 <template></template>
-<!-- <template>{{ test }}</template> -->
 
 <script setup lang="ts">
-// import { WeatherForecastService } from '@/api';
-// import { onMounted, ref } from 'vue';
+import { onMounted } from "vue"
+import { useAuthenticationStore } from "@/stores/authenticationStore"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 
-// const test = ref('nothing')
+const { enablePackingLists } = useAuthenticationStore()
+const { setPackingListsShown } = useAllPackingListsStore()
 
-// const fetchWeather = async () => {
-//   const response = await WeatherForecastService.getWeatherForecast()
-//   test.value = JSON.stringify(response)
-// }
-
-// onMounted(() => {
-//   fetchWeather()
-// })
+onMounted(() => {
+  setPackingListsShown(enablePackingLists())
+})
 </script>
