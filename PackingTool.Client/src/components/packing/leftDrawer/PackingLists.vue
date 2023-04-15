@@ -65,7 +65,6 @@
 
         <AddPackingList
           v-else
-          v-model="newListName"
           :onSubmit="addNewList"
           :onCancel="cancelAddNewList"
         />
@@ -111,18 +110,15 @@ defineProps({
 
 const selectedListName = ref("")
 const addingList = ref(false)
-const newListName = ref("")
 const uploadJsonFile = ref<HTMLLinkElement>()
 
 const addNewList = (name: string) => {
   router.push(`/list?name=${name}`)
   addingList.value = false
-  newListName.value = ""
 }
 
 const cancelAddNewList = () => {
   addingList.value = false
-  newListName.value = ""
 }
 
 const chooseFileToUpload = () => {

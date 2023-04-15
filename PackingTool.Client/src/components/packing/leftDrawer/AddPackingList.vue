@@ -3,7 +3,7 @@
     <q-item>
       <q-item-section>
         <q-input
-          v-model="modelValue"
+          v-model="newListName"
           autofocus
           outlined
           label="Name"
@@ -19,7 +19,7 @@
         <q-btn flat icon="undo" class="q-ma-none q-pa-sm" @click="cancel" />
       </q-item-section>
     </q-item>
-    
+
     <q-item class="q-pt-md q-pb-md">
       <q-btn
         color="green"
@@ -40,9 +40,9 @@ import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 const { allPackingLists } = storeToRefs(useAllPackingListsStore())
 
 const props = defineProps({
-  modelValue: {
+  initialListName: {
     type: String,
-    required: true,
+    default: "",
   },
   onSubmit: {
     type: Function,
@@ -54,13 +54,13 @@ const props = defineProps({
   },
 })
 
-const initialListName = ref(props.modelValue)
+const newListName = ref(props.initialListName)
 const newListNameError = ref("")
 
 const submit = () => {
   validateNewListName()
   if (!newListNameError.value) {
-    props.onSubmit(props.modelValue)
+    props.onSubmit(newListName.value)
   }
 }
 
@@ -69,18 +69,18 @@ const cancel = () => {
 }
 
 const validateNewListName = () => {
-  if (!props.modelValue) {
+  if (!newListName.value) {
     newListNameError.value = "Please provide name"
     return
   }
 
-  if (props.modelValue === initialListName.value) {
+  if (newListName.value === props.initialListName) {
     newListNameError.value = ""
     return
   }
 
   const list = allPackingLists.value.find(
-    (list) => list.name === props.modelValue
+    (list) => list.name === newListName.value
   )
   if (list) {
     newListNameError.value = "Already exist list with given name"

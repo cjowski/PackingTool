@@ -19,7 +19,7 @@
 
       <q-item-section v-else>
         <ListNameInput
-          v-model="editedListName"
+          :initialListName="editedListName"
           :onSubmit="doUpdateListName"
           :onCancel="cancelEditingListName"
         ></ListNameInput>
