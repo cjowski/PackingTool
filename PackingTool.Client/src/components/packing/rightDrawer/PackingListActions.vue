@@ -61,6 +61,7 @@
               color="light-green-6"
               size="lg"
               :disable="disableDrawer"
+              :style="packing ? 'visibility: hidden;' : ''"
               @click="addingGroup = true"
               @click.stop=""
             />
@@ -127,7 +128,7 @@
       </q-scroll-area>
 
       <q-dialog v-model="addingGroup" position="top">
-        <AddPackingGroup :closeAddGroupDialog="() => (addingGroup = false)" />
+        <AddPackingGroup :closeAddGroupDialog="() => onAddingGroup()" />
       </q-dialog>
     </q-drawer>
   </div>
@@ -155,9 +156,7 @@ const configuringGrid = ref(false)
 const packingListActionsShown = ref(true)
 
 const unhideDrawer = computed(() => !!selectedListName.value)
-const disableDrawer = computed(
-  () => $q.screen.lt.md && packingListsShown.value
-)
+const disableDrawer = computed(() => $q.screen.lt.md && packingListsShown.value)
 
 const minColumnsInRow = computed(() => {
   return packingList.value.content.groups.length < 2
@@ -191,6 +190,13 @@ const packAllGroups = (value: boolean) => {
   packingList.value.content.groups.forEach((group) =>
     group.items.forEach((item) => (item.packed = value))
   )
+}
+
+const onAddingGroup = () => {
+  addingGroup.value = false
+  setTimeout(() => {
+    window.scrollTo({ top: 1000000, behavior: "smooth" })
+  }, 50)
 }
 </script>
 
