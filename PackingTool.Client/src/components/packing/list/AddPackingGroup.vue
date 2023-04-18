@@ -26,41 +26,36 @@
     </q-card-section>
 
     <q-card-section>
-      <q-item dense>
-        <q-item-section>
-          <q-select
-            outlined
-            use-input
-            clearable
-            v-model="itemType"
-            :options="foundItemTypes"
-            label="Group type"
-            @filter="searchItemTypes"
-            @keydown.enter.prevent="add"
-            class="new-group-type-select"
-          >
-            <template v-slot:option="scope">
-              <q-item v-bind="scope.itemProps" class="group-item-type">
-                <q-item-section>
-                  <q-item-label>{{ scope.opt }}</q-item-label>
-                </q-item-section>
+      <q-select
+        options-dense
+        outlined
+        label="Group type"
+        v-model="itemType"
+        :options="foundItemTypes"
+        @filter="searchItemTypes"
+        @keydown.enter.prevent="add"
+        class="new-group-type-select q-ml-md q-mr-md"
+      >
+        <template v-slot:option="scope">
+          <q-item v-bind="scope.itemProps" class="group-item-type">
+            <q-item-section side>
+              <q-icon :name="getIconByItemType(scope.opt)" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label class="text-bold">{{ scope.opt }}</q-item-label>
+            </q-item-section>
+          </q-item>
+        </template>
 
-                <q-item-section side>
-                  <q-icon :name="getIconByItemType(scope.opt)" />
-                </q-item-section>
-              </q-item>
-            </template>
-
-            <template v-slot:selected-item="scope">
-              {{ scope.opt }}
-            </template>
-          </q-select>
-        </q-item-section>
-
-        <q-item-section side>
-          <q-icon :name="getIconByItemType(itemType)" />
-        </q-item-section>
-      </q-item>
+        <template v-slot:selected-item="scope">
+          <q-icon
+            size="sm"
+            class="q-pr-sm"
+            :name="getIconByItemType(itemType)"
+          />
+          {{ scope.opt }}
+        </template>
+      </q-select>
     </q-card-section>
 
     <q-card-actions vertical>
@@ -159,11 +154,14 @@ const add = () => {
   :deep(.q-field__label) {
     font-size: 16px;
     top: 10px;
+    font-weight: bold;
   }
   :deep(input) {
     padding-top: 10px;
     font-size: 18px;
+    font-weight: bold;
   }
+  font-family: "Ink Free";
 }
 .new-group-type-select {
   :deep(.q-field__control) {
@@ -171,6 +169,7 @@ const add = () => {
   }
   :deep(.q-field__native) {
     font-size: 18px;
+    font-weight: bold;
   }
 }
 </style>

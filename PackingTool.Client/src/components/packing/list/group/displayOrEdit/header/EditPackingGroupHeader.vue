@@ -14,8 +14,8 @@
     <div class="row">
       <div class="col-12">
         <q-select
+          options-dense
           outlined
-          use-input
           v-model="modifiedItemType"
           :options="foundItemTypes"
           @filter="searchItemTypes"
@@ -23,12 +23,11 @@
         >
           <template v-slot:option="scope">
             <q-item v-bind="scope.itemProps" class="group-item-type">
-              <q-item-section>
-                <q-item-label>{{ scope.opt }}</q-item-label>
-              </q-item-section>
-
               <q-item-section side>
                 <q-icon :name="getIconByItemType(scope.opt)" />
+              </q-item-section>
+              <q-item-section>
+                <q-item-label class="text-bold">{{ scope.opt }}</q-item-label>
               </q-item-section>
             </q-item>
           </template>

@@ -108,7 +108,7 @@ const cancelEditingTask = () => {
     font-weight: bold;
     top: 10px;
   }
-  :deep(input) {
+  :deep(textarea) {
     padding-top: 10px;
     font-size: 18px;
     font-weight: bold;

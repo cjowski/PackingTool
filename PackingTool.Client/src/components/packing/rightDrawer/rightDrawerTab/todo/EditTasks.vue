@@ -3,9 +3,9 @@
     <q-item class="q-pa-none q-mb-sm">
       <q-item-section>
         <q-input
-          v-if="showNewTaskInput"
           v-model="newTask"
           type="textarea"
+          ref="newTaskInputRef"
           :spellcheck="false"
           autofocus
           outlined
@@ -74,6 +74,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
+import type { QInput } from "quasar"
 import { storeToRefs } from "pinia"
 import { useTodoTasksStore } from "@/stores/todoTasksStore"
 import EditTask from "./EditTask.vue"
@@ -82,20 +83,15 @@ const { tasks, editing } = storeToRefs(useTodoTasksStore())
 const { addTask, removeAllTasks } = useTodoTasksStore()
 
 const newTask = ref("")
-const showNewTaskInput = ref(true)
 const showRemoveAllTasksConfirmation = ref(false)
 const scrollAreaHeight = ref(0)
+const newTaskInputRef = ref<InstanceType<typeof QInput>>()
 
 const addNewTask = () => {
   if (!newTask.value) return
   addTask(newTask.value)
   newTask.value = ""
-
-  //hack to not loose focus on input:
-  showNewTaskInput.value = false
-  setTimeout(() => {
-    showNewTaskInput.value = true
-  }, 10)
+  newTaskInputRef.value?.focus()
 }
 
 const cancelAddingTask = () => {
@@ -127,7 +123,7 @@ onMounted(() => {
     font-weight: bold;
     top: 10px;
   }
-  :deep(input) {
+  :deep(textarea) {
     padding-top: 10px;
     font-size: 18px;
     font-weight: bold;

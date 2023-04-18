@@ -10,7 +10,7 @@
           dense
           icon="menu"
           size="lg"
-          :disable="rightDrawerShown"
+          :disable="smallScreen && rightDrawerShown"
         />
         <q-toolbar-title>
           <span v-if="!smallScreen" class="text-bold non-selectable"

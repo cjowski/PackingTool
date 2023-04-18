@@ -3,9 +3,9 @@
     <q-item dense>
       <q-item-section>
         <q-input
-          v-if="showNameInput"
           v-model="name"
           type="textarea"
+          ref="inputRef"
           :spellcheck="false"
           autofocus
           outlined
@@ -54,10 +54,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, type VNodeRef } from "vue"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import type { PackingItemAttribute } from "@/api/models/PackingItemAttribute"
+import { QInput } from "quasar";
 
 const { packingListManager } = useAllPackingListsStore()
 const { finishAddingItemsForGroup } = useOpenedPackingListStore()
@@ -75,7 +76,7 @@ const props = defineProps({
 
 const name = ref("")
 const count = ref(1)
-const showNameInput = ref(true)
+const inputRef = ref<InstanceType<typeof QInput>>()
 
 const increaseCount = () => {
   if (count.value < 99) ++count.value
@@ -96,11 +97,7 @@ const add = () => {
   )
   name.value = ""
   count.value = 1
-  //hack to not loose focus on input:
-  showNameInput.value = false
-  setTimeout(() => {
-    showNameInput.value = true
-  }, 10)
+  inputRef.value?.focus()
 }
 
 const synchronize = async () => {
