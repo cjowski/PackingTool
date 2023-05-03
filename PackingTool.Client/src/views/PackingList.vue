@@ -8,6 +8,7 @@
         <PackingGrid />
       </div>
       <div v-else style="margin-top: -20px">
+        <div class="list-title">{{ selectedListName }}</div>
         <div v-for="group in packingList.content.groups" class="row q-mt-md">
           <PackingGroup :group="packingListManager.GetGroup(group.id)" />
         </div>
@@ -108,3 +109,13 @@ onUnmounted(() => {
   window.removeEventListener("keydown", savePackingList)
 })
 </script>
+
+<style lang="scss" scoped>
+.list-title {
+  font-family: "Ink Free";
+  font-weight: bold;
+  font-size: 18px;
+  text-align: center;
+  margin-right: 50px;
+}
+</style>

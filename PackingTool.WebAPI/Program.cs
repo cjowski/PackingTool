@@ -41,7 +41,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.UseEndpoints(endpoints => { });
+app.UseEndpoints(endpoints => {
+    endpoints.MapFallbackToFile("/index.html");
+});
 
 app.UseCors(policy => policy
     .AllowAnyOrigin()

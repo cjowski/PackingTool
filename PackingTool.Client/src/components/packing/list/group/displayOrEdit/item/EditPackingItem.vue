@@ -5,7 +5,8 @@
         <q-input
           v-model="modifiedName"
           type="textarea"
-          :spellcheck="false"
+          spellcheck="false"
+          autocapitalize="off"
           autofocus
           outlined
           autogrow
@@ -33,6 +34,16 @@
           <q-btn flat dense icon="keyboard_arrow_down" @click="decreaseCount" />
         </div>
       </q-item-section>
+
+      <q-item-section side style="padding-left: 4px">
+        <q-btn
+          flat
+          dense
+          icon="close"
+          class=""
+          @click="packingListManager.RemoveItem(item.id, groupID)"
+        />
+      </q-item-section>
     </q-item>
 
     <q-item class="q-pa-none q-pb-md">
@@ -51,6 +62,9 @@
 import { computed, ref } from "vue"
 import type { PackingItem } from "@/models/packing/list/PackingItem"
 import { ExistenceStatus } from "@/models/packing/list/ExistenceStatus"
+import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
+
+const { packingListManager } = useAllPackingListsStore()
 
 const props = defineProps({
   item: {
