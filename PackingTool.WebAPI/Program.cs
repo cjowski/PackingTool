@@ -42,7 +42,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.UseEndpoints(endpoints => {
-    endpoints.MapFallbackToFile("/index.html");
+    if (!app.Environment.IsDevelopment())
+    {
+        endpoints.MapFallbackToFile("/index.html");
+    }
 });
 
 app.UseCors(policy => policy
