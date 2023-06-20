@@ -59,7 +59,9 @@
             icon="format_size"
             color="cyan-5"
             @click="editListName"
-          />
+          >
+            <q-tooltip>Edit name</q-tooltip>
+          </q-btn>
         </q-item-section>
 
         <q-item-section>
@@ -69,7 +71,9 @@
             icon="content_copy"
             color="purple"
             @click="copyList"
-          />
+          >
+            <q-tooltip>Make copy</q-tooltip>
+          </q-btn>
         </q-item-section>
 
         <q-item-section v-if="id !== 0">
@@ -79,7 +83,9 @@
             icon="download"
             color="blue-grey-2"
             @click="downloadFile"
-          />
+          >
+            <q-tooltip>Download</q-tooltip>
+          </q-btn>
         </q-item-section>
       </q-item>
 

@@ -22,7 +22,9 @@
           icon="close"
           color="red"
           @click="showRemoveAllConfirmation = true"
-        />
+        >
+          <q-tooltip>Delete all</q-tooltip>
+        </q-btn>
       </q-item-section>
     </q-item>
 

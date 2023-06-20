@@ -32,7 +32,9 @@
       <q-item-section />
 
       <q-item-section v-if="tasks.length != 0" side @click.stop="">
-        <q-btn flat dense icon="check" color="green" @click="editing = false" />
+        <q-btn flat dense icon="check" color="green" @click="editing = false">
+          <q-tooltip>Finish editing</q-tooltip>
+        </q-btn>
       </q-item-section>
 
       <q-item-section
@@ -47,7 +49,9 @@
           icon="close"
           color="red"
           @click="showRemoveAllTasksConfirmation = true"
-        />
+        >
+          <q-tooltip>Delete all</q-tooltip>
+        </q-btn>
       </q-item-section>
     </q-item>
 

@@ -24,7 +24,11 @@
               :disable="disableDrawer"
               @click="packing = true"
               @click.stop=""
-            />
+            >
+              <q-tooltip anchor="bottom left" :offset="[65, -35]"
+                >Pack items</q-tooltip
+              >
+            </q-btn>
 
             <q-btn
               v-else
@@ -36,7 +40,11 @@
               :disable="disableDrawer"
               @click="packing = false"
               @click.stop=""
-            />
+            >
+              <q-tooltip anchor="bottom left" :offset="[105, -35]"
+                >Cancel packing items</q-tooltip
+              >
+            </q-btn>
           </q-item>
 
           <q-item class="q-pa-sm">
@@ -50,7 +58,17 @@
               :disable="disableDrawer"
               @click="packAllGroups(!allGroupsPacked)"
               @click.stop=""
-            />
+            >
+              <q-tooltip
+                v-if="allGroupsPacked"
+                anchor="bottom left"
+                :offset="[85, -35]"
+                >Uncheck all items</q-tooltip
+              >
+              <q-tooltip v-else anchor="bottom left" :offset="[80, -35]"
+                >Check all items</q-tooltip
+              >
+            </q-btn>
           </q-item>
 
           <q-item class="q-pa-sm">
@@ -64,7 +82,11 @@
               :style="packing ? 'visibility: hidden;' : ''"
               @click="addingGroup = true"
               @click.stop=""
-            />
+            >
+              <q-tooltip anchor="bottom left" :offset="[95, -35]"
+                >Add packing group</q-tooltip
+              >
+            </q-btn>
           </q-item>
 
           <q-item class="q-pa-sm">
@@ -77,7 +99,11 @@
               :disable="disableDrawer"
               @click="packingListManager.SavePackingList"
               @click.stop=""
-            />
+            >
+              <q-tooltip anchor="bottom left" :offset="[55, -35]"
+                >Save list</q-tooltip
+              >
+            </q-btn>
           </q-item>
 
           <q-item v-if="$q.screen.gt.sm" class="q-pa-sm">
@@ -91,7 +117,11 @@
               :disable="disableDrawer"
               @click="configuringGrid = true"
               @click.stop=""
-            />
+            >
+              <q-tooltip anchor="bottom left" :offset="[90, -35]"
+                >Set column count</q-tooltip
+              >
+            </q-btn>
 
             <q-input
               v-else
@@ -122,7 +152,11 @@
               :disable="disableDrawer"
               @click="packingListManager.FetchPackingList"
               @click.stop=""
-            />
+            >
+              <q-tooltip anchor="bottom left" :offset="[60, -35]"
+                >Refresh list</q-tooltip
+              >
+            </q-btn>
           </q-item>
         </q-list>
       </q-scroll-area>

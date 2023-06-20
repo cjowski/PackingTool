@@ -1,6 +1,9 @@
 <template>
   <div>
-    <q-item clickable @click="finishAllTasks(!allTasksDone)">
+    <q-item
+      :clickable="tasks.length > 1"
+      @click="finishAllTasks(!allTasksDone)"
+    >
       <q-item-section>
         <q-checkbox
           v-if="tasks.length > 1"
@@ -14,13 +17,9 @@
       </q-item-section>
 
       <q-item-section side @click.stop="">
-        <q-btn
-          flat
-          dense
-          icon="edit"
-          color="yellow-5"
-          @click="editing = true"
-        />
+        <q-btn flat dense icon="edit" color="yellow-5" @click="editing = true">
+          <q-tooltip>Edit tasks</q-tooltip>
+        </q-btn>
       </q-item-section>
     </q-item>
 

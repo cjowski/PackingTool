@@ -11,7 +11,9 @@
           color="green-14"
           size="md"
           @click="addItemsForGroup(group.id)"
-        />
+        >
+          <q-tooltip>Add item</q-tooltip>
+        </q-btn>
       </q-item-section>
 
       <q-item-section>
@@ -23,7 +25,9 @@
           size="md"
           :disable="editingHeader"
           @click="editHeaderForGroup(group.id)"
-        />
+        >
+          <q-tooltip>Edit group details</q-tooltip>
+        </q-btn>
       </q-item-section>
 
       <q-item-section v-if="!isNew">
@@ -34,7 +38,9 @@
           color="orange"
           size="md"
           @click="synchronize"
-        />
+        >
+          <q-tooltip>Refresh group</q-tooltip>
+        </q-btn>
       </q-item-section>
 
       <q-item-section>
@@ -45,7 +51,9 @@
           color="pink-5"
           size="md"
           @click="editAttributesForGroup(group.id)"
-        />
+        >
+          <q-tooltip>Mark items</q-tooltip>
+        </q-btn>
       </q-item-section>
     </q-item>
 

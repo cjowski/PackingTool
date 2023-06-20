@@ -66,7 +66,11 @@
             </q-item-section>
           </q-item>
           <q-item>
-            <q-item-section class="text-red text-bold text-body1">
+            <q-item-section v-if="registerSucceed" class="text-light-green-14 text-bold text-body1">
+              Successfully registered!
+              <br/>Please ask administrator to authorize user.
+            </q-item-section>
+            <q-item-section v-else class="text-red text-bold text-body1">
               {{ registerError }}
             </q-item-section>
           </q-item>
@@ -88,8 +92,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import { QSpinnerHourglass, useQuasar } from "quasar";
-import router from "@/router"
+import { QSpinnerHourglass, useQuasar } from "quasar"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 
 const { register } = useAuthenticationStore()
@@ -107,10 +110,21 @@ const emailError = ref("")
 const passwordError = ref("")
 
 const registerError = ref("")
+const registerSucceed = ref(false)
 
 const validateUserName = () => {
   if (!userName.value) {
     userNameError.value = "Please enter username"
+    return
+  }
+
+  if (userName.value.length < 5) {
+    userNameError.value = "Username should have at least 5 characters"
+    return
+  }
+
+  if (userName.value.length > 20) {
+    userNameError.value = "Username should have max 20 characters"
     return
   }
 
@@ -145,6 +159,16 @@ const validatePassword = () => {
     return
   }
 
+  if (password.value.length < 5) {
+    passwordError.value = "Password should have at least 5 characters"
+    return
+  }
+
+  if (password.value.length > 20) {
+    passwordError.value = "Password should have max 20 characters"
+    return
+  }
+
   passwordError.value = ""
 }
 
@@ -168,7 +192,7 @@ const doRegister = async () => {
   const response = await register(userName.value, password.value)
 
   if (response.success) {
-    router.push("/")
+    registerSucceed.value = true
   } else {
     registerError.value = response.message!
   }

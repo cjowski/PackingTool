@@ -18,7 +18,9 @@
               dense
               color="green-14"
               padding="xs"
-            />
+            >
+              <q-tooltip>Add list</q-tooltip>
+            </q-btn>
           </q-item-section>
 
           <q-item-section>
@@ -29,7 +31,9 @@
               dense
               color="orange"
               padding="xs"
-            />
+            >
+              <q-tooltip>Refresh lists</q-tooltip>
+            </q-btn>
           </q-item-section>
 
           <q-item-section>
@@ -47,7 +51,9 @@
               dense
               color="blue-grey-2"
               padding="xs"
-            />
+            >
+              <q-tooltip>Upload list from .json file</q-tooltip>
+            </q-btn>
           </q-item-section>
 
           <q-item-section>
@@ -59,7 +65,9 @@
               dense
               color="blue-grey-2"
               padding="xs"
-            />
+            >
+              <q-tooltip>Download lists</q-tooltip>
+            </q-btn>
           </q-item-section>
         </q-item>
 
