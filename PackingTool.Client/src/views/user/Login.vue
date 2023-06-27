@@ -5,7 +5,9 @@
         <q-card-section horizontal>
           <q-item class="col">
             <q-item-section>
-              <q-item-label class="text-h5 text-bold"> LogIn </q-item-label>
+              <q-item-label class="text-h5 text-bold">{{
+                $t("logIn")
+              }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -61,7 +63,9 @@
         <q-card-actions vertical class="q-pt-none">
           <q-item class="q-pt-none">
             <q-item-section>
-              <q-btn size="18px" color="primary" @click="doLogin">Login</q-btn>
+              <q-btn size="18px" color="primary" @click="doLogin">{{
+                $t("logInSubmit")
+              }}</q-btn>
             </q-item-section>
           </q-item>
         </q-card-actions>

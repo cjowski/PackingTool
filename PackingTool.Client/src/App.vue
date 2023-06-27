@@ -13,32 +13,32 @@
           :disable="smallScreen && rightDrawerShown"
         />
         <q-toolbar-title>
-          <span v-if="!smallScreen" class="text-bold non-selectable"
-            >Packing lists</span
-          >
+          <span v-if="!smallScreen" class="text-bold non-selectable">{{
+            $t("packingLists")
+          }}</span>
         </q-toolbar-title>
 
         <q-btn
           v-if="!isAuthorized()"
-          to="/login"
+          :to="{ name: 'login' }"
           flat
           no-caps
           :size="smallScreen ? '17px' : '20px'"
         >
-          <span class="text-bold">LogIn</span>
+          <span class="text-bold">{{ $t("logIn") }}</span>
         </q-btn>
         <q-btn
           v-if="!isAuthorized()"
-          to="/register"
+          :to="{ name: 'register' }"
           flat
           no-caps
           :size="smallScreen ? '17px' : '20px'"
         >
-          <span class="text-bold">Register</span>
+          <span class="text-bold">{{ $t("register") }}</span>
         </q-btn>
         <q-btn
           v-if="isAdmin()"
-          to="/admin"
+          :to="{ name: 'admin' }"
           flat
           no-caps
           :size="smallScreen ? '17px' : '20px'"
@@ -47,12 +47,12 @@
         </q-btn>
         <q-btn
           v-if="isAuthorized()"
-          to="/changePassword"
+          :to="{ name: 'changePassword' }"
           flat
           no-caps
           :size="smallScreen ? '17px' : '20px'"
         >
-          <span class="text-bold">Change Password</span>
+          <span class="text-bold">{{ $t("changePassword") }}</span>
         </q-btn>
         <q-btn
           v-if="isAuthorized()"
@@ -61,8 +61,9 @@
           no-caps
           :size="smallScreen ? '17px' : '20px'"
         >
-          <span class="text-bold">LogOut</span>
+          <span class="text-bold">{{ $t("logOut") }}</span>
         </q-btn>
+        <LanguageSwitcher />
       </q-toolbar>
     </q-header>
 
@@ -87,6 +88,7 @@ import router from "./router"
 import { useAuthenticationStore } from "./stores/authenticationStore"
 import { useAllPackingListsStore } from "./stores/allPackingListsStore"
 import { useOperationStatusStore } from "./stores/operationStatusStore"
+import LanguageSwitcher from "./components/topToolbar/languageSwitcher.vue"
 import PackingLists from "./components/packing/leftDrawer/PackingLists.vue"
 import PackingListActions from "./components/packing/rightDrawer/PackingListActions.vue"
 import RightDrawer from "./components/packing/rightDrawer/RightDrawer.vue"
