@@ -6,7 +6,7 @@
           <q-item class="col">
             <q-item-section>
               <q-item-label class="text-h5 text-bold">
-                Change Password
+                {{ $t("changePassword") }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -22,10 +22,10 @@
                 :type="viewCurrentPassword ? 'text' : 'password'"
                 autofocus
                 outlined
-                label="Current password"
+                :label="$t('currentPassword')"
                 @blur="validateCurrentPassword"
                 :error="currentPasswordError.length > 0"
-                :error-message="currentPasswordError"
+                :error-message="$t(currentPasswordError)"
                 class="change-password-input"
               >
                 <template v-slot:append>
@@ -46,10 +46,10 @@
                 v-model="newPassword"
                 :type="viewNewPassword ? 'text' : 'password'"
                 outlined
-                label="New password"
+                :label="$t('newPassword')"
                 @blur="validateNewPassword"
                 :error="newPasswordError.length > 0"
-                :error-message="newPasswordError"
+                :error-message="$t(newPasswordError)"
                 class="change-password-input"
               >
                 <template v-slot:append>
@@ -68,11 +68,11 @@
                 v-model="repeatNewPassword"
                 :type="viewNewPassword ? 'text' : 'password'"
                 outlined
-                label="Repeat new password"
+                :label="$t('repeatNewPassword')"
                 @keydown.enter.prevent="doChangePassword"
                 @blur="validateRepeatNewPassword"
                 :error="repeatNewPasswordError.length > 0"
-                :error-message="repeatNewPasswordError"
+                :error-message="$t(repeatNewPasswordError)"
                 class="change-password-input"
               >
                 <template v-slot:append>
@@ -86,8 +86,8 @@
             </q-item-section>
           </q-item>
           <q-item v-if="requiredNewPassword()">
-            <q-item-section class="text-orange text-bold text-body1">
-              Please change your temporary password
+            <q-item-section class="text-orange text-bold text-body1"
+              >{{ $t("changeTemporaryPassword") }}
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -95,9 +95,9 @@
         <q-card-actions vertical class="q-pt-none">
           <q-item class="q-pt-none">
             <q-item-section>
-              <q-btn size="18px" color="primary" @click="doChangePassword"
-                >Submit change</q-btn
-              >
+              <q-btn size="18px" color="primary" @click="doChangePassword">{{
+                $t("submitChange")
+              }}</q-btn>
             </q-item-section>
           </q-item>
         </q-card-actions>
@@ -130,17 +130,17 @@ const repeatNewPasswordError = ref("")
 const validateCurrentPassword = () => {
   currentPasswordError.value = currentPassword.value
     ? ""
-    : "Please enter current password"
+    : "enterCurrentPasswordError"
 }
 
 const validateNewPassword = () => {
   if (!newPassword.value) {
-    newPasswordError.value = "Please enter new password"
+    newPasswordError.value = "enterNewPasswordError"
     return
   }
 
   if (newPassword.value == currentPassword.value) {
-    newPasswordError.value = "Please set different password"
+    newPasswordError.value = "setNewDifferentPasswordError"
     return
   }
 
@@ -149,12 +149,12 @@ const validateNewPassword = () => {
 
 const validateRepeatNewPassword = () => {
   if (!repeatNewPassword.value) {
-    repeatNewPasswordError.value = "Please repeat new password"
+    repeatNewPasswordError.value = "repeatNewPasswordError"
     return
   }
 
   if (repeatNewPassword.value != newPassword.value) {
-    repeatNewPasswordError.value = "Password doesn't match"
+    repeatNewPasswordError.value = "repeatPasswordNotMatchedError"
     return
   }
 
@@ -197,7 +197,7 @@ const doChangePassword = async () => {
   } else {
     currentPasswordError.value = response.message!
   }
-  
+
   $q.loading.hide()
 }
 </script>

@@ -5,7 +5,9 @@
         <q-card-section horizontal>
           <q-item class="col">
             <q-item-section>
-              <q-item-label class="text-h5 text-bold"> Register </q-item-label>
+              <q-item-label class="text-h5 text-bold">
+                {{ $t("register") }}
+              </q-item-label>
             </q-item-section>
           </q-item>
         </q-card-section>
@@ -20,10 +22,10 @@
                 type="text"
                 autofocus
                 outlined
-                label="Username"
+                :label="$t('userName')"
                 @blur="validateUserName"
                 :error="userNameError.length > 0"
-                :error-message="userNameError"
+                :error-message="$t(userNameError)"
                 class="register-input"
               />
             </q-item-section>
@@ -48,11 +50,11 @@
                 v-model="password"
                 :type="viewPassword ? 'text' : 'password'"
                 outlined
-                label="Password"
+                :label="$t('password')"
                 @keydown.enter.prevent="doRegister"
                 @blur="validatePassword"
                 :error="passwordError.length > 0"
-                :error-message="passwordError"
+                :error-message="$t(passwordError)"
                 class="register-input"
               >
                 <template v-slot:append>
@@ -66,9 +68,13 @@
             </q-item-section>
           </q-item>
           <q-item>
-            <q-item-section v-if="registerSucceed" class="text-light-green-14 text-bold text-body1">
-              Successfully registered!
-              <br/>Please ask administrator to authorize user.
+            <q-item-section
+              v-if="registerSucceed"
+              class="text-light-green-14 text-bold text-body1"
+            >
+              {{ $t("successfullyRegistered") }}!<br />{{
+                $t("askAdministratorToAuthorizeUser")
+              }}.
             </q-item-section>
             <q-item-section v-else class="text-red text-bold text-body1">
               {{ registerError }}
@@ -79,9 +85,9 @@
         <q-card-actions vertical class="q-pt-none">
           <q-item class="q-pt-none">
             <q-item-section>
-              <q-btn size="18px" color="primary" @click="doRegister"
-                >Register</q-btn
-              >
+              <q-btn size="18px" color="primary" @click="doRegister">{{
+                $t("registerSubmit")
+              }}</q-btn>
             </q-item-section>
           </q-item>
         </q-card-actions>
@@ -114,23 +120,23 @@ const registerSucceed = ref(false)
 
 const validateUserName = () => {
   if (!userName.value) {
-    userNameError.value = "Please enter username"
+    userNameError.value = "enterUserNameError"
     return
   }
 
   if (userName.value.length < 5) {
-    userNameError.value = "Username should have at least 5 characters"
+    userNameError.value = "userNameAtLeast5CharactersError"
     return
   }
 
   if (userName.value.length > 20) {
-    userNameError.value = "Username should have max 20 characters"
+    userNameError.value = "userNameMax20CharactersError"
     return
   }
 
   const reg = /^[A-Za-z0-9]*$/
   if (!reg.test(userName.value)) {
-    userNameError.value = "Please use only letters and numbers"
+    userNameError.value = "useLettersAndNumbersError"
     return
   }
 
@@ -155,17 +161,17 @@ const validateEmail = () => {
 
 const validatePassword = () => {
   if (!password.value) {
-    passwordError.value = "Please enter password"
+    passwordError.value = "enterPasswordError"
     return
   }
 
   if (password.value.length < 5) {
-    passwordError.value = "Password should have at least 5 characters"
+    passwordError.value = "passwordAtLeast5CharactersError"
     return
   }
 
   if (password.value.length > 20) {
-    passwordError.value = "Password should have max 20 characters"
+    passwordError.value = "passwordMax20CharactersError"
     return
   }
 

@@ -22,10 +22,10 @@
                 type="text"
                 autofocus
                 outlined
-                label="Username"
+                :label="$t('userName')"
                 @blur="validateUserName"
                 :error="userNameError.length > 0"
-                :error-message="userNameError"
+                :error-message="$t(userNameError)"
                 class="login-input"
               />
             </q-item-section>
@@ -36,11 +36,11 @@
                 v-model="password"
                 :type="viewPassword ? 'text' : 'password'"
                 outlined
-                label="Password"
+                :label="$t('password')"
                 @keydown.enter.prevent="doLogin"
                 @blur="validatePassword"
                 :error="passwordError.length > 0"
-                :error-message="passwordError"
+                :error-message="$t(passwordError)"
                 class="login-input"
               >
                 <template v-slot:append>
@@ -100,13 +100,13 @@ const anotherLoginError = ref(false)
 
 const validateUserName = () => {
   if (!userName.value) {
-    userNameError.value = "Please enter username"
+    userNameError.value = "enterUserNameError"
     return
   }
 
   const reg = /^[A-Za-z0-9]*$/
   if (!reg.test(userName.value)) {
-    userNameError.value = "Please use only letters and numbers"
+    userNameError.value = "useLettersAndNumbersError"
     return
   }
 
@@ -115,7 +115,7 @@ const validateUserName = () => {
 
 const validatePassword = () => {
   if (!password.value) {
-    passwordError.value = "Please enter password"
+    passwordError.value = "enterPasswordError"
     return
   }
 
