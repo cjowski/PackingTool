@@ -96,7 +96,7 @@
 import { ref, watch } from "vue"
 import { useQuasar } from "quasar"
 import { useRoute } from "vue-router"
-import router from "@/router"
+import routerExtensions from "@/router/routerExtensions"
 import PackingListElement from "./PackingListElement.vue"
 import AddPackingList from "./AddPackingList.vue"
 import JSZip from "jszip"
@@ -121,7 +121,7 @@ const addingList = ref(false)
 const uploadJsonFile = ref<HTMLLinkElement>()
 
 const addNewList = (name: string) => {
-  router.push(`/list?name=${name}`)
+  routerExtensions.pushWithLocale("list", { name: name })
   addingList.value = false
 }
 

@@ -81,19 +81,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue"
+import { computed, onMounted } from "vue"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
-import router from "./router"
+import routerExtensions from "./router/routerExtensions"
 import { useAuthenticationStore } from "./stores/authenticationStore"
 import { useAllPackingListsStore } from "./stores/allPackingListsStore"
 import { useOperationStatusStore } from "./stores/operationStatusStore"
-import LanguageSwitcher from "./components/topToolbar/languageSwitcher.vue"
+import LanguageSwitcher from "./components/topToolbar/LanguageSwitcher.vue"
 import PackingLists from "./components/packing/leftDrawer/PackingLists.vue"
 import PackingListActions from "./components/packing/rightDrawer/PackingListActions.vue"
 import RightDrawer from "./components/packing/rightDrawer/RightDrawer.vue"
 import { PackingSectionType } from "./enums/PackingSectionType"
-import { computed } from "@vue/reactivity"
 
 const { isAuthorized, enablePackingLists, isAdmin, logout } =
   useAuthenticationStore()
@@ -111,7 +110,7 @@ $q.dark.toggle()
 const doLogout = async () => {
   setPackingListsShown(false)
   await logout()
-  router.push("/login")
+  routerExtensions.pushWithLocale("login")
 }
 
 const showPackingLists = () => {

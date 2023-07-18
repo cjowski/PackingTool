@@ -1,5 +1,5 @@
 import type { Ref } from "vue"
-import router from "@/router"
+import routerExtensions from "@/router/routerExtensions"
 import type { PackingItemType } from "src/api/models/PackingItemType"
 import type { PackingItemAttribute } from "src/api/models/PackingItemAttribute"
 import { PackingListAction } from "@/enums/PackingListAction"
@@ -142,7 +142,7 @@ export class PackingListManager {
 
     if (list.name === this._selectedListName.value) {
       this._selectedListName.value = ""
-      router.push("/")
+      routerExtensions.pushWithLocale("home")
     }
 
     if (list.state != PackingListState.New) {

@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import { QSpinnerHourglass, useQuasar } from "quasar"
-import router from "@/router"
+import routerExtensions from "@/router/routerExtensions"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 
@@ -136,9 +136,9 @@ const doLogin = async () => {
   if (response.success) {
     packingListManager.FetchListDescriptions()
     if (requiredNewPassword()) {
-      router.push("/changePassword")
+      routerExtensions.pushWithLocale("changePassword")
     } else {
-      router.push("/")
+      routerExtensions.pushWithLocale("home")
     }
   } else if (response.message! == loginError.value) {
     anotherLoginError.value = true
@@ -165,7 +165,7 @@ onMounted(async () => {
   await tryAutoLogin().then((isSuccess) => {
     if (isSuccess) {
       packingListManager.FetchListDescriptions()
-      router.push("/")
+      routerExtensions.pushWithLocale("home")
     }
     isMounted.value = true
     $q.loading.hide()

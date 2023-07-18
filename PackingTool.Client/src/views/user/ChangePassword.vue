@@ -109,7 +109,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { QSpinnerHourglass, useQuasar } from "quasar"
-import router from "@/router"
+import routerExtensions from "@/router/routerExtensions"
 import { useAuthenticationStore } from "@/stores/authenticationStore"
 
 const { requiredNewPassword, changePassword } = useAuthenticationStore()
@@ -188,7 +188,7 @@ const doChangePassword = async () => {
   )
 
   if (response.success) {
-    router.push("/")
+    routerExtensions.pushWithLocale("home")
     $q.notify({
       message: "Password changed",
       color: "blue",

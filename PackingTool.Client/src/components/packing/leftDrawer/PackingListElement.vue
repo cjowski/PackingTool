@@ -117,9 +117,9 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue"
-import router from "@/router"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
+import routerExtensions from "@/router/routerExtensions"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
 import { useOpenedPackingListStore } from "@/stores/openedPackingListStore"
 import { useOperationStatusStore } from "@/stores/operationStatusStore"
@@ -175,7 +175,7 @@ const select = () => {
   if ($q.screen.lt.md) {
     setPackingListsShown(false)
   }
-  router.push(`/list?name=${props.name}`)
+  routerExtensions.pushWithLocale("list", { name: props.name })
 }
 
 const downloadFile = async () => {
@@ -201,7 +201,7 @@ const doUpdateListName = async (name: string) => {
   await packingListManager.UpdateListName(props.id, name)
 
   if (selectedListName.value != name) {
-    router.push(`/list?name=${name}`)
+    routerExtensions.pushWithLocale("list", { name: name })
   }
 }
 
@@ -211,7 +211,7 @@ const cancelEditingListName = () => {
 
 const copyList = async () => {
   const copiedListName = await packingListManager.CopyPackingList(props.name)
-  router.push(`/list?name=${copiedListName}`)
+  routerExtensions.pushWithLocale("list", { name: copiedListName })
 }
 
 const confirmDelete = () => {

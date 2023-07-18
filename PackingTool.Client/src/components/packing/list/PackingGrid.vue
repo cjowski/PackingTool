@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, watch } from "vue"
+import { computed, onMounted, onUnmounted } from "vue"
 import { useQuasar } from "quasar"
 import { storeToRefs } from "pinia"
 import { useAllPackingListsStore } from "@/stores/allPackingListsStore"
